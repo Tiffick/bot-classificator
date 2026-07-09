@@ -7,27 +7,41 @@ load_dotenv()
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
-async def analyze_user_message(text: str):
+async def analyze_user_message(text: str, context: dict):
+
+    last_question = context.get("last_question")
+    state = context.get("state")
 
     prompt = f"""
-Ты анализируешь сообщения пользователя в боте про самочувствие и энергию.
+Ты анализируешь сообщения пользователя в диалоге про самочувствие.
+
+Контекст:
+
+Состояние диалога: {state}
+Последний вопрос бота: {last_question}
 
 ВАЖНО:
 
-1. Короткие ответы типа:
-"да", "есть", "давай", "ок", "ну", "ага"
-— НЕ являются проблемой
+1. Короткие ответы:
+"да", "есть", "ага", "ок"
 
-2. Если пользователь отвечает на вопрос:
-"насколько важно" → это readiness
+— могут быть ответом на вопрос
 
-3. Если пользователь говорит:
-"есть усталость", "нет энергии" → has_energy_issue = true
+2. Если вопрос был про энергию:
+"есть", "да", "ага" → has_energy_issue = true
+"нет" → has_energy_issue = false
 
-4. Если:
-"хочу похудеть", "лишний вес", "толстый" → has_weight_issue = true
+3. Если вопрос был про важность:
+"да", "очень", "конечно" → readiness = 7-10
 
-5. Если не уверен → НЕ придумывай, ставь null
+4. Если пользователь явно пишет число → это readiness
+
+5. Если:
+"лишний вес", "толстый", "хочу похудеть" → has_weight_issue = true
+
+6. Если не уверен → null
+
+НЕ ВЫДУМЫВАЙ.
 
 Сообщение:
 {text}
@@ -35,10 +49,10 @@ async def analyze_user_message(text: str):
 Верни строго JSON:
 
 {{
-    "problem": строка или null,
+    "problem": string or null,
     "has_energy_issue": true/false/null,
     "has_weight_issue": true/false/null,
-    "readiness": число 0-10 или null
+    "readiness": number or null
 }}
 """
 

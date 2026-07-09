@@ -1,24 +1,45 @@
-import json
-
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 from aiogram import Router
 
-from ai.analyzer import analyze_user_message
-from logic.dialog_manager import generate_reply
-from memory.user_memory import get_user_profile, update_user_profile
+from ai.dialog_engine import run_dialog_engine
 
+from memory.user_memory import (
+    get_user_profile,
+    update_user_profile,
+    set_last_question,
+    reset_user_profile
+)
+
+from utils.logger import (
+    clear_log,
+    log_user,
+    log_bot
+)
 
 router = Router()
 
 
 @router.message(CommandStart())
 async def start_handler(message: Message):
-    await message.answer(
-        "Привет! 👋\n\n"
-        "Я помогу разобрать ваше самочувствие и уровень энергии.\n\n"
-        "Расскажите, что вас больше всего беспокоит?"
+
+    user_id = message.from_user.id
+
+    reset_user_profile(user_id)
+
+    clear_log()
+
+    text = (
+        "Привет 🙂\n\n"
+        "Если ты здесь, значит что-то уже начало напрягать - "
+        "вес, энергия или просто самочувствие в целом."
     )
+
+    set_last_question(user_id, text)
+
+    log_bot(text)
+
+    await message.answer(text)
 
 
 @router.message()
@@ -30,27 +51,33 @@ async def message_handler(message: Message):
     print("\n--- NEW MESSAGE ---")
     print("USER:", user_text)
 
-    await message.answer("Анализирую ваше сообщение...")
+    log_user(user_text)
 
-    analysis = await analyze_user_message(user_text)
+    profile = get_user_profile(user_id)
 
-    print("RAW AI RESPONSE:", analysis)
+    result = await run_dialog_engine(user_text, profile)
 
-    try:
-        analysis_data = json.loads(analysis)
-    except Exception:
-        await message.answer("Ошибка анализа. Попробуйте еще раз.")
-        print("JSON ERROR:", analysis)
-        return
+    print("ENGINE RESULT:", result)
 
-    print("PARSED AI:", analysis_data)
+    update_data = result.get("update", {})
+    reply = result.get(
+        "reply",
+        "Можешь чуть подробнее рассказать?"
+    )
 
-    profile = update_user_profile(user_id, analysis_data)
+    profile = update_user_profile(
+        user_id,
+        update_data
+    )
+
+    set_last_question(
+        user_id,
+        reply
+    )
+
+    log_bot(reply)
 
     print("UPDATED PROFILE:", profile)
-
-    reply = generate_reply(profile)
-
     print("BOT REPLY:", reply)
 
     await message.answer(reply)
