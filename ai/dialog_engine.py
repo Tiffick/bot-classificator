@@ -232,22 +232,22 @@ async def run_dialog_engine(user_text: str, profile: dict):
     update = parsed.get("update", {})
     reply = parsed.get("reply", "Можешь чуть подробнее рассказать?")
 
-safe_update = {}
+    safe_update = {}
 
-IMMUTABLE_FIELDS = {
-    "name",
-    "gender"
-}
+    IMMUTABLE_FIELDS = {
+        "name",
+        "gender"
+    }
 
-for key, value in update.items():
+    for key, value in update.items():
 
-    if value is None:
-        continue
+        if value is None:
+            continue
 
-    if key in IMMUTABLE_FIELDS and profile.get(key) is not None:
-        continue
+        if key in IMMUTABLE_FIELDS and profile.get(key) is not None:
+            continue
 
-    safe_update[key] = value
+        safe_update[key] = value
 
     history.append(
         {
