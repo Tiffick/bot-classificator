@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
+from ai.engines.human_model_engine import HumanModelEngine
 
 load_dotenv()
 
@@ -137,6 +138,8 @@ def build_known_unknown(profile: dict):
 async def run_dialog_engine(user_text: str, profile: dict):
 
     client = OpenAI()
+    human_model_engine = HumanModelEngine()
+    human_model = human_model_engine.build(profile)
 
     history = profile.get("history", [])
 
