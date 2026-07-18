@@ -138,12 +138,12 @@ def build_known_unknown(profile: dict):
 async def run_dialog_engine(user_text: str, profile: dict):
 
     client = OpenAI()
-    human_model_engine = HumanModelEngine()
-    human_model = human_model_engine.build(profile)
 
     history = profile.get("history", [])
 
     known, unknown = build_known_unknown(profile)
+    human_model_engine = HumanModelEngine()
+    human_model = human_model_engine.build(profile)
 
     messages = [
         {

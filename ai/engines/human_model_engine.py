@@ -9,6 +9,8 @@ Human Model Engine
 Логика будет переноситься сюда постепенно.
 """
 
+from ai.engines.human_model import HumanModel
+
 
 class HumanModelEngine:
     """
@@ -17,11 +19,14 @@ class HumanModelEngine:
     Пока ничего не делает.
     """
 
-    def build(self, profile: dict) -> dict:
+    def build(self, profile: dict) -> HumanModel:
         """
-        В будущем будет строить Human Model.
+        Строит первичную модель человека
+        на основе накопленного профиля.
+        """
 
-        Сейчас возвращает пустой словарь,
-        чтобы не менять поведение проекта.
-        """
-        return {}
+        model = HumanModel()
+
+        model.facts = profile.copy()
+
+        return model
