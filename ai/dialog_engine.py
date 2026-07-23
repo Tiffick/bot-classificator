@@ -3,7 +3,9 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from openai import OpenAI
+
 from ai.engines.human_model_engine import HumanModelEngine
+from ai.engines.semantic_engine import SemanticEngine
 
 load_dotenv()
 
@@ -108,40 +110,17 @@ def calculate_discovery_complete(profile: dict) -> bool:
     return filled >= 2
 
 
-def build_known_unknown(profile: dict):
-
-    slots = [
-        "age",
-        "current_weight",
-        "target_weight",
-        "duration",
-        "main_problem",
-        "previous_attempts",
-        "failure_reason"
-    ]
-
-    known = []
-    unknown = []
-
-    for slot in slots:
-
-        value = profile.get(slot)
-
-        if value:
-            known.append(f"{slot}: {value}")
-        else:
-            unknown.append(slot)
-
-    return known, unknown
-
-
 async def run_dialog_engine(user_text: str, profile: dict):
 
     client = OpenAI()
 
     history = profile.get("history", [])
 
-    known, unknown = build_known_unknown(profile)
+    semantic = SemanticEngine().analyze(profile)
+
+    known = semantic.known
+    unknown = semantic.unknown
+
     human_model_engine = HumanModelEngine()
     human_model = human_model_engine.build(profile)
 
