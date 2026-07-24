@@ -5,7 +5,6 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from ai.engines.human_model_engine import HumanModelEngine
-from ai.engines.semantic_engine import SemanticEngine
 
 load_dotenv()
 
@@ -116,13 +115,11 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
     history = profile.get("history", [])
 
-    semantic = SemanticEngine().analyze(profile)
+    human_model = HumanModelEngine().build(profile)
 
-    known = semantic.known
-    unknown = semantic.unknown
-
-    human_model_engine = HumanModelEngine()
-    human_model = human_model_engine.build(profile)
+    # TODO V2:
+    # Дальнейшие Engine будут работать через HumanModel,
+    # а не напрямую с profile.
 
     messages = [
         {
@@ -143,13 +140,13 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
 УЖЕ ИЗВЕСТНО:
 
-{chr(10).join(known) if known else "ничего"}
+{chr(10).join(human_model.known) if human_model.known else "ничего"}
 
 ---
 
 НЕ ХВАТАЕТ:
 
-{chr(10).join(unknown) if unknown else "ничего"}
+{chr(10).join(human_model.unknown) if human_model.unknown else "ничего"}
 
 ---
 

@@ -10,6 +10,7 @@ Human Model Engine
 """
 
 from ai.engines.human_model import HumanModel
+from ai.engines.semantic_engine import SemanticEngine
 
 
 class HumanModelEngine:
@@ -28,5 +29,10 @@ class HumanModelEngine:
         model = HumanModel()
 
         model.facts = profile.copy()
+
+        semantic = SemanticEngine().analyze(profile)
+        model.known = semantic.known
+
+        model.unknown = semantic.unknown
 
         return model

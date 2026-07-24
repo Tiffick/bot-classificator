@@ -11,7 +11,8 @@ class HumanModel:
     """
 
     facts: dict = field(default_factory=dict)
-    unknown: dict = field(default_factory=dict)
+    known: list = field(default_factory=list)
+    unknown: list = field(default_factory=list)
     hypotheses: dict = field(default_factory=dict)
     confidence: dict = field(default_factory=dict)
     pain_map: dict = field(default_factory=dict)
