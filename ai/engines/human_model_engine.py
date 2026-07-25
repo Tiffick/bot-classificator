@@ -36,3 +36,27 @@ class HumanModelEngine:
         model.unknown = semantic.unknown
 
         return model
+
+    def apply_update(self, profile: dict, update: dict) -> dict:
+        """
+        Применяет безопасное обновление профиля.
+        """
+
+        safe_update = {}
+
+        immutable_fields = {
+            "name",
+            "gender"
+        }
+
+        for key, value in update.items():
+
+            if value is None:
+                continue
+
+            if key in immutable_fields and profile.get(key) is not None:
+                continue
+
+            safe_update[key] = value
+
+        return safe_update
