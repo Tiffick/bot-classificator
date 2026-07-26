@@ -60,3 +60,34 @@ class HumanModelEngine:
             safe_update[key] = value
 
         return safe_update
+
+    def is_discovery_complete(self, profile: dict) -> bool:
+        """
+        Проверяет, завершён ли этап знакомства.
+        """
+
+        required = [
+            "main_problem",
+            "duration"
+        ]
+
+        optional = [
+            "age",
+            "current_weight",
+            "target_weight",
+            "previous_attempts",
+            "failure_reason"
+        ]
+
+        for field in required:
+            if not profile.get(field):
+                return False
+
+        filled = sum(
+            1 for field in optional
+            if profile.get(field)
+        )
+
+        return filled >= 2
+
+        

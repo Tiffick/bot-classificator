@@ -83,32 +83,6 @@ def clean_json_response(content: str) -> str:
     return content.strip()
 
 
-def calculate_discovery_complete(profile: dict) -> bool:
-
-    required = [
-        "main_problem",
-        "duration"
-    ]
-
-    optional = [
-        "age",
-        "current_weight",
-        "target_weight",
-        "previous_attempts",
-        "failure_reason"
-    ]
-
-    # Главная проблема и длительность должны быть известны.
-    for field in required:
-        if not profile.get(field):
-            return False
-
-    # Из остальных полей достаточно любых двух.
-    filled = sum(1 for field in optional if profile.get(field))
-
-    return filled >= 2
-
-
 async def run_dialog_engine(user_text: str, profile: dict):
 
     client = OpenAI()
@@ -231,8 +205,8 @@ async def run_dialog_engine(user_text: str, profile: dict):
     temp_profile.update(safe_update)
 
     safe_update["history"] = history[-20:]
-    safe_update["discovery_complete"] = calculate_discovery_complete(
-        temp_profile
+    safe_update["discovery_complete"] = (
+        HumanModelEngine().is_discovery_complete(temp_profile)
     )
 
     return {
