@@ -89,7 +89,9 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
     history = profile.get("history", [])
 
-    human_model = HumanModelEngine().build(profile)
+    engine = HumanModelEngine()
+
+    human_model = engine.build(profile)
 
     # TODO V2:
     # Дальнейшие Engine будут работать через HumanModel,
@@ -185,7 +187,7 @@ async def run_dialog_engine(user_text: str, profile: dict):
     update = parsed.get("update", {})
     reply = parsed.get("reply", "Можешь чуть подробнее рассказать?")
 
-    safe_update = HumanModelEngine().apply_update(profile, update)
+    safe_update = engine.apply_update(profile, update)
 
     history.append(
         {
@@ -206,7 +208,7 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
     safe_update["history"] = history[-20:]
     safe_update["discovery_complete"] = (
-        HumanModelEngine().is_discovery_complete(temp_profile)
+        engine.is_discovery_complete(temp_profile)
     )
 
     return {
