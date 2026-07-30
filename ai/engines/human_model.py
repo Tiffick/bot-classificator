@@ -18,3 +18,14 @@ class HumanModel:
     pain_map: dict = field(default_factory=dict)
     motivation: dict = field(default_factory=dict)
     consultation_stage: str = "unknown"
+    understanding_score: dict = field(
+        default_factory=lambda: {
+            "problem": 0.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0,
+        }
+    )

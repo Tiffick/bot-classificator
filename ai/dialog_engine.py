@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from ai.engines.human_model_engine import HumanModelEngine
+from ai.engines.semantic_engine import SemanticEngine
 
 load_dotenv()
 
@@ -120,8 +121,10 @@ async def run_dialog_engine(user_text: str, profile: dict):
     history = profile.get("history", [])
 
     engine = HumanModelEngine()
+    semantic_engine = SemanticEngine()
 
-    human_model = engine.build(profile)
+    semantic_context = semantic_engine.analyze(user_text)
+    human_model = engine.build(profile, semantic_context)
 
     # TODO V2:
     # Дальнейшие Engine будут работать через HumanModel,

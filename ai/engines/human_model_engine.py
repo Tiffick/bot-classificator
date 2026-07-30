@@ -10,7 +10,6 @@ Human Model Engine
 """
 
 from ai.engines.human_model import HumanModel
-from ai.engines.semantic_engine import SemanticEngine
 
 
 class HumanModelEngine:
@@ -20,7 +19,7 @@ class HumanModelEngine:
     Пока ничего не делает.
     """
 
-    def build(self, profile: dict) -> HumanModel:
+    def build(self, profile: dict, semantic_context) -> HumanModel:
         """
         Строит первичную модель человека
         на основе накопленного профиля.
@@ -28,12 +27,21 @@ class HumanModelEngine:
 
         model = HumanModel()
 
-        model.facts = profile.copy()
+        technical_fields = {
+            "history",
+            "last_question",
+            "discovery_complete",
+        }
 
-        semantic = SemanticEngine().analyze(profile)
-        model.known = semantic.known
+        model.facts = {
+            key: value
+            for key, value in profile.items()
+            if key not in technical_fields
+        }
 
-        model.unknown = semantic.unknown
+        model.known = semantic_context.known
+
+        model.unknown = semantic_context.unknown
 
         return model
 
@@ -89,5 +97,3 @@ class HumanModelEngine:
         )
 
         return filled >= 2
-
-        

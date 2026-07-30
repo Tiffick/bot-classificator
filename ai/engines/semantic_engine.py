@@ -9,42 +9,24 @@ Semantic Engine
 а что ещё неизвестно.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class SemanticContext:
     known: list[str]
     unknown: list[str]
+    facts: dict = field(default_factory=dict)
+    emotional_tone: str = "unknown"
+    intent: str = "unknown"
+    new_information: dict = field(default_factory=dict)
 
 
 class SemanticEngine:
 
-    def analyze(self, profile: dict) -> SemanticContext:
-
-        slots = [
-            "age",
-            "current_weight",
-            "target_weight",
-            "duration",
-            "main_problem",
-            "previous_attempts",
-            "failure_reason",
-        ]
-
-        known = []
-        unknown = []
-
-        for slot in slots:
-
-            value = profile.get(slot)
-
-            if value:
-                known.append(f"{slot}: {value}")
-            else:
-                unknown.append(slot)
+    def analyze(self, user_text: str) -> SemanticContext:
 
         return SemanticContext(
-            known=known,
-            unknown=unknown,
+            known=[],
+            unknown=[],
         )
