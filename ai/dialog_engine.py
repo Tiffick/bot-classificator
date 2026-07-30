@@ -67,6 +67,36 @@ def build_system_prompt() -> str:
 SYSTEM_CONTEXT = build_system_prompt()
 
 
+def build_messages(history: list) -> list:
+    messages = [
+        {
+            "role": "system",
+            "content": SYSTEM_CONTEXT
+        }
+    ]
+
+    messages.extend(history[-12:])
+
+    return messages
+
+
+def append_history(history: list, user_text: str, reply: str) -> None:
+
+    history.append(
+        {
+            "role": "user",
+            "content": user_text
+        }
+    )
+
+    history.append(
+        {
+            "role": "assistant",
+            "content": reply
+        }
+    )
+
+
 def clean_json_response(content: str) -> str:
 
     content = content.strip()
@@ -97,15 +127,7 @@ async def run_dialog_engine(user_text: str, profile: dict):
     # Дальнейшие Engine будут работать через HumanModel,
     # а не напрямую с profile.
 
-    messages = [
-        {
-            "role": "system",
-            "content": SYSTEM_CONTEXT
-        }
-    ]
-
-    for item in history[-12:]:
-        messages.append(item)
+    messages = build_messages(history)
 
     extraction_prompt = f"""
 ТЕКУЩИЙ ПРОФИЛЬ:
@@ -189,19 +211,7 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
     safe_update = engine.apply_update(profile, update)
 
-    history.append(
-        {
-            "role": "user",
-            "content": user_text
-        }
-    )
-
-    history.append(
-        {
-            "role": "assistant",
-            "content": reply
-        }
-    )
+    append_history(history, user_text, reply)
 
     temp_profile = profile.copy()
     temp_profile.update(safe_update)
