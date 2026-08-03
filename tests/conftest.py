@@ -15,10 +15,16 @@ def user_profile():
 @pytest.fixture
 def fake_openai(monkeypatch):
     import ai.dialog_engine as dialog_engine
+    import ai.engines.response_engine as response_engine
 
     class FakeCompletions:
         def create(self, **kwargs):
-            content = '{"update": {"age": 30}, "reply": "Test reply"}'
+            prompt = kwargs["messages"][-1]["content"]
+            content = (
+                '{"is_valid": true, "reason": ""}'
+                if "ПРОВЕРЬ ОТВЕТ" in prompt
+                else "Понимаю. Как давно это тебя беспокоит?"
+            )
             message = SimpleNamespace(content=content)
             return SimpleNamespace(
                 choices=[SimpleNamespace(message=message)]
@@ -28,5 +34,5 @@ def fake_openai(monkeypatch):
         def __init__(self):
             self.chat = SimpleNamespace(completions=FakeCompletions())
 
-    monkeypatch.setattr(dialog_engine, "OpenAI", FakeOpenAI)
+    monkeypatch.setattr(response_engine, "OpenAI", FakeOpenAI)
     return dialog_engine

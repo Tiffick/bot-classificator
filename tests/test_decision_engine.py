@@ -47,6 +47,21 @@ def test_selects_one_highest_priority_missing_area():
     assert human_model == original_model
 
 
+def test_selects_concrete_weight_impact_step_for_weight_concern():
+    decision = DecisionEngine().decide(
+        SemanticEngine().analyze("я толстый"),
+        HumanModel(),
+        ReasoningContext(priorities=["goals", "motivation"]),
+        {"facts": {}},
+    )
+
+    assert decision.next_goal == "clarify_weight_impact"
+    assert decision.reason == "topic:weight; missing_information:weight_impact"
+    assert decision.needs_additional_information is True
+    assert decision.expected_outcome == "understanding_of_weight_impact_increases"
+    assert decision.response_type == "question"
+
+
 def test_verifies_working_hypothesis_when_information_is_sufficient():
     reasoning_context = ReasoningContext(
         hypotheses={"change_difficulty_requires_clarification": {"status": "working"}},

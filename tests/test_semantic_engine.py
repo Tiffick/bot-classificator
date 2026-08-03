@@ -48,6 +48,14 @@ def test_preserves_uncertainty_for_ambiguous_message():
     assert context.emotional_signals == []
 
 
+def test_marks_self_description_as_weight_topic_without_interpretation():
+    context = SemanticEngine().analyze("я толстый")
+
+    assert context.topics == ["weight"]
+    assert context.facts == {}
+    assert context.intent == "information_statement"
+
+
 def test_returns_empty_context_for_empty_message():
     context = SemanticEngine().analyze(EMPTY_MESSAGE)
 

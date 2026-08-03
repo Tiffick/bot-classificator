@@ -41,6 +41,18 @@ class DecisionEngine:
                 response_type="question",
             )
 
+        if "weight" in semantic_context.topics and not reasoning_context.hypotheses:
+            return DecisionContext(
+                next_goal="clarify_weight_impact",
+                reason="topic:weight; missing_information:weight_impact",
+                priority="normal",
+                needs_additional_information=True,
+                expected_outcome="understanding_of_weight_impact_increases",
+                confidence=semantic_context.confidence,
+                strategy="exploration",
+                response_type="question",
+            )
+
         if reasoning_context.priorities:
             area = reasoning_context.priorities[0]
             return DecisionContext(

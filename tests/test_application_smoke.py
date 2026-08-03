@@ -16,5 +16,5 @@ def test_current_dialog_pipeline(fake_openai, user_profile):
         fake_openai.run_dialog_engine("Мне 30 лет", user_profile)
     )
 
-    assert result["reply"] == "Test reply"
+    assert result["reply"] == "Понимаю. Как давно это тебя беспокоит?"
     assert result["update"]["age"] == 30
