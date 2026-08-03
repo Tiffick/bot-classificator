@@ -60,11 +60,9 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
 
     safe_update = human_model_engine.apply_update(profile, semantic_context.facts)
     append_history(history, user_text, reply)
-    temp_profile = profile.copy()
-    temp_profile.update(safe_update)
     safe_update["history"] = history[-20:]
     safe_update["discovery_complete"] = human_model_engine.is_discovery_complete(
-        temp_profile
+        human_model
     )
 
     if user_id is not None:

@@ -49,6 +49,25 @@ class HumanModelEngine:
             if preference not in model.communication_style:
                 model.communication_style = preference
 
+        reported_topics = model.pain_map.setdefault("reported_topics", [])
+        for topic in semantic_context.topics:
+            if topic not in reported_topics:
+                reported_topics.append(topic)
+
+        model.understanding_score["problem"] = float(bool(reported_topics))
+        model.understanding_score["motivation"] = float(
+            bool(model.goals or model.motivation)
+        )
+        model.understanding_score["pain"] = float(
+            bool(model.facts.get("duration"))
+        )
+        model.understanding_score["limitations"] = float(bool(model.barriers))
+        model.consultation_stage = (
+            "discovery_complete"
+            if self.is_discovery_complete(model)
+            else "discovery"
+        )
+
         model.known = [
             f"{key}: {value}"
             for key, value in sorted(model.facts.items())
@@ -72,7 +91,13 @@ class HumanModelEngine:
 
         return safe_update
 
-    def is_discovery_complete(self, profile: dict) -> bool:
+    def is_discovery_complete(self, model_or_profile) -> bool:
+        if isinstance(model_or_profile, HumanModel):
+            score = model_or_profile.understanding_score
+            required_areas = ("problem", "motivation", "pain", "limitations")
+            return all(score.get(area, 0.0) >= 1.0 for area in required_areas)
+
+        profile = model_or_profile
         required = ["main_problem", "duration"]
         optional = [
             "age",

@@ -41,6 +41,22 @@ class DecisionEngine:
                 response_type="question",
             )
 
+        if human_model.consultation_stage == "discovery_complete":
+            return DecisionContext(
+                next_goal="begin_consultation",
+                reason="human_model:discovery_complete",
+                priority="normal",
+                needs_additional_information=False,
+                ready_for_next_stage=True,
+                expected_outcome="consultation_focus_is_selected",
+                confidence=min(
+                    human_model.understanding_score[area]
+                    for area in ("problem", "motivation", "pain", "limitations")
+                ),
+                strategy="consultation",
+                response_type="statement",
+            )
+
         if reasoning_context.hypotheses:
             hypothesis_name = next(iter(reasoning_context.hypotheses))
             return DecisionContext(

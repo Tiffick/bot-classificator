@@ -281,6 +281,8 @@ DecisionContext, ImpactContext и EmotionalContext являются принят
 
     @staticmethod
     def _fallback_reply(decision_context) -> str:
+        if decision_context.next_goal == "begin_consultation":
+            return "Картина уже стала яснее. Давай посмотрим, что может помочь тебе дальше."
         if decision_context.next_goal == "clarify_weight_impact":
             return "Понимаю. Как вес сейчас влияет на твоё самочувствие или энергию?"
         if decision_context.next_goal == "clarify_problem_duration":
