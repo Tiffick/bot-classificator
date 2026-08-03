@@ -1,0 +1,5 @@
+EXPLICIT_FACT_MESSAGE = "Мне 30 лет, вешу 92 кг, рост 175 см."
+QUESTION_MESSAGE = "Почему мне так тяжело подниматься по лестнице?"
+DURATION_MESSAGE = "Я уже 5 лет пытаюсь похудеть."
+AMBIGUOUS_MESSAGE = "Не знаю."
+EMPTY_MESSAGE = "   "
