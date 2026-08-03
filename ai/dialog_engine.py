@@ -154,9 +154,11 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
         memory,
     )
     impact_context = impact_engine.evaluate(
+        semantic_context,
         human_model,
         reasoning_context,
         decision_context,
+        memory,
     )
 
     # TODO V2:
