@@ -41,13 +41,50 @@ class DecisionEngine:
                 response_type="question",
             )
 
-        if "weight" in semantic_context.topics and not reasoning_context.hypotheses:
+        if reasoning_context.hypotheses:
+            hypothesis_name = next(iter(reasoning_context.hypotheses))
+            return DecisionContext(
+                next_goal="verify_hypothesis",
+                reason=f"working_hypothesis:{hypothesis_name}",
+                priority="normal",
+                needs_additional_information=True,
+                expected_outcome="hypothesis_confidence_is_updated",
+                confidence=reasoning_context.confidence.get(hypothesis_name, 0.5),
+                strategy="verification",
+                response_type="question",
+            )
+
+        if "duration" in semantic_context.facts:
+            return DecisionContext(
+                next_goal="clarify_desired_change",
+                reason="fact:duration; missing_information:desired_change",
+                priority="normal",
+                needs_additional_information=True,
+                expected_outcome="understanding_of_desired_change_increases",
+                confidence=semantic_context.confidence,
+                strategy="exploration",
+                response_type="question",
+            )
+
+        if "weight" in semantic_context.topics:
             return DecisionContext(
                 next_goal="clarify_weight_impact",
                 reason="topic:weight; missing_information:weight_impact",
                 priority="normal",
                 needs_additional_information=True,
                 expected_outcome="understanding_of_weight_impact_increases",
+                confidence=semantic_context.confidence,
+                strategy="exploration",
+                response_type="question",
+            )
+
+        if any(topic in semantic_context.topics for topic in ("energy", "health")):
+            return DecisionContext(
+                next_goal="clarify_problem_duration",
+                reason="topic:energy_or_health; missing_information:problem_duration",
+                priority="normal",
+                needs_additional_information=True,
+                expected_outcome="understanding_of_problem_duration_increases",
                 confidence=semantic_context.confidence,
                 strategy="exploration",
                 response_type="question",
@@ -63,19 +100,6 @@ class DecisionEngine:
                 expected_outcome=f"understanding_of_{area}_increases",
                 confidence=0.6,
                 strategy="exploration",
-                response_type="question",
-            )
-
-        if reasoning_context.hypotheses:
-            hypothesis_name = next(iter(reasoning_context.hypotheses))
-            return DecisionContext(
-                next_goal="verify_hypothesis",
-                reason=f"working_hypothesis:{hypothesis_name}",
-                priority="normal",
-                needs_additional_information=True,
-                expected_outcome="hypothesis_confidence_is_updated",
-                confidence=reasoning_context.confidence.get(hypothesis_name, 0.5),
-                strategy="verification",
                 response_type="question",
             )
 

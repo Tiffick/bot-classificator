@@ -62,6 +62,31 @@ def test_selects_concrete_weight_impact_step_for_weight_concern():
     assert decision.response_type == "question"
 
 
+def test_selects_duration_after_energy_or_health_signal():
+    decision = DecisionEngine().decide(
+        SemanticEngine().analyze("энергии совсем нет"),
+        HumanModel(),
+        ReasoningContext(priorities=["goals", "motivation"]),
+        {"facts": {}},
+    )
+
+    assert decision.next_goal == "clarify_problem_duration"
+    assert decision.reason == "topic:energy_or_health; missing_information:problem_duration"
+    assert decision.expected_outcome == "understanding_of_problem_duration_increases"
+
+
+def test_selects_desired_change_after_duration_is_known():
+    decision = DecisionEngine().decide(
+        SemanticEngine().analyze("это уже 2 года"),
+        HumanModel(),
+        ReasoningContext(priorities=["goals", "motivation"]),
+        {"facts": {}},
+    )
+
+    assert decision.next_goal == "clarify_desired_change"
+    assert decision.reason == "fact:duration; missing_information:desired_change"
+
+
 def test_verifies_working_hypothesis_when_information_is_sufficient():
     reasoning_context = ReasoningContext(
         hypotheses={"change_difficulty_requires_clarification": {"status": "working"}},
