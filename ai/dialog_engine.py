@@ -9,6 +9,11 @@ from ai.engines.human_model_engine import HumanModelEngine
 from ai.engines.impact_engine import ImpactEngine
 from ai.engines.reasoning_engine import ReasoningEngine
 from ai.engines.semantic_engine import SemanticEngine
+from memory.user_memory import (
+    get_human_model,
+    get_user_memory,
+    set_human_model,
+)
 
 load_dotenv()
 
@@ -117,7 +122,7 @@ def clean_json_response(content: str) -> str:
     return content.strip()
 
 
-async def run_dialog_engine(user_text: str, profile: dict):
+async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
 
     client = OpenAI()
 
@@ -130,7 +135,13 @@ async def run_dialog_engine(user_text: str, profile: dict):
     impact_engine = ImpactEngine()
 
     semantic_context = semantic_engine.analyze(user_text)
-    human_model = engine.build(profile, semantic_context)
+    memory = get_user_memory(user_id) if user_id is not None else {"facts": profile}
+    previous_human_model = get_human_model(user_id) if user_id is not None else None
+    human_model = engine.build(
+        semantic_context,
+        previous_human_model,
+        memory,
+    )
     reasoning_context = reasoning_engine.reason(human_model)
     decision_context = decision_engine.decide(
         human_model,
@@ -239,6 +250,9 @@ async def run_dialog_engine(user_text: str, profile: dict):
     safe_update["discovery_complete"] = (
         engine.is_discovery_complete(temp_profile)
     )
+
+    if user_id is not None:
+        set_human_model(user_id, human_model)
 
     return {
         "reply": reply,

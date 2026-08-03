@@ -55,7 +55,7 @@ async def message_handler(message: Message):
 
     profile = get_user_profile(user_id)
 
-    result = await run_dialog_engine(user_text, profile)
+    result = await run_dialog_engine(user_text, profile, user_id)
 
     print("ENGINE RESULT:", result)
 
