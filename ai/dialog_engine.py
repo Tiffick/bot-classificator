@@ -4,7 +4,10 @@ from pathlib import Path
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from ai.engines.decision_engine import DecisionEngine
 from ai.engines.human_model_engine import HumanModelEngine
+from ai.engines.impact_engine import ImpactEngine
+from ai.engines.reasoning_engine import ReasoningEngine
 from ai.engines.semantic_engine import SemanticEngine
 
 load_dotenv()
@@ -122,9 +125,22 @@ async def run_dialog_engine(user_text: str, profile: dict):
 
     engine = HumanModelEngine()
     semantic_engine = SemanticEngine()
+    reasoning_engine = ReasoningEngine()
+    decision_engine = DecisionEngine()
+    impact_engine = ImpactEngine()
 
     semantic_context = semantic_engine.analyze(user_text)
     human_model = engine.build(profile, semantic_context)
+    reasoning_context = reasoning_engine.reason(human_model)
+    decision_context = decision_engine.decide(
+        human_model,
+        reasoning_context,
+    )
+    impact_context = impact_engine.evaluate(
+        human_model,
+        reasoning_context,
+        decision_context,
+    )
 
     # TODO V2:
     # Дальнейшие Engine будут работать через HumanModel,
