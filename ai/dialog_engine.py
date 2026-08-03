@@ -142,7 +142,11 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
         previous_human_model,
         memory,
     )
-    reasoning_context = reasoning_engine.reason(human_model)
+    reasoning_context = reasoning_engine.reason(
+        semantic_context,
+        human_model,
+        memory,
+    )
     decision_context = decision_engine.decide(
         human_model,
         reasoning_context,
