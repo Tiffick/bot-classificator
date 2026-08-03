@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from ai.engines.decision_engine import DecisionEngine
+from ai.engines.emotional_engine import EmotionalEngine
 from ai.engines.human_model_engine import HumanModelEngine
 from ai.engines.impact_engine import ImpactEngine
 from ai.engines.reasoning_engine import ReasoningEngine
@@ -133,6 +134,7 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
     reasoning_engine = ReasoningEngine()
     decision_engine = DecisionEngine()
     impact_engine = ImpactEngine()
+    emotional_engine = EmotionalEngine()
 
     semantic_context = semantic_engine.analyze(user_text)
     memory = get_user_memory(user_id) if user_id is not None else {"facts": profile}
@@ -158,6 +160,14 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
         human_model,
         reasoning_context,
         decision_context,
+        memory,
+    )
+    emotional_context = emotional_engine.choose(
+        semantic_context,
+        human_model,
+        reasoning_context,
+        decision_context,
+        impact_context,
         memory,
     )
 
