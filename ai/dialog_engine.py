@@ -1,11 +1,17 @@
+import logging
+
 from ai.engines.decision_engine import DecisionEngine
 from ai.engines.emotional_engine import EmotionalEngine
 from ai.engines.human_model_engine import HumanModelEngine
 from ai.engines.impact_engine import ImpactEngine
 from ai.engines.reasoning_engine import ReasoningEngine
 from ai.engines.response_engine import ResponseEngine
+from ai.engines.llm_semantic_engine import LLMSemanticEngine
 from ai.engines.semantic_engine import SemanticEngine
 from memory.user_memory import get_human_model, get_user_memory, set_human_model
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def append_history(history: list, user_text: str, reply: str) -> None:
@@ -17,14 +23,26 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
     """Orchestrate one full consultation cycle and preserve its result."""
     history = profile.get("history", [])
     human_model_engine = HumanModelEngine()
-    semantic_engine = SemanticEngine()
+    llm_semantic_engine = LLMSemanticEngine()
     reasoning_engine = ReasoningEngine()
     decision_engine = DecisionEngine()
     impact_engine = ImpactEngine()
     emotional_engine = EmotionalEngine()
     response_engine = ResponseEngine()
 
-    semantic_context = semantic_engine.analyze(user_text)
+    semantic_context = llm_semantic_engine.analyze(user_text)
+    if not llm_semantic_engine.last_diagnostics.get("success", False):
+        fallback_reason = llm_semantic_engine.last_diagnostics.get("fallback_reason")
+        LOGGER.warning(
+            "LLM Semantic Engine failed; using deterministic fallback: %s",
+            fallback_reason,
+        )
+        semantic_context = SemanticEngine().analyze(user_text)
+    elif llm_semantic_engine.last_diagnostics.get("rejected_fields"):
+        LOGGER.info(
+            "LLM Semantic Engine discarded unconfirmed values: %s",
+            llm_semantic_engine.last_diagnostics["rejected_fields"],
+        )
     memory = get_user_memory(user_id) if user_id is not None else {"facts": profile}
     previous_human_model = get_human_model(user_id) if user_id is not None else None
     human_model = human_model_engine.build(

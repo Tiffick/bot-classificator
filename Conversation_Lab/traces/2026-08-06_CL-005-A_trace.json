@@ -1,0 +1,2912 @@
+{
+  "scenario_id": "CL-005",
+  "variant": "A",
+  "created_at": "2026-08-06T09:06:53.276409+00:00",
+  "process_id": 1552,
+  "user_id": 950051,
+  "turns": [
+    {
+      "turn": 1,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "Домой прихожу как овощ.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 5.14,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": null,
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [],
+        "human_model": null,
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 10051.01,
+          "prompt_tokens": 3056,
+          "completion_tokens": 800,
+          "total_tokens": 3856,
+          "raw_content": "Понимаю, это тяжело. Какое главное изменение в самочувствии ты хочешь получить?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 9198.6,
+          "prompt_tokens": 3137,
+          "completion_tokens": 799,
+          "total_tokens": 3936,
+          "raw_content": "Жаль это слышать. За какой срок ты хочешь перестать приходить домой «как овощ»?"
+        }
+      ],
+      "response": "Понимаю. Что тебе хотелось бы изменить в первую очередь?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 2,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "Не быть выжатым и немного сбросить вес.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.19,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [
+          "weight"
+        ],
+        "intent": "goal_statement",
+        "goal": "lose_weight",
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": []
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 0.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [
+          {
+            "name": "explicit_goal",
+            "value": "lose_weight"
+          }
+        ],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {
+          "explicit_goal": 0.5
+        },
+        "foundations": {
+          "explicit_goal": "semantic_context.goal"
+        }
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 9178.46,
+          "prompt_tokens": 3165,
+          "completion_tokens": 801,
+          "total_tokens": 3966,
+          "raw_content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 4365.2,
+          "prompt_tokens": 508,
+          "completion_tokens": 304,
+          "total_tokens": 812,
+          "raw_content": "{\"is_valid\": true, \"reason\": \"Вопрос конкретно уточняет влияние веса (соответствует next_goal), форма — вопрос, тон и длина соответствуют EmotionalContext.\"}"
+        }
+      ],
+      "response": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 3,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.15,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_problem_duration",
+        "reason": "topic:energy_or_health; missing_information:problem_duration",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_problem_duration_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_problem_duration_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_problem_duration",
+        "confidence": 0.5,
+        "expected_effect": "clarify_problem_duration",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 6579.37,
+          "prompt_tokens": 3179,
+          "completion_tokens": 480,
+          "total_tokens": 3659,
+          "raw_content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 4748.69,
+          "prompt_tokens": 510,
+          "completion_tokens": 369,
+          "total_tokens": 879,
+          "raw_content": "{\"is_valid\": true, \"reason\": \"Вопрос прямо уточняет длительность проблемы (соответствует next_goal), тон и уровень эмпатии отвечают заданным контекстам.\"}"
+        }
+      ],
+      "response": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 4,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "С тех пор как родился ребёнок — уже больше года.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.69,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_motivation",
+        "reason": "missing_information:motivation",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_motivation_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_motivation_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_motivation",
+        "confidence": 0.6,
+        "expected_effect": "clarify_motivation",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 8575.05,
+          "prompt_tokens": 3238,
+          "completion_tokens": 668,
+          "total_tokens": 3906,
+          "raw_content": "Понимаю, это большой этап. Почему сейчас сбросить вес важно для тебя?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 10864.84,
+          "prompt_tokens": 3315,
+          "completion_tokens": 806,
+          "total_tokens": 4121,
+          "raw_content": "Понимаю, это многое меняет. Твоя главная мотивация — иметь больше энергии, чтобы играть с сыном?"
+        }
+      ],
+      "response": "Понимаю. Что поможет уточнить для тебя тему motivation?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 5,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "Не знаю, уже устал это объяснять.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.13,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "frustration"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "frustration",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_problem_duration",
+        "reason": "topic:energy_or_health; missing_information:problem_duration",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_problem_duration_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_problem_duration_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_problem_duration",
+        "confidence": 0.5,
+        "expected_effect": "clarify_problem_duration",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 8317.28,
+          "prompt_tokens": 3321,
+          "completion_tokens": 680,
+          "total_tokens": 4001,
+          "raw_content": "Понимаю, как утомительно. Как долго примерно ты замечаешь такое падение энергии к вечеру — месяцы или больше года?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 10912.65,
+          "prompt_tokens": 3410,
+          "completion_tokens": 998,
+          "total_tokens": 4408,
+          "raw_content": "Понимаю, тебе это утомляет. Как долго примерно продолжается такое падение энергии — недели, месяцы или больше года?"
+        }
+      ],
+      "response": "Понимаю. Как давно эта ситуация тебя беспокоит?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 6,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "Я это уже сказал: к вечеру сил почти нет.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.23,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "frustration"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_problem_duration",
+        "reason": "topic:energy_or_health; missing_information:problem_duration",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_problem_duration_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_problem_duration_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_problem_duration",
+        "confidence": 0.5,
+        "expected_effect": "clarify_problem_duration",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 7166.35,
+          "prompt_tokens": 3369,
+          "completion_tokens": 669,
+          "total_tokens": 4038,
+          "raw_content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 7438.24,
+          "prompt_tokens": 500,
+          "completion_tokens": 699,
+          "total_tokens": 1199,
+          "raw_content": "{\"is_valid\": true, \"reason\": \"Вопрос конкретно уточняет длительность проблемы (месяцы после рождения) — это необходимый факт для next_goal; формулировка эмпатична и соответствует заданному тону.\"}"
+        }
+      ],
+      "response": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          },
+          {
+            "role": "user",
+            "content": "Я это уже сказал: к вечеру сил почти нет."
+          },
+          {
+            "role": "assistant",
+            "content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          },
+          {
+            "role": "user",
+            "content": "Я это уже сказал: к вечеру сил почти нет."
+          },
+          {
+            "role": "assistant",
+            "content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 7,
+      "variant": "A",
+      "process_id": 1552,
+      "user_id": 950051,
+      "user_text": "Давайте потом.",
+      "semantic_execution": {
+        "source": "deterministic",
+        "runtime_ms": 0.1,
+        "error": null,
+        "fallback": false,
+        "api_calls": 0,
+        "tokens": null
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          },
+          {
+            "role": "user",
+            "content": "Я это уже сказал: к вечеру сил почти нет."
+          },
+          {
+            "role": "assistant",
+            "content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "frustration"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_motivation",
+        "reason": "missing_information:motivation",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_motivation_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_motivation_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_motivation",
+        "confidence": 0.6,
+        "expected_effect": "clarify_motivation",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "api_calls": [
+        {
+          "role": "response",
+          "runtime_ms": 6791.69,
+          "prompt_tokens": 3416,
+          "completion_tokens": 543,
+          "total_tokens": 3959,
+          "raw_content": "Жаль, что так устал. Что тебя лично больше всего мотивирует начать менять вес и энергию?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 8477.22,
+          "prompt_tokens": 3496,
+          "completion_tokens": 800,
+          "total_tokens": 4296,
+          "raw_content": "Понимаю. Назови одну главную причину, зачем ты хочешь изменить вес и энергию?"
+        },
+        {
+          "role": "response",
+          "runtime_ms": 6614.31,
+          "prompt_tokens": 494,
+          "completion_tokens": 561,
+          "total_tokens": 1055,
+          "raw_content": "{\"is_valid\": true, \"reason\": \"Задает конкретный вопрос о мотивации, тон приглашающий и эмпатичный, соответствует DecisionContext (clarify_motivation).\"}"
+        }
+      ],
+      "response": "Понимаю. Назови одну главную причину, зачем ты хочешь изменить вес и энергию?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          },
+          {
+            "role": "user",
+            "content": "Я это уже сказал: к вечеру сил почти нет."
+          },
+          {
+            "role": "assistant",
+            "content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+          },
+          {
+            "role": "user",
+            "content": "Давайте потом."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Назови одну главную причину, зачем ты хочешь изменить вес и энергию?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что тебе хотелось бы изменить в первую очередь?"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатым и немного сбросить вес."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как лишний вес сейчас влияет на твою энергию в течение дня?"
+          },
+          {
+            "role": "user",
+            "content": "К вечеру сил почти нет: хочется играть с сыном, а я просто лежу."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это тяжело. Как давно ты замечаешь такое падение сил к вечеру?"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок — уже больше года."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Не знаю, уже устал это объяснять."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Как давно эта ситуация тебя беспокоит?"
+          },
+          {
+            "role": "user",
+            "content": "Я это уже сказал: к вечеру сил почти нет."
+          },
+          {
+            "role": "assistant",
+            "content": "Жаль, что так устаёшь. Сколько месяцев примерно прошло с рождения ребёнка?"
+          },
+          {
+            "role": "user",
+            "content": "Давайте потом."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Назови одну главную причину, зачем ты хочешь изменить вес и энергию?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "frustration"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    }
+  ],
+  "stop_reason": "user_paused",
+  "disclosed_conditions": [
+    "duration",
+    "goal",
+    "impact"
+  ],
+  "user_simulator_state": {
+    "vague_count": 1,
+    "repeat_count": 2
+  }
+}

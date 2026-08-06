@@ -1,0 +1,635 @@
+{
+  "runner": "Conversation_Lab.session_runner",
+  "created_at": "2026-08-05T03:33:04.291798+00:00",
+  "process_id": 18300,
+  "user_id": 920001,
+  "live_response": false,
+  "turns": [
+    {
+      "turn": 1,
+      "process_id": 18300,
+      "user_id": 920001,
+      "user_text": "мне 30 лет",
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {
+          "age": 30
+        },
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 1.0,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {
+          "age": 30
+        }
+      },
+      "previous_human_model_input": null,
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [],
+        "human_model": null,
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {
+          "age": 30
+        },
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [
+          "age: 30"
+        ],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [
+          {
+            "name": "confirmed_facts_available",
+            "fields": [
+              "age"
+            ]
+          }
+        ],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {
+          "confirmed_facts_available": 1.0
+        },
+        "foundations": {
+          "confirmed_facts_available": "human_model.facts"
+        }
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "update": {
+        "age": 30,
+        "history": [
+          {
+            "role": "user",
+            "content": "мне 30 лет"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": 30,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "мне 30 лет"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {
+          "age": 30
+        },
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [
+          "age: 30"
+        ],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 2,
+      "process_id": 18300,
+      "user_id": 920001,
+      "user_text": "уже 2 года",
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {
+          "duration": "уже 2 года"
+        },
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 1.0,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {
+          "duration": "уже 2 года"
+        }
+      },
+      "previous_human_model_input": {
+        "facts": {
+          "age": 30
+        },
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [
+          "age: 30"
+        ],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": 30,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "мне 30 лет"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {
+            "age": 30
+          },
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": []
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 0.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [
+            "age: 30"
+          ],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {
+          "age": 30,
+          "duration": "уже 2 года"
+        },
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 1.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [
+          "age: 30",
+          "duration: уже 2 года"
+        ],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [
+          {
+            "name": "confirmed_facts_available",
+            "fields": [
+              "age",
+              "duration"
+            ]
+          }
+        ],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {
+          "confirmed_facts_available": 1.0
+        },
+        "foundations": {
+          "confirmed_facts_available": "human_model.facts"
+        }
+      },
+      "decision_context": {
+        "next_goal": "clarify_desired_change",
+        "reason": "fact:duration; missing_information:desired_change",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_desired_change_increases",
+        "confidence": 1.0,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_desired_change_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_desired_change",
+        "confidence": 1.0,
+        "expected_effect": "clarify_desired_change",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "update": {
+        "duration": "уже 2 года",
+        "history": [
+          {
+            "role": "user",
+            "content": "мне 30 лет"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "уже 2 года"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": 30,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": "уже 2 года",
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "мне 30 лет"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "уже 2 года"
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {
+          "age": 30,
+          "duration": "уже 2 года"
+        },
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": []
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 0.0,
+          "motivation": 0.0,
+          "pain": 1.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [
+          "age: 30",
+          "duration: уже 2 года"
+        ],
+        "unknown": []
+      }
+    }
+  ],
+  "continuity_check": {
+    "same_process": true,
+    "same_user_id": true,
+    "history_preserved": true,
+    "previous_human_model_preserved": true,
+    "known_facts_preserved": true,
+    "consultation_state_preserved": true
+  }
+}

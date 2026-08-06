@@ -1,0 +1,2295 @@
+{
+  "runner": "Conversation_Lab.session_runner",
+  "created_at": "2026-08-05T03:40:18.968467+00:00",
+  "process_id": 12116,
+  "user_id": 940004,
+  "live_response": true,
+  "turns": [
+    {
+      "turn": 1,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "Вес уже год растёт, и мне от этого тяжело.",
+      "semantic_context": {
+        "topics": [
+          "weight"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": null,
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [],
+        "human_model": null,
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 2,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "Хочу похудеть и снова нормально себя чувствовать.",
+      "semantic_context": {
+        "topics": [
+          "weight"
+        ],
+        "intent": "goal_statement",
+        "goal": "lose_weight",
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "motivation"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "motivation",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [
+          {
+            "name": "explicit_goal",
+            "value": "lose_weight"
+          }
+        ],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {
+          "explicit_goal": 0.5
+        },
+        "foundations": {
+          "explicit_goal": "semantic_context.goal"
+        }
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 3,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "После работы нет сил готовить, поэтому часто заказываю еду.",
+      "semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "motivation"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "motivation",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_problem_duration",
+        "reason": "topic:energy_or_health; missing_information:problem_duration",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_problem_duration_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_problem_duration_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_problem_duration",
+        "confidence": 0.5,
+        "expected_effect": "clarify_problem_duration",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 4,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "Пробовала считать калории, но быстро бросала.",
+      "semantic_context": {
+        "topics": [
+          "previous_attempts"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_motivation",
+        "reason": "missing_information:motivation",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_motivation_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_motivation_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_motivation",
+        "confidence": 0.6,
+        "expected_effect": "clarify_motivation",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю. Что поможет уточнить для тебя тему motivation?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 5,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "Мне важнее здоровье и энергия, не просто цифра на весах.",
+      "semantic_context": {
+        "topics": [
+          "weight",
+          "energy",
+          "health"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 6,
+      "process_id": 12116,
+      "user_id": 940004,
+      "user_text": "Спасибо, но я пока не готова обсуждать дальше.",
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "motivation"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "motivation",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [
+            "lose_weight"
+          ],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 1.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_motivation",
+        "reason": "missing_information:motivation",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_motivation_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_motivation_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_motivation",
+        "confidence": 0.6,
+        "expected_effect": "clarify_motivation",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "Понимаю. Что поможет уточнить для тебя тему motivation?",
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это правда может давить. Где вес сильнее всего мешает тебе в повседневной жизни?"
+          },
+          {
+            "role": "user",
+            "content": "Хочу похудеть и снова нормально себя чувствовать."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, тебе сейчас важно вернуть лёгкость. Где вес сильнее всего мешает — в энергии, движении или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, это уже мешает в быту. Как давно у тебя так с вечерами после работы?"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю, для тебя это важнее цифры. Где вес сильнее всего отражается на здоровье, энергии или самочувствии?"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "Понимаю. Что поможет уточнить для тебя тему motivation?"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [
+          "lose_weight"
+        ],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 1.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    }
+  ],
+  "continuity_check": {
+    "same_process": true,
+    "same_user_id": true,
+    "history_preserved": true,
+    "previous_human_model_preserved": true,
+    "known_facts_preserved": true,
+    "consultation_state_preserved": true
+  }
+}

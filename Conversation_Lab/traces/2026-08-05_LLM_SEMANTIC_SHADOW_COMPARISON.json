@@ -1,0 +1,4821 @@
+{
+  "runner": "Conversation_Lab.session_runner",
+  "created_at": "2026-08-05T07:19:07.812304+00:00",
+  "process_id": 16816,
+  "user_id": 950010,
+  "live_response": false,
+  "shadow_semantic": true,
+  "turns": [
+    {
+      "turn": 1,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Вес уже год растёт, и мне от этого тяжело.",
+      "llm_semantic_context": {
+        "topics": [],
+        "intent": "unknown",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.0,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [
+          "weight"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": null,
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [],
+        "human_model": null,
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": "unknown"
+        },
+        "only_deterministic": {
+          "topics": [
+            "weight"
+          ],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": "information_statement"
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 2,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "После работы нет сил готовить, поэтому часто заказываю еду.",
+      "llm_semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [
+          "daily_effect:difficulty_cooking",
+          "daily_effect:reduced_energy"
+        ],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [
+          "fatigue_after_work"
+        ],
+        "emotional_signals": [],
+        "confidence": 0.9,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "motivation"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "motivation",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_problem_duration",
+        "reason": "topic:energy_or_health; missing_information:problem_duration",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_problem_duration_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_problem_duration_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_problem_duration",
+        "confidence": 0.5,
+        "expected_effect": "clarify_problem_duration",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [
+            "daily_effect:difficulty_cooking",
+            "daily_effect:reduced_energy"
+          ],
+          "preferences": [],
+          "constraints": [
+            "fatigue_after_work"
+          ],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [
+            "motivation"
+          ],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 3,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Пробовала считать калории, но быстро бросала.",
+      "llm_semantic_context": {
+        "topics": [
+          "weight"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [
+          "attempt:calorie_counting",
+          "attempt_result:stopped"
+        ],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.9,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [
+          "previous_attempts"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [
+            "weight"
+          ],
+          "questions": [],
+          "events": [
+            "attempt:calorie_counting",
+            "attempt_result:stopped"
+          ],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [
+            "previous_attempts"
+          ],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 4,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Мне важнее здоровье и энергия, не просто цифра на весах.",
+      "llm_semantic_context": {
+        "topics": [
+          "health",
+          "energy",
+          "weight"
+        ],
+        "intent": "information_statement",
+        "goal": "restore_energy",
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.0,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [
+          "weight",
+          "energy",
+          "health"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_weight_impact",
+        "reason": "topic:weight; missing_information:weight_impact",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_weight_impact_increases",
+        "confidence": 0.5,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_weight_impact_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_weight_impact",
+        "confidence": 0.5,
+        "expected_effect": "clarify_weight_impact",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": "restore_energy",
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 5,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Спасибо, но я пока не готова обсуждать дальше.",
+      "llm_semantic_context": {
+        "topics": [],
+        "intent": "pause_or_end",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "closedness"
+        ],
+        "confidence": 0.95,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "closedness",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "motivation"
+        ],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "motivation",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [
+            "closedness"
+          ],
+          "facts": {},
+          "goal": null,
+          "intent": "pause_or_end"
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [
+            "motivation"
+          ],
+          "facts": {},
+          "goal": null,
+          "intent": "information_statement"
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 6,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Не быть выжатой.",
+      "llm_semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "goal_statement",
+        "goal": "restore_energy",
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.9,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [
+            "energy"
+          ],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": "restore_energy",
+          "intent": "goal_statement"
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": "information_statement"
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 7,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Домой прихожу как овощ.",
+      "llm_semantic_context": {
+        "topics": [
+          "energy"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [
+          "daily_effect:reduced_energy"
+        ],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [
+          "fatigue_after_work"
+        ],
+        "emotional_signals": [
+          "situation_fatigue"
+        ],
+        "confidence": 0.9,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "situation_fatigue",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [
+            "energy"
+          ],
+          "questions": [],
+          "events": [
+            "daily_effect:reduced_energy"
+          ],
+          "preferences": [],
+          "constraints": [
+            "fatigue_after_work"
+          ],
+          "emotional_signals": [
+            "situation_fatigue"
+          ],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 8,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "С тех пор как родился ребёнок.",
+      "llm_semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {
+          "duration": "С тех пор как родился ребёнок."
+        },
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.95,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {
+          "duration": "С тех пор как родился ребёнок."
+        }
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "barriers",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {
+            "duration": "С тех пор как родился ребёнок."
+          },
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 9,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Уже смотреть на себя не могу.",
+      "llm_semantic_context": {
+        "topics": [
+          "appearance"
+        ],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [
+          "self_dissatisfaction"
+        ],
+        "confidence": 0.9,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "self_dissatisfaction",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [
+          "не могу"
+        ],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 0.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 0.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [
+          "не могу"
+        ],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 1.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [
+            "appearance"
+          ],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [
+            "self_dissatisfaction"
+          ],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [
+            "не могу"
+          ],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Уже смотреть на себя не могу."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Уже смотреть на себя не могу."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [
+          "не могу"
+        ],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 1.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    },
+    {
+      "turn": 10,
+      "process_id": 16816,
+      "user_id": 950010,
+      "user_text": "Не, не до такой степени. Просто дискомфорт.",
+      "llm_semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.95,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "semantic_context": {
+        "topics": [],
+        "intent": "information_statement",
+        "goal": null,
+        "questions": [],
+        "events": [],
+        "people": [],
+        "objects": [],
+        "facts": {},
+        "preferences": [],
+        "constraints": [],
+        "emotional_signals": [],
+        "confidence": 0.5,
+        "known": [],
+        "unknown": [],
+        "emotional_tone": "unknown",
+        "new_information": {}
+      },
+      "previous_human_model_input": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [
+          "не могу"
+        ],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 1.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "memory_input": {
+        "facts": {
+          "name": null,
+          "gender": null,
+          "age": null,
+          "height": null,
+          "current_weight": null,
+          "target_weight": null,
+          "duration": null,
+          "main_problem": null,
+          "previous_attempts": null,
+          "failure_reason": null,
+          "appearance": false,
+          "clothes": false,
+          "breathing": false,
+          "energy": false,
+          "mobility": false,
+          "sleep": false,
+          "health": false
+        },
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Уже смотреть на себя не могу."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "human_model": {
+          "facts": {},
+          "goals": [],
+          "needs": [],
+          "motivation": [],
+          "values": [],
+          "lifestyle": [],
+          "life_situation": [],
+          "habits": [],
+          "emotional_features": [
+            "motivation"
+          ],
+          "barriers": [
+            "не могу"
+          ],
+          "fears": [],
+          "doubts": [],
+          "beliefs": [],
+          "experience": [],
+          "communication_style": "unknown",
+          "trust": 0.0,
+          "hypotheses": {},
+          "confidence": {},
+          "pain_map": {
+            "reported_topics": [
+              "weight",
+              "energy",
+              "previous_attempts",
+              "health"
+            ]
+          },
+          "consultation_stage": "discovery",
+          "understanding_score": {
+            "problem": 1.0,
+            "motivation": 0.0,
+            "pain": 0.0,
+            "fear": 0.0,
+            "self_perception": 0.0,
+            "limitations": 1.0,
+            "trust": 0.0
+          },
+          "known": [],
+          "unknown": []
+        },
+        "conversation_state": {
+          "last_question": null,
+          "discovery_complete": false
+        }
+      },
+      "consultation_state_input": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [
+          "не могу"
+        ],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 1.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      },
+      "reasoning_context": {
+        "conclusions": [],
+        "hypotheses": {},
+        "confirmed_hypotheses": [],
+        "refuted_hypotheses": [],
+        "uncertainties": [
+          "current_message_contains_no_confirmed_facts",
+          "memory_facts_not_reflected_in_human_model"
+        ],
+        "contradictions": [],
+        "missing_information": [
+          "goals",
+          "motivation",
+          "trust"
+        ],
+        "priorities": [
+          "goals",
+          "motivation",
+          "trust"
+        ],
+        "confidence": {},
+        "foundations": {}
+      },
+      "decision_context": {
+        "next_goal": "clarify_goals",
+        "reason": "missing_information:goals",
+        "priority": "normal",
+        "needs_additional_information": true,
+        "ready_for_next_stage": false,
+        "expected_outcome": "understanding_of_goals_increases",
+        "confidence": 0.6,
+        "strategy": "exploration",
+        "response_type": "question"
+      },
+      "impact_context": {
+        "main_goal": "increase_self_understanding",
+        "expected_understanding_change": "understanding_of_goals_increases",
+        "expected_emotional_change": "calm_attention",
+        "expected_attitude_change": "more_open_to_reflection",
+        "expected_readiness_change": "ready_to_share_relevant_information",
+        "success_criterion": "user_provides_or_recognizes_goals",
+        "confidence": 0.6,
+        "expected_effect": "clarify_goals",
+        "risks": [],
+        "follow_up": "continue_exploration"
+      },
+      "emotional_context": {
+        "tone": "reflective",
+        "empathy_level": "medium",
+        "speech_confidence": "calm",
+        "explanation_depth": "moderate",
+        "initiative_level": "inviting",
+        "directness": "gentle",
+        "response_length": "medium",
+        "user_specific_notes": [
+          "invite_self_observation"
+        ]
+      },
+      "response": "[Conversation Lab technical response stub]",
+      "semantic_comparison": {
+        "only_llm": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        },
+        "only_deterministic": {
+          "topics": [],
+          "questions": [],
+          "events": [],
+          "preferences": [],
+          "constraints": [],
+          "emotional_signals": [],
+          "facts": {},
+          "goal": null,
+          "intent": null
+        }
+      },
+      "update": {
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Уже смотреть на себя не могу."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не, не до такой степени. Просто дискомфорт."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "discovery_complete": false
+      },
+      "memory_after_turn": {
+        "name": null,
+        "gender": null,
+        "age": null,
+        "height": null,
+        "current_weight": null,
+        "target_weight": null,
+        "duration": null,
+        "main_problem": null,
+        "previous_attempts": null,
+        "failure_reason": null,
+        "appearance": false,
+        "clothes": false,
+        "breathing": false,
+        "energy": false,
+        "mobility": false,
+        "sleep": false,
+        "health": false,
+        "history": [
+          {
+            "role": "user",
+            "content": "Вес уже год растёт, и мне от этого тяжело."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "После работы нет сил готовить, поэтому часто заказываю еду."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Пробовала считать калории, но быстро бросала."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Мне важнее здоровье и энергия, не просто цифра на весах."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Спасибо, но я пока не готова обсуждать дальше."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не быть выжатой."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Домой прихожу как овощ."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "С тех пор как родился ребёнок."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Уже смотреть на себя не могу."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          },
+          {
+            "role": "user",
+            "content": "Не, не до такой степени. Просто дискомфорт."
+          },
+          {
+            "role": "assistant",
+            "content": "[Conversation Lab technical response stub]"
+          }
+        ],
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "consultation_state_after_turn": {
+        "last_question": null,
+        "discovery_complete": false
+      },
+      "human_model_after_turn": {
+        "facts": {},
+        "goals": [],
+        "needs": [],
+        "motivation": [],
+        "values": [],
+        "lifestyle": [],
+        "life_situation": [],
+        "habits": [],
+        "emotional_features": [
+          "motivation"
+        ],
+        "barriers": [
+          "не могу"
+        ],
+        "fears": [],
+        "doubts": [],
+        "beliefs": [],
+        "experience": [],
+        "communication_style": "unknown",
+        "trust": 0.0,
+        "hypotheses": {},
+        "confidence": {},
+        "pain_map": {
+          "reported_topics": [
+            "weight",
+            "energy",
+            "previous_attempts",
+            "health"
+          ]
+        },
+        "consultation_stage": "discovery",
+        "understanding_score": {
+          "problem": 1.0,
+          "motivation": 0.0,
+          "pain": 0.0,
+          "fear": 0.0,
+          "self_perception": 0.0,
+          "limitations": 1.0,
+          "trust": 0.0
+        },
+        "known": [],
+        "unknown": []
+      }
+    }
+  ],
+  "continuity_check": {
+    "same_process": true,
+    "same_user_id": true,
+    "history_preserved": true,
+    "previous_human_model_preserved": true,
+    "known_facts_preserved": true,
+    "consultation_state_preserved": true
+  }
+}

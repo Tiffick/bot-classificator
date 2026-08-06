@@ -16,6 +16,7 @@ def user_profile():
 def fake_openai(monkeypatch):
     import ai.dialog_engine as dialog_engine
     import ai.engines.response_engine as response_engine
+    from ai.engines.semantic_engine import SemanticEngine
 
     class FakeCompletions:
         def create(self, **kwargs):
@@ -34,5 +35,13 @@ def fake_openai(monkeypatch):
         def __init__(self):
             self.chat = SimpleNamespace(completions=FakeCompletions())
 
+    class FakeLLMSemanticEngine:
+        def __init__(self):
+            self.last_diagnostics = {"success": True}
+
+        def analyze(self, user_text):
+            return SemanticEngine().analyze(user_text)
+
     monkeypatch.setattr(response_engine, "OpenAI", FakeOpenAI)
+    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", FakeLLMSemanticEngine)
     return dialog_engine

@@ -16,10 +16,18 @@ def test_dialog_engine_calls_all_engines_in_architectural_order(monkeypatch):
 
     calls = []
 
-    class Semantic:
+    class LLMSemantic:
+        def __init__(self):
+            self.last_diagnostics = {"success": True}
+
         def analyze(self, user_text):
-            calls.append("semantic")
+            calls.append("llm_semantic")
             return SemanticContext(facts={"age": 30}, confidence=1.0)
+
+    class DeterministicFallback:
+        def analyze(self, user_text):
+            calls.append("deterministic_fallback")
+            return SemanticContext()
 
     class Human:
         def build(self, semantic_context, previous_human_model, memory):
@@ -57,7 +65,8 @@ def test_dialog_engine_calls_all_engines_in_architectural_order(monkeypatch):
             calls.append("response")
             return "Оркестрованный ответ"
 
-    monkeypatch.setattr(dialog_engine, "SemanticEngine", Semantic)
+    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", LLMSemantic)
+    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
     monkeypatch.setattr(dialog_engine, "HumanModelEngine", Human)
     monkeypatch.setattr(dialog_engine, "ReasoningEngine", Reasoning)
     monkeypatch.setattr(dialog_engine, "DecisionEngine", Decision)
@@ -69,7 +78,7 @@ def test_dialog_engine_calls_all_engines_in_architectural_order(monkeypatch):
 
     assert result["reply"] == "Оркестрованный ответ"
     assert calls == [
-        "semantic",
+        "llm_semantic",
         "human_model",
         "reasoning",
         "decision",
@@ -77,6 +86,102 @@ def test_dialog_engine_calls_all_engines_in_architectural_order(monkeypatch):
         "emotional",
         "response",
     ]
+
+
+def test_active_llm_semantic_receives_only_user_text_not_profile(monkeypatch):
+    import ai.dialog_engine as dialog_engine
+
+    received = []
+
+    class LLMSemantic:
+        def __init__(self):
+            self.last_diagnostics = {"success": True}
+
+        def analyze(self, user_text):
+            received.append(user_text)
+            return SemanticContext()
+
+    class Response:
+        def generate(self, *args):
+            return "Ответ"
+
+    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", LLMSemantic)
+    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
+
+    asyncio.run(
+        dialog_engine.run_dialog_engine(
+            "Сообщение пользователя", {"history": [], "hidden_profile": "must not pass"}
+        )
+    )
+
+    assert received == ["Сообщение пользователя"]
+
+
+def test_dialog_engine_uses_deterministic_semantic_only_after_llm_failure(monkeypatch):
+    import ai.dialog_engine as dialog_engine
+
+    calls = []
+
+    class FailedLLMSemantic:
+        def __init__(self):
+            self.last_diagnostics = {"success": False, "fallback_reason": "APIError"}
+
+        def analyze(self, user_text):
+            calls.append("llm_semantic")
+            return SemanticContext()
+
+    class DeterministicFallback:
+        def analyze(self, user_text):
+            calls.append("deterministic_fallback")
+            return SemanticContext(facts={"age": 30}, confidence=1.0)
+
+    class Response:
+        def generate(self, *args):
+            calls.append("response")
+            return "Ответ после fallback"
+
+    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", FailedLLMSemantic)
+    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
+    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
+
+    result = asyncio.run(dialog_engine.run_dialog_engine("Мне 30 лет", {}))
+
+    assert result["update"]["age"] == 30
+    assert calls == ["llm_semantic", "deterministic_fallback", "response"]
+
+
+def test_dialog_engine_uses_fallback_after_invalid_llm_structured_output(monkeypatch):
+    import ai.dialog_engine as dialog_engine
+
+    calls = []
+
+    class InvalidLLMSemantic:
+        def __init__(self):
+            self.last_diagnostics = {
+                "success": False,
+                "fallback_reason": "ValueError: Invalid facts schema.",
+            }
+
+        def analyze(self, user_text):
+            calls.append("invalid_llm_semantic")
+            return SemanticContext()
+
+    class DeterministicFallback:
+        def analyze(self, user_text):
+            calls.append("deterministic_fallback")
+            return SemanticContext(topics=["energy"], confidence=0.5)
+
+    class Response:
+        def generate(self, *args):
+            return "Безопасный ответ"
+
+    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", InvalidLLMSemantic)
+    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
+    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
+
+    asyncio.run(dialog_engine.run_dialog_engine("Домой прихожу как овощ.", {}))
+
+    assert calls == ["invalid_llm_semantic", "deterministic_fallback"]
 
 
 def test_decision_context_is_not_changed_by_impact_or_emotional_engines():

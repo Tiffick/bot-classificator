@@ -49,7 +49,7 @@ GENERIC_WEIGHT_RESTATEMENTS = (
 class ResponseEngine:
     """Implements a ready decision without changing any consultation context."""
 
-    def __init__(self, client=None, model: str = "gpt-4.1-mini", max_attempts: int = 2):
+    def __init__(self, client=None, model: str = "gpt-5-mini", max_attempts: int = 2):
         load_dotenv()
         self.client = client or OpenAI()
         self.model = model
@@ -200,11 +200,10 @@ DecisionContext, ImpactContext и EmotionalContext являются принят
 {current_message}
 """.strip()
 
-    def _complete(self, messages: list, temperature: float) -> str:
+    def _complete(self, messages: list) -> str:
         response = self.client.chat.completions.create(
             model=self.model,
             messages=messages,
-            temperature=temperature,
         )
         return (response.choices[0].message.content or "").strip()
 
@@ -271,8 +270,7 @@ DecisionContext, ImpactContext и EmotionalContext являются принят
                         emotional_context,
                     ),
                 },
-            ],
-            temperature=0.0,
+            ]
         )
         try:
             return bool(json.loads(self._clean_json_response(content))["is_valid"])
@@ -322,7 +320,7 @@ DecisionContext, ImpactContext и EmotionalContext являются принят
         ]
 
         for attempt in range(self.max_attempts):
-            reply = self._complete(messages, temperature=0.8)
+            reply = self._complete(messages)
             if self._is_valid(
                 reply,
                 memory.get("current_message", ""),
