@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Literal, Optional
+from typing import Literal, Mapping, Optional, TypeVar
 from uuid import UUID, uuid4
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
@@ -23,6 +23,36 @@ def utc_now() -> datetime:
 def make_id(prefix: str) -> str:
     """Create a stable, serialisable identifier with a semantic object prefix."""
     return f"{prefix}_{uuid4().hex}"
+
+
+T = TypeVar("T")
+
+
+class FrozenDict(dict):
+    """A JSON-serialisable mapping that rejects ordinary in-place mutation."""
+
+    @staticmethod
+    def _frozen(*args, **kwargs):
+        raise TypeError("Discovery contract mappings are immutable; create a validated replacement model.")
+
+    __setitem__ = _frozen
+    __delitem__ = _frozen
+    __ior__ = _frozen
+    clear = _frozen
+    pop = _frozen
+    popitem = _frozen
+    setdefault = _frozen
+    update = _frozen
+
+
+def _freeze_mapping(value: Mapping[str, T]) -> FrozenDict:
+    return FrozenDict(value)
+
+
+def _validate_unique(values: tuple[str, ...], field_name: str) -> tuple[str, ...]:
+    if len(values) != len(set(values)):
+        raise ValueError(f"{field_name} must not contain duplicate IDs.")
+    return values
 
 
 def _validate_prefixed_uuid(value: str, prefix: str) -> str:
@@ -39,7 +69,7 @@ def _validate_prefixed_uuid(value: str, prefix: str) -> str:
 class DiscoveryModel(BaseModel):
     """Strict base class for the Discovery persistence contract."""
 
-    model_config = ConfigDict(extra="forbid", validate_assignment=True)
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
 
 class ModelItemKind(str, Enum):
@@ -116,7 +146,7 @@ class DialogueMessage(DiscoveryModel):
 
 
 class DialogueHistory(DiscoveryModel):
-    messages: list[DialogueMessage] = Field(default_factory=list)
+    messages: tuple[DialogueMessage, ...] = Field(default_factory=tuple)
 
     @model_validator(mode="after")
     def validate_message_sequences(self) -> "DialogueHistory":
@@ -132,8 +162,8 @@ class ModelItem(DiscoveryModel):
     content: str = Field(min_length=1)
     provenance: Provenance
     status: ItemStatus
-    source_refs: list[SourceReference] = Field(min_length=1)
-    supersedes_item_ids: list[str] = Field(default_factory=list)
+    source_refs: tuple[SourceReference, ...] = Field(min_length=1)
+    supersedes_item_ids: tuple[str, ...] = Field(default_factory=tuple)
     created_turn: int = Field(ge=1)
     updated_turn: int = Field(ge=1)
 
@@ -144,8 +174,9 @@ class ModelItem(DiscoveryModel):
 
     @field_validator("supersedes_item_ids")
     @classmethod
-    def validate_superseded_ids(cls, values: list[str]) -> list[str]:
-        return [_validate_prefixed_uuid(value, "mi") for value in values]
+    def validate_superseded_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        validated = tuple(_validate_prefixed_uuid(value, "mi") for value in values)
+        return _validate_unique(validated, "supersedes_item_ids")
 
     @model_validator(mode="after")
     def validate_turn_order(self) -> "ModelItem":
@@ -159,12 +190,12 @@ class ModelItem(DiscoveryModel):
 class Relation(DiscoveryModel):
     id: str = Field(default_factory=lambda: make_id("rel"))
     meaning: str = Field(min_length=1)
-    source_item_ids: list[str] = Field(min_length=1)
-    target_item_ids: list[str] = Field(min_length=1)
+    source_item_ids: tuple[str, ...] = Field(min_length=1)
+    target_item_ids: tuple[str, ...] = Field(min_length=1)
     provenance: Provenance
     status: ItemStatus
-    source_refs: list[SourceReference] = Field(min_length=1)
-    supersedes_relation_ids: list[str] = Field(default_factory=list)
+    source_refs: tuple[SourceReference, ...] = Field(min_length=1)
+    supersedes_relation_ids: tuple[str, ...] = Field(default_factory=tuple)
     created_turn: int = Field(ge=1)
     updated_turn: int = Field(ge=1)
 
@@ -175,13 +206,15 @@ class Relation(DiscoveryModel):
 
     @field_validator("source_item_ids", "target_item_ids")
     @classmethod
-    def validate_item_ids(cls, values: list[str]) -> list[str]:
-        return [_validate_prefixed_uuid(value, "mi") for value in values]
+    def validate_item_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        validated = tuple(_validate_prefixed_uuid(value, "mi") for value in values)
+        return _validate_unique(validated, "Relation item references")
 
     @field_validator("supersedes_relation_ids")
     @classmethod
-    def validate_superseded_ids(cls, values: list[str]) -> list[str]:
-        return [_validate_prefixed_uuid(value, "rel") for value in values]
+    def validate_superseded_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        validated = tuple(_validate_prefixed_uuid(value, "rel") for value in values)
+        return _validate_unique(validated, "supersedes_relation_ids")
 
     @model_validator(mode="after")
     def validate_turn_order(self) -> "Relation":
@@ -222,6 +255,26 @@ class HumanModel(DiscoveryModel):
                     )
         return self
 
+    @field_validator("items", "relations")
+    @classmethod
+    def freeze_mappings(cls, value: dict[str, T]) -> FrozenDict:
+        return _freeze_mapping(value)
+
+    def with_updates(
+        self,
+        *,
+        items: Optional[Mapping[str, ModelItem]] = None,
+        relations: Optional[Mapping[str, Relation]] = None,
+    ) -> "HumanModel":
+        """Return a fully revalidated replacement instead of mutating this model."""
+        data = self.model_dump()
+        if items is not None:
+            data["items"] = items
+        if relations is not None:
+            data["relations"] = relations
+        data["updated_at"] = utc_now()
+        return HumanModel.model_validate(data)
+
 
 class ActiveContentKind(str, Enum):
     SYSTEM_QUESTION = "system_question"
@@ -236,8 +289,8 @@ class ActiveContentItem(DiscoveryModel):
     id: str = Field(default_factory=lambda: make_id("aci"))
     kind: ActiveContentKind
     content: str = Field(min_length=1)
-    model_item_ids: list[str] = Field(default_factory=list)
-    relation_ids: list[str] = Field(default_factory=list)
+    model_item_ids: tuple[str, ...] = Field(default_factory=tuple)
+    relation_ids: tuple[str, ...] = Field(default_factory=tuple)
     source_message_id: str
 
     @field_validator("id")
@@ -247,13 +300,15 @@ class ActiveContentItem(DiscoveryModel):
 
     @field_validator("model_item_ids")
     @classmethod
-    def validate_model_item_ids(cls, values: list[str]) -> list[str]:
-        return [_validate_prefixed_uuid(value, "mi") for value in values]
+    def validate_model_item_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        validated = tuple(_validate_prefixed_uuid(value, "mi") for value in values)
+        return _validate_unique(validated, "model_item_ids")
 
     @field_validator("relation_ids")
     @classmethod
-    def validate_relation_ids(cls, values: list[str]) -> list[str]:
-        return [_validate_prefixed_uuid(value, "rel") for value in values]
+    def validate_relation_ids(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        validated = tuple(_validate_prefixed_uuid(value, "rel") for value in values)
+        return _validate_unique(validated, "relation_ids")
 
     @field_validator("source_message_id")
     @classmethod
@@ -353,6 +408,11 @@ class ActiveConversationState(DiscoveryModel):
                 )
         return self
 
+    @field_validator("active_content", "response_targets")
+    @classmethod
+    def freeze_mappings(cls, value: dict[str, T]) -> FrozenDict:
+        return _freeze_mapping(value)
+
 
 def validate_acs_human_model_references(
     active_state: ActiveConversationState,
@@ -380,3 +440,46 @@ def validate_acs_human_model_references(
             and target.subject.id not in human_model.relations
         ):
             raise ValueError("RELATION TargetReference must exist in HumanModel.relations.")
+
+
+def validate_discovery_memory(
+    human_model: HumanModel,
+    active_state: Optional[ActiveConversationState],
+    dialogue_history: DialogueHistory,
+) -> None:
+    """Validate references across the three persistent Discovery memory objects."""
+    messages = {message.id: message for message in dialogue_history.messages}
+
+    def validate_source_reference(source_ref: SourceReference) -> None:
+        message = messages.get(source_ref.message_id)
+        if message is None:
+            raise ValueError("SourceReference.message_id must exist in DialogueHistory.")
+        text_length = len(message.text)
+        if source_ref.char_start is not None and source_ref.char_start > text_length:
+            raise ValueError("SourceReference.char_start must be within message text.")
+        if source_ref.char_end is not None and source_ref.char_end > text_length:
+            raise ValueError("SourceReference.char_end must be within message text.")
+
+    for item in human_model.items.values():
+        for source_ref in item.source_refs:
+            validate_source_reference(source_ref)
+    for relation in human_model.relations.values():
+        for source_ref in relation.source_refs:
+            validate_source_reference(source_ref)
+
+    if active_state is None:
+        return
+
+    validate_acs_human_model_references(active_state, human_model)
+    source_system_message = messages.get(active_state.source_system_message_id)
+    if source_system_message is None:
+        raise ValueError("ActiveConversationState.source_system_message_id must exist in DialogueHistory.")
+    if source_system_message.role != DialogueRole.SYSTEM:
+        raise ValueError("ActiveConversationState.source_system_message_id must reference a system message.")
+
+    for content in active_state.active_content.values():
+        source_message = messages.get(content.source_message_id)
+        if source_message is None:
+            raise ValueError("ActiveContentItem.source_message_id must exist in DialogueHistory.")
+        if source_message.role != DialogueRole.SYSTEM:
+            raise ValueError("ActiveContentItem.source_message_id must reference a system message.")
