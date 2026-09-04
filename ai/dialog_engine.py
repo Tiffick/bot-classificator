@@ -14,6 +14,10 @@ from ai.discovery_data_model import (
     DialogueRole,
     validate_discovery_memory,
 )
+from ai.shadow_discovery_cognition import (
+    ShadowIntegrationEngine,
+    ShadowPerceptionEngine,
+)
 from memory.user_memory import (
     ShadowDiscoveryMemory,
     get_human_model,
@@ -32,31 +36,37 @@ def append_history(history: list, user_text: str, reply: str) -> None:
     history.append({"role": "assistant", "content": reply})
 
 
-def _append_shadow_turn(
+def _candidate_user_message(shadow_memory: ShadowDiscoveryMemory, user_text: str) -> DialogueMessage:
+    messages = shadow_memory.dialogue_history.messages
+    next_sequence = messages[-1].sequence + 1 if messages else 1
+    return DialogueMessage(
+        role=DialogueRole.USER,
+        text=user_text,
+        sequence=next_sequence,
+    )
+
+
+def _complete_shadow_turn(
     shadow_memory: ShadowDiscoveryMemory,
-    user_text: str,
+    updated_human_model,
+    user_message: DialogueMessage,
     reply: str,
 ) -> ShadowDiscoveryMemory:
     """Build a validated immutable shadow record for one completed turn pair."""
     messages = shadow_memory.dialogue_history.messages
-    next_sequence = messages[-1].sequence + 1 if messages else 1
     dialogue_history = DialogueHistory(
         messages=(
             *messages,
-            DialogueMessage(
-                role=DialogueRole.USER,
-                text=user_text,
-                sequence=next_sequence,
-            ),
+            user_message,
             DialogueMessage(
                 role=DialogueRole.SYSTEM,
                 text=reply,
-                sequence=next_sequence + 1,
+                sequence=user_message.sequence + 1,
             ),
         )
     )
     updated_memory = ShadowDiscoveryMemory(
-        human_model=shadow_memory.human_model,
+        human_model=updated_human_model,
         active_conversation_state=None,
         dialogue_history=dialogue_history,
     )
@@ -72,6 +82,8 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
     """Orchestrate one full consultation cycle and preserve its result."""
     history = profile.get("history", [])
     shadow_memory = None
+    candidate_user_message = None
+    candidate_shadow_human_model = None
     if user_id is not None:
         shadow_memory = get_shadow_discovery_memory(user_id)
         legacy_memory = {
@@ -88,6 +100,34 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
     impact_engine = ImpactEngine()
     emotional_engine = EmotionalEngine()
     response_engine = ResponseEngine()
+
+    if shadow_memory is not None:
+        candidate_user_message = _candidate_user_message(shadow_memory, user_text)
+        candidate_shadow_human_model = shadow_memory.human_model
+        try:
+            perception = ShadowPerceptionEngine(
+                client=getattr(llm_semantic_engine, "client", None),
+                model=getattr(llm_semantic_engine, "model", "gpt-5-mini"),
+                timeout_seconds=getattr(
+                    llm_semantic_engine, "timeout_seconds", 15.0
+                ),
+            ).perceive(
+                candidate_user_message,
+                shadow_memory.human_model,
+                shadow_memory.active_conversation_state,
+                shadow_memory.dialogue_history,
+            )
+            candidate_shadow_human_model = ShadowIntegrationEngine().integrate(
+                perception,
+                shadow_memory.human_model,
+                candidate_user_message,
+                (len(shadow_memory.dialogue_history.messages) // 2) + 1,
+            ).human_model
+        except Exception as error:
+            LOGGER.warning(
+                "Shadow Discovery cognition failed; preserving the previous model: %s",
+                error,
+            )
 
     semantic_context = llm_semantic_engine.analyze(user_text)
     if not llm_semantic_engine.last_diagnostics.get("success", False):
@@ -143,8 +183,32 @@ async def run_dialog_engine(user_text: str, profile: dict, user_id=None):
 
     if user_id is not None:
         set_human_model(user_id, human_model)
-        set_shadow_discovery_memory(
-            user_id, _append_shadow_turn(shadow_memory, user_text, reply)
-        )
+        try:
+            set_shadow_discovery_memory(
+                user_id,
+                _complete_shadow_turn(
+                    shadow_memory,
+                    candidate_shadow_human_model,
+                    candidate_user_message,
+                    reply,
+                ),
+            )
+        except Exception as error:
+            LOGGER.warning(
+                "Shadow Discovery persistence failed; retrying with the previous model: %s",
+                error,
+            )
+            try:
+                set_shadow_discovery_memory(
+                    user_id,
+                    _complete_shadow_turn(
+                        shadow_memory,
+                        shadow_memory.human_model,
+                        candidate_user_message,
+                        reply,
+                    ),
+                )
+            except Exception:
+                LOGGER.exception("Shadow Discovery history persistence failed.")
 
     return {"reply": reply, "update": safe_update}
