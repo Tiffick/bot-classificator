@@ -1147,4 +1147,316 @@ Conversation Lab стала постоянным инструментом оце
 Основная цель — устранение повторных вопросов, улучшение критериев завершения Discovery, развитие Human Model и повышение естественности консультационного диалога при сохранении существующей архитектуры.
 
 ===============================================================================
+
+===============================================================================
+
+## Discovery Data Model — архитектура и технический контракт
+
+Дата: 02.09.2026
+
+Commits:
+
+8f64042
+Add Discovery data model contract
+
+8439025
+Harden Discovery data model invariants
+
+7e5b449
+Add Weight Human Experience research architecture
+
+### Что сделано
+
+- Зафиксирована новая архитектура Discovery на основе единственного повторяющегося Cognitive Cycle.
+- Определены границы между Human Model, Active Conversation State, Dialogue History и Human Experience.
+- Human Model переведён на семантическую модель ModelItem + Relation без обязательных profile slots.
+- Разделены provenance и status пользовательского и системного материала.
+- Введён статус RECORDED для прямого субъективного материала пользователя без объявления его объективной истиной.
+- Relation получила свободный нормализованный meaning вместо закрытой онтологии типов человеческих связей.
+- Active Conversation State определён как семантическая закладка между соседними ходами, а не как накопительная память или аналог last_question.
+- ACS поддерживает несколько независимо адресуемых Active Content и Response Targets.
+- Результаты Integration не сохраняются в ResponseTarget: предыдущий ACS потребляется следующим Cognitive Cycle.
+- Зафиксировано, что Human Experience является картой возможного человеческого опыта, но не доказательством о конкретном пользователе.
+- Убрана архитектурная зависимость Discovery от required fields, filled slots, understanding_score и discovery_complete.
+
+### Реализован технический Data Model
+
+Создан изолированный Pydantic v2 контракт:
+
+- HumanModel;
+- ModelItem;
+- Relation;
+- ActiveConversationState;
+- ActiveContentItem;
+- ResponseTarget;
+- DialogueHistory;
+- DialogueMessage;
+- SourceReference;
+- необходимые semantic enums.
+
+Добавлены prefixed UUID:
+
+- msg_
+- mi_
+- rel_
+- acs_
+- aci_
+- rt_
+
+Реализованы проверки ссылочной целостности Human Model, ACS и Dialogue History.
+
+Добавлена history-aware validation:
+
+- SourceReference должен указывать на существующее сообщение;
+- системные ссылки ACS должны указывать на system message;
+- offsets проверяются относительно реального текста сообщения;
+- ACS references на ModelItem и Relation проверяются относительно конкретного HumanModel.
+
+Модели защищены от нарушения invariants через in-place mutation.
+
+Для эволюционного обновления HumanModel предусмотрено создание нового валидируемого состояния вместо прямого изменения внутренней структуры.
+
+Также запрещены:
+
+- duplicate IDs в структурных reference lists;
+- self-supersession ModelItem;
+- self-supersession Relation;
+- неправильный порядок created_turn / updated_turn;
+- неверные prefixes и malformed UUID;
+- неизвестные дополнительные поля.
+
+При этом несколько ModelItem одного Kind разрешены: Data Model не является slot architecture.
+
+### Validation
+
+Архитектурная модель проверена на сценариях:
+
+- multiple user changes;
+- user interpretation;
+- supported/rejected system proposal;
+- ambiguous response;
+- partial Reflection;
+- multi-option Recognition;
+- answer + new material;
+- topic shift;
+- user question;
+- correction/supersession;
+- return to older topic;
+- multiple unresolved versions;
+- other-person view;
+- contradictory experience;
+- Personal Meaning not established;
+- refusal;
+- Transition consent.
+
+После реализации и hardening:
+
+- Discovery Data Model contract suite: 68 passed.
+- Полный V2 test suite: 124 passed.
+- py_compile: успешно.
+- git diff --check: успешно.
+
+### Важная граница текущего состояния
+
+Новая Discovery Data Model пока полностью изолирована от рабочего runtime.
+
+Не изменены:
+
+- DialogEngine;
+- HumanModelEngine;
+- DecisionEngine;
+- ResponseEngine;
+- Telegram handlers;
+- Conversation Lab;
+- legacy user state.
+
+Текущее поведение работающего V2 не изменилось.
+
+Legacy HumanModel и новая Discovery HumanModel пока существуют отдельно.
+
+### Research
+
+В Git добавлена полная актуальная ветка:
+
+Research/Human_Experience/Weight/
+
+включая документы 00–17 и TEMP_CORE_MOTIVATIONS.
+
+Документы 12–17 являются текущим архитектурным source of truth для Cognitive Cycle, ACS, Human Model, Discovery Memory и Discovery Data Model.
+
+### Следующий этап
+
+Спроектировать минимальный staged migration новой Discovery Memory в runtime без big-bang rewrite.
+
+Первый runtime slice должен позволить новой связке:
+
+HumanModel + ActiveConversationState + DialogueHistory
+
+начать жить между соседними Cognitive Cycles, при этом не изменяя пользовательское поведение и сохраняя существующие Decision/Response и Telegram transport до следующих этапов миграции.
+
+===============================================================================
+
+===============================================================================
+
+## Stage 1 — Shadow Discovery Memory lifecycle
+
+Дата: 04.09.2026
+
+Commit:
+
+8f2c17b
+Add shadow Discovery memory lifecycle
+
+### Что сделано
+
+Новая Discovery Memory впервые подключена к реальному runtime V2 в shadow-режиме.
+
+Для каждого user_id теперь существует отдельный технический контейнер:
+
+HumanModel
++
+ActiveConversationState
++
+DialogueHistory
+
+На текущем этапе:
+
+- новый HumanModel создаётся пустым;
+- ActiveConversationState всегда равен None;
+- DialogueHistory сохраняет literal диалог пользователя и системы;
+- новая Discovery Memory не передаётся ни в один существующий Engine;
+- пользовательское поведение V2 не изменено.
+
+### Runtime lifecycle
+
+После успешного существующего цикла DialogEngine:
+
+User Message
+→ legacy Semantic / HumanModel / Reasoning / Decision / Impact / Emotional / Response
+→ successful System Response
+→ запись пары USER + SYSTEM в shadow DialogueHistory
+→ validation
+→ сохранение новой Discovery Memory
+
+Shadow DialogueHistory получает только завершённую пару сообщений.
+
+Если существующий pipeline завершается ошибкой до получения System Response, одиночный User Message в новую историю не сохраняется.
+
+Sequence новой DialogueHistory независим от legacy history:
+
+1, 2, 3, 4...
+
+### Границы Stage 1
+
+Новый HumanModel пока НЕ получает:
+
+- legacy facts;
+- goals;
+- motivation;
+- barriers;
+- hypotheses;
+- understanding_score;
+- known / unknown;
+- discovery_complete;
+- другие legacy HumanModel fields.
+
+Причина: эти данные не имеют необходимого provenance и source references нового Discovery Data Model.
+
+ActiveConversationState намеренно НЕ создаётся.
+
+Текущий runtime ещё не формирует структурированное semantic system action, из которого можно честно получить:
+
+- addressable Active Content;
+- Response Targets;
+- различие Question / Reflection / Recognition / Transition.
+
+Поэтому ACS не строится из:
+
+- полного Response text;
+- last_question;
+- legacy DecisionContext;
+- ReasoningContext.
+
+Это сознательная архитектурная граница, а не незавершённая реализация Stage 1.
+
+### Legacy compatibility
+
+Без изменений продолжают работать:
+
+- legacy HumanModel;
+- legacy history;
+- HumanModelEngine;
+- ReasoningEngine;
+- DecisionEngine;
+- ImpactEngine;
+- EmotionalEngine;
+- ResponseEngine;
+- discovery_complete;
+- last_question;
+- Telegram handlers.
+
+Shadow Discovery Memory хранится отдельно и не является source of truth для существующего pipeline.
+
+При отсутствии user_id shadow state не создаётся.
+
+### Validation
+
+Добавлены lifecycle tests для:
+
+- первого хода;
+- двух соседних ходов;
+- literal сохранения короткого ответа пользователя;
+- изоляции пользователей;
+- failed turn atomicity;
+- запуска без user_id;
+- совместимости с legacy history;
+- совместимости с legacy HumanModel;
+- отсутствия передачи shadow state в legacy HumanModelEngine.
+
+Результаты:
+
+- Discovery runtime lifecycle: 6 passed.
+- Lifecycle + Discovery Data Model: 74 passed.
+- Полный V2 test suite: 130 passed.
+- py_compile: успешно.
+- git diff --check: успешно.
+
+### Текущее архитектурное состояние
+
+В runtime теперь параллельно существуют два слоя:
+
+LEGACY STATE
+→ продолжает управлять текущим поведением бота.
+
+SHADOW DISCOVERY MEMORY
+→ начинает накапливать корректную literal историю для будущего Cognitive Cycle.
+
+Новая Discovery Memory уже переживает границу соседних ходов, но пока не интерпретирует их.
+
+Короткий ответ вроде:
+
+«Да»
+
+уже корректно сохраняется вместе с предыдущим диалогом, но система ещё НЕ использует previous ACS и Integration для определения того, к какому смыслу относится этот ответ.
+
+### Следующий этап
+
+Stage 2 — Shadow Perception + Integration.
+
+Перед реализацией необходимо отдельно определить технический контракт Perception и Integration:
+
+User Message
++
+previous HumanModel
++
+previous ACS
++
+Human Experience
+→ Perception
+→ Integration / State Reconciliation
+→ updated HumanModel
+
+При этом новый HumanModel сначала должен оставаться shadow source of truth и не влиять на legacy Decision / Response до отдельного контролируемого этапа миграции.
+
+===============================================================================
 ```
