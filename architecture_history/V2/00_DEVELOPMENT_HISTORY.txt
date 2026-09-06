@@ -1459,4 +1459,281 @@ Human Experience
 При этом новый HumanModel сначала должен оставаться shadow source of truth и не влиять на legacy Decision / Response до отдельного контролируемого этапа миграции.
 
 ===============================================================================
+
+===============================================================================
+
+## Stage 2A — Shadow Perception + Integration
+
+Дата: 06.09.2026
+
+Commit:
+
+30555a7
+Add shadow Discovery cognition
+
+### Что сделано
+
+Новая Discovery Memory перешла от простого хранения literal Dialogue History к первому реальному shadow semantic understanding пользовательского сообщения.
+
+Реализован отдельный shadow pipeline:
+
+User Message
++
+previous shadow HumanModel
++
+DialogueHistory
++
+ACS=None
+→ Shadow Perception
+→ Python Integration
+→ candidate updated HumanModel
+
+Новый HumanModel по-прежнему не влияет на существующий legacy runtime и пользовательский ответ.
+
+### Shadow Perception
+
+Создан:
+
+ai/shadow_discovery_cognition.py
+
+Добавлен ephemeral Perception contract для материала текущего пользовательского сообщения.
+
+Perception может выделять:
+
+- независимый пользовательский материал;
+- ModelItemKind;
+- normalized semantic content;
+- provenance candidate;
+- source span;
+- NEW / REINFORCE / CORRECT / UNRESOLVED;
+- semantic correspondence с существующим ModelItem;
+- relation candidates;
+- direct question;
+- refusal / pause;
+- topic shift;
+- ambiguity.
+
+PerceptionResult не является persistent Discovery Memory entity.
+
+### LLM / Python boundary
+
+LLM отвечает за понимание человеческого смысла:
+
+- нормализацию материала;
+- semantic correspondence;
+- различение нового материала, reinforcement и correction;
+- распознавание OTHER_PERSON_VIEW;
+- предложение явно выраженных пользователем Relations;
+- transient interaction signals.
+
+LLM не изменяет persistent HumanModel напрямую.
+
+Python ShadowIntegrationEngine единолично:
+
+- проверяет provenance;
+- проверяет referenced IDs;
+- запрещает SYSTEM_PROPOSED на Stage 2A;
+- создаёт persistent mi_* и rel_*;
+- назначает RECORDED;
+- создаёт SourceReference;
+- применяет reinforcement;
+- применяет correction / supersession;
+- создаёт Relation;
+- создаёт immutable replacement HumanModel;
+- выполняет validation перед persist.
+
+### Human Model lifecycle
+
+NEW:
+
+создаётся новый ModelItem с корректным provenance, status=RECORDED и source reference текущего USER message.
+
+REINFORCE:
+
+новый duplicate ModelItem не создаётся;
+к существующему item добавляется SourceReference нового сообщения.
+
+CORRECT:
+
+старый item сохраняется со status=CORRECTED;
+создаётся новый item;
+новый item supersedes старый;
+source references сохраняют историю обеих версий.
+
+UNRESOLVED:
+
+опасное persistent изменение не производится.
+
+### Relations
+
+Relation создаётся только если связь была выражена самим пользователем в текущем сообщении.
+
+Relation:
+
+- использует свободный normalized meaning;
+- не имеет закрытого RelationKind;
+- ссылается на ModelItem;
+- получает source reference literal USER message, где связь была выражена.
+
+Human Experience не используется как evidence и на Stage 2A вообще не подключён.
+
+### SourceReference lifecycle
+
+До запуска shadow cognition создаётся candidate USER DialogueMessage:
+
+- с постоянным msg_* ID;
+- с literal user text;
+- с очередным sequence.
+
+Сообщение ещё не сохраняется.
+
+Shadow Perception / Integration используют именно этот message_id для SourceReference.
+
+После successful legacy reply создаётся SYSTEM DialogueMessage.
+
+Затем атомарно валидируется и сохраняется:
+
+candidate updated HumanModel
++
+exact USER DialogueMessage
++
+SYSTEM DialogueMessage
++
+ACS=None
+
+Таким образом persistent HumanModel всегда ссылается на реально сохранённое сообщение DialogueHistory.
+
+### Failure isolation
+
+Shadow cognition не имеет права ломать существующий бот.
+
+При ошибке Shadow Perception или Integration:
+
+- ошибка логируется;
+- legacy pipeline продолжает работу;
+- пользователь получает обычный legacy reply;
+- literal USER/SYSTEM pair сохраняется в новой DialogueHistory;
+- previous shadow HumanModel остаётся без изменений;
+- ACS остаётся None.
+
+При ошибке legacy pipeline до получения reply:
+
+- candidate USER message отбрасывается;
+- candidate HumanModel отбрасывается;
+- shadow state остаётся предыдущим.
+
+### Ограничение ACS
+
+Stage 2A работает только с independent user-originated material.
+
+ACS всё ещё:
+
+None
+
+Поэтому система пока НЕ интерпретирует:
+
+«Да»
+«Нет»
+«Может быть»
+
+как реакцию на конкретное предыдущее действие системы.
+
+Не используются:
+
+- last_question;
+- literal previous system reply;
+- legacy Decision;
+- legacy Reasoning;
+
+для искусственного восстановления referent.
+
+SYSTEM_PROPOSED material на Stage 2A запрещён.
+
+State Reconciliation относительно предыдущего системного действия остаётся задачей Stage 2B после появления корректного structured system action / ACS.
+
+### Legacy compatibility
+
+Не изменялись:
+
+- SemanticEngine;
+- LLMSemanticEngine;
+- legacy HumanModelEngine;
+- ReasoningEngine;
+- DecisionEngine;
+- ImpactEngine;
+- EmotionalEngine;
+- ResponseEngine;
+- Telegram handlers;
+- Conversation Lab;
+- Discovery Data Model.
+
+Новый shadow HumanModel не передаётся legacy Engine и не влияет на reply/update contract.
+
+### Validation
+
+Добавлены тесты:
+
+- independent user material;
+- Previous Attempt + Barrier + explicit Relation;
+- OTHER_PERSON_VIEW;
+- correction / supersession;
+- semantic reinforcement без duplicate;
+- direct question;
+- refusal;
+- ACS-less short response;
+- invalid existing item reference;
+- Shadow LLM failure;
+- legacy pipeline failure;
+- user isolation;
+- exact persisted USER message ID в SourceReference.
+
+Результаты:
+
+- целевой набор: 88 passed;
+- полный V2 test suite: 144 passed;
+- py_compile: успешно;
+- git diff --check: успешно.
+
+### Текущее архитектурное состояние
+
+В V2 теперь существует первый работающий shadow Cognitive fragment:
+
+literal Dialogue History
+→ Perception
+→ Integration
+→ accumulated semantic HumanModel
+
+То есть новая система уже не только помнит слова пользователя, но и начинает формировать структурированное понимание конкретного человека с provenance, source references, relations и correction history.
+
+При этом старый runtime полностью сохраняет контроль над пользовательским диалогом.
+
+### Следующий архитектурный рубеж
+
+Stage 2B требует настоящего Active Conversation State.
+
+Для этого сначала необходимо получить structured semantic representation системного действия:
+
+- что именно система предъявила пользователю;
+- какие независимые semantic contents содержал ответ;
+- на какой content пользователь может отвечать;
+- какой ResponseTarget относится к каждому content.
+
+Только после этого можно корректно реализовать:
+
+previous ACS
++
+new User Message
+→ State Reconciliation
+
+и начать понимать короткие ответы вроде:
+
+«Да»
+«Нет»
+«Именно»
+«Не совсем»
+«Может быть»
+
+относительно конкретного предыдущего смысла.
+
+===============================================================================
 ```
