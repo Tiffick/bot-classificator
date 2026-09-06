@@ -1736,4 +1736,438 @@ new User Message
 относительно конкретного предыдущего смысла.
 
 ===============================================================================
+
+================================================================================
+06.09.2026 — COGNITIVE CORE CONTRACT + DETERMINISTIC STATE APPLIER
+================================================================================
+
+АРХИТЕКТУРНОЕ РЕШЕНИЕ
+
+После отдельного аудита архитектуры V2 принято решение упростить runtime-модель
+Discovery и перейти к HYBRID / Cognitive Core architecture.
+
+Cognitive Cycle остаётся моделью качественного мышления консультанта, но его
+этапы больше не рассматриваются как обязательные отдельные runtime Engines или
+отдельные LLM-вызовы.
+
+Новая граница ответственности:
+
+LLM:
+- понимает человеческий смысл и контекст;
+- интерпретирует неоднозначные ответы;
+- выполняет reconciliation с предыдущим действием системы;
+- формирует рабочее понимание ситуации;
+- выбирает следующий полезный ход;
+- адаптирует эмоциональную форму ответа;
+- формулирует естественный ответ пользователю.
+
+Python:
+- применяет предложенные изменения состояния;
+- создаёт persistent IDs;
+- выводит provenance и status по детерминированным правилам;
+- проверяет references и invariants;
+- обеспечивает immutable / atomic state transition;
+- выполняет structural validation и hard boundaries;
+- отвечает за persistence boundary.
+
+Ключевой принцип:
+
+LLM должна думать.
+Python должен помогать ей помнить и не давать нарушать контракт.
+
+
+PERSISTENT MEMORY
+
+Архитектура памяти не упрощалась до обычной истории диалога.
+
+Сохраняются три разные функции:
+
+Human Model
+- компактное накопленное понимание конкретного человека.
+
+Active Conversation State
+- семантическая закладка последнего реально показанного пользователю действия
+  системы, необходимая для понимания следующей реплики.
+
+Dialogue History
+- буквальная история того, что действительно было сказано.
+
+Human Experience остаётся отдельной read-only knowledge base и не является
+доказательством о конкретном пользователе.
+
+
+ОТМЕНЁННЫЙ ПУТЬ
+
+Отменён ранее рассматривавшийся Stage 2B1:
+
+legacy Decision
+→ deterministic Action Builder / structured action
+→ ACS.
+
+Аудит показал, что legacy Decision обычно знает только общее направление
+(например clarify_weight_impact), а конкретный человеческий смысл действия
+рождается позднее внутри LLM Response.
+
+Построение structured semantic action между ними создало бы скрытый второй
+Decision layer.
+
+Этот путь не реализовывать.
+
+
+НОВЫЙ TURN CONTRACT
+
+Реализован ephemeral CognitiveTurnResult.
+
+Файл:
+
+ai/cognitive_turn.py
+
+CognitiveTurnResult не является persistent memory и не содержит внутренних
+Formulation / Decision / Impact / Emotional Context.
+
+Основные части:
+
+- state_patch;
+- reconciliation;
+- system_action;
+- reply_segments.
+
+LLM предлагает semantic transition, но не мутирует persistent state напрямую.
+
+Для новых объектов LLM использует только turn-local IDs.
+
+Persistent IDs:
+
+mi_*
+rel_*
+acs_*
+aci_*
+rt_*
+msg_*
+
+создаются и контролируются Python.
+
+
+STATE PATCH
+
+Поддержаны операции Human Model:
+
+Items:
+- ADD;
+- REINFORCE;
+- CORRECT.
+
+Relations:
+- ADD;
+- REINFORCE;
+- CORRECT.
+
+Correction lifecycle:
+
+- старый объект остаётся в Human Model;
+- старый получает status CORRECTED;
+- создаётся новый persistent объект;
+- новый объект supersedes старый.
+
+Relations остаются first-class objects.
+
+
+PROVENANCE
+
+LLM не назначает произвольный persistent Provenance.
+
+Она сообщает EvidenceOrigin.
+
+Python детерминированно выводит:
+
+CURRENT_USER_MATERIAL
+→ USER_PROVIDED
+
+CURRENT_USER_INTERPRETATION
+→ USER_INTERPRETATION
+
+CURRENT_OTHER_PERSON_REPORT
+→ OTHER_PERSON
+
+ProposalMaterialization из previous ACS
+→ SYSTEM_PROPOSED.
+
+
+STATUS
+
+Persistent status также выводится Python.
+
+Новый прямой пользовательский материал:
+→ RECORDED
+
+REINFORCE:
+→ существующий status сохраняется
+
+CORRECT:
+→ старый CORRECTED
+→ новый RECORDED
+
+System proposal:
+
+SUPPORTED
+→ SUPPORTED
+
+REJECTED
+→ REJECTED
+
+PARTIALLY_SUPPORTED
+→ PARTIALLY_SUPPORTED
+
+UNCERTAIN
+→ UNCERTAIN.
+
+
+RECONCILIATION
+
+Поддержаны outcomes:
+
+- ANSWERED;
+- SUPPORTED;
+- REJECTED;
+- PARTIALLY_SUPPORTED;
+- UNCERTAIN;
+- AMBIGUOUS;
+- CONSENTED;
+- DECLINED;
+- REFUSED.
+
+NOT_ADDRESSED не является отдельным outcome.
+
+Если previous ResponseTarget отсутствует в reconciliation текущего turn,
+это детерминированно означает, что пользователь его не адресовал.
+
+Это позволяет не заставлять новый материал, вопрос пользователя или смену темы
+искусственно становиться ответом на предыдущий вопрос системы.
+
+Bare "да" при нескольких возможных targets не подтверждает их автоматически.
+Cognitive Core может вернуть AMBIGUOUS, а Python не пытается самостоятельно
+понимать русский язык.
+
+
+SYSTEM_PROPOSED MATERIALIZATION
+
+Значимая версия, предложенная системой, может попасть в Human Model только после
+реакции пользователя.
+
+ProposalMaterialization должен ссылаться на реально существующие:
+
+- previous ActiveContent;
+- previous ResponseTarget;
+- соответствующий reconciliation result.
+
+Persistent SYSTEM_PROPOSED object сохраняет source references как минимум на:
+
+- предыдущую SYSTEM message, где версия действительно была показана;
+- текущую USER reaction.
+
+Таким образом system hypothesis не превращается задним числом в user fact.
+
+
+SYSTEM ACTION / ACS
+
+SystemAction является семантическим источником нового ACS.
+
+ActionContent использует semantic_content.
+
+Natural reply существует отдельно.
+
+В ACS попадает только ActionContent, на который существует ResponseTarget.
+
+Если response targets отсутствуют:
+
+ACS = None.
+
+Эмпатия, пояснения и другие части ответа, на которые пользователь не должен
+отвечать как на отдельный смысл, не обязаны переживать границу хода.
+
+Новый ACS всегда относится только к system action, который пользователь
+действительно получил.
+
+
+REPLY REPRESENTATION
+
+Natural reply представлен ReplySegment.
+
+ReplySegment может декларативно указывать:
+
+realizes_action_content_ids.
+
+Это связывает semantic action с реально показанным surface reply.
+
+Literal совпадение semantic_content с текстом ответа НЕ требуется.
+
+Python не делает keyword matching и не пытается доказать семантическое
+равенство русского текста.
+
+Один естественный ReplySegment может реализовывать несколько independently
+addressable semantic contents.
+
+Фактический SYSTEM reply детерминированно собирается из ReplySegments.
+
+Переданный SYSTEM DialogueMessage.text должен точно совпадать с собранным reply.
+
+
+DETERMINISTIC STATE APPLIER
+
+Реализован:
+
+ai/discovery_state_applier.py
+
+State Applier является чистой candidate transformation.
+
+Он получает:
+
+- previous Human Model;
+- previous ACS;
+- Dialogue History;
+- exact current USER DialogueMessage;
+- exact candidate SYSTEM DialogueMessage;
+- CognitiveTurnResult.
+
+Он:
+
+1. валидирует ephemeral contract;
+2. проверяет USER/SYSTEM roles и ordering;
+3. проверяет local IDs и references;
+4. проверяет reconciliation относительно previous ACS;
+5. проверяет source spans;
+6. проверяет existing Human Model references;
+7. создаёт persistent IDs;
+8. применяет item operations;
+9. применяет relation operations;
+10. применяет ProposalMaterialization;
+11. строит candidate Human Model;
+12. строит новый ACS;
+13. добавляет exact USER/SYSTEM pair в candidate Dialogue History;
+14. выполняет validate_discovery_memory(...);
+15. возвращает AppliedTurn.
+
+State Applier сам ничего не записывает в memory/user_memory.py.
+
+При любой ошибке весь candidate semantic transition отклоняется.
+
+Частичная мутация Human Model, ACS или History не допускается.
+
+
+SHADOW MODE
+
+Подтверждено важное ограничение:
+
+production shadow Cognitive Core не может честно создавать ACS из собственного
+hypothetical reply, если пользователь фактически получил legacy reply.
+
+Поэтому hypothetical ACS нельзя использовать для интерпретации следующего
+реального user message.
+
+Production shadow может безопасно проверять обновление Human Model без такого
+ACS.
+
+Полноценные сценарии:
+
+- ACS;
+- short-answer reconciliation;
+- Recognition;
+- Reflection;
+- Consent
+
+должны тестироваться в непрерывной Conversation Lab simulation или позднее на
+feature-gated Cognitive Core route, где пользователь/симулятор действительно
+получает Cognitive Core reply.
+
+
+STAGE 2A
+
+Stage 2A не считается потерянной работой.
+
+Её основные идеи вошли в новую архитектуру:
+
+- semantic proposals вместо slot filling;
+- turn-local references;
+- source spans;
+- immutable transitions;
+- deterministic Integration;
+- failure isolation.
+
+ShadowIntegrationEngine концептуально является предшественником нового
+deterministic State Applier.
+
+Отдельный ShadowPerceptionEngine является переходной реализацией и в будущем
+может быть поглощён единым Cognitive Core call.
+
+
+РЕАЛИЗОВАННЫЕ ФАЙЛЫ
+
+Созданы:
+
+ai/cognitive_turn.py
+ai/discovery_state_applier.py
+tests/test_cognitive_turn_contract.py
+tests/test_discovery_state_applier.py
+
+Production runtime этим шагом НЕ изменён.
+
+Не изменялись:
+
+- DialogEngine;
+- Telegram;
+- legacy Semantic / HumanModel / Reasoning / Decision / Impact /
+  Emotional / Response Engines;
+- Conversation Lab;
+- memory runtime;
+- Human Experience loader.
+
+
+ПРОВЕРКА
+
+После реализации:
+
+CognitiveTurnResult + State Applier tests:
+38 passed
+
+Discovery-related suite:
+126 passed
+
+Full V2 suite:
+182 passed
+
+Компиляция новых модулей:
+успешно
+
+git diff --check:
+успешно
+
+Blockers:
+нет.
+
+
+GIT
+
+Основной implementation commit:
+
+1ffaf68 — Add Cognitive turn state contract
+
+Commit pushed в origin/main.
+
+
+ТЕКУЩАЯ ТОЧКА
+
+Изолированная транзакционная граница Cognitive Core теперь существует и
+проверена deterministic fixture tests.
+
+При этом сам Cognitive Core LLM ещё НЕ подключён.
+
+Следующий milestone:
+
+реализовать первый Cognitive Core LLM slice поверх CognitiveTurnResult contract,
+не подключая его сразу как основной production route.
+
+Legacy route должен оставаться fallback на этапе миграции.
+
+Нельзя создавать production ACS из hypothetical Cognitive Core reply, которого
+реальный пользователь не видел.
 ```
