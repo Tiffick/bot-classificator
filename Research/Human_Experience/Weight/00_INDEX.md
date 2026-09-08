@@ -20,6 +20,8 @@ The concrete technical runtime schema has not yet been defined.
 This folder describes:
 
 - what may be important to understand about a person who comes with a weight-related concern;
+- how Discovery combines human understanding with grounded professional
+  recognition of the person's problem;
 - how that understanding may develop through conversation;
 - how to distinguish user material, user interpretation, system proposals,
   support, rejection, correction, and uncertainty;
@@ -34,6 +36,19 @@ The central object is the working picture of this concrete person:
 their experience, changes, personal meaning, interpretations, relations,
 previous attempts / barriers, and desired change, while preserving
 provenance and uncertainty.
+
+Useful Discovery balances two complementary lines:
+
+- Human / Meaningful Change — what changed, how it is experienced,
+  why it matters, and what the person wants;
+- Mechanism / Expertise — what was tried, what happened,
+  and which substantial barrier or recurring mechanism is supported
+  by the person's subjective experience.
+
+Neither line has a mandatory order or equal required depth.
+Decision compares their expected value in the concrete conversation.
+Professional recognition remains a working, evidence-bounded understanding;
+it is not objective diagnosis, false certainty, or solution design.
 
 ---
 
@@ -234,7 +249,8 @@ and the current Formulation.
 
 Decision evaluates Sufficiency dynamically:
 
-**“Will another exploratory move add meaningful understanding?”**
+**“Will another exploratory move add useful understanding of the person
+or of the problem mechanism within the current product boundary?”**
 
 If the answer would merely add another interesting fact,
 continuing Discovery may have less value than moving forward.
@@ -280,6 +296,8 @@ The system must not:
 - equate Human Model completeness with Discovery quality;
 - continue Discovery by inertia;
 - drift into full nutrition / program design;
+- confuse grounded professional recognition with objective diagnosis
+  or knowledge the system has not actually obtained;
 - mix user material with system proposals;
 - make Reflection stronger than the source material;
 - hand off without meaningful consent;
