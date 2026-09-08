@@ -1,0 +1,802 @@
+===============================================================================
+FIRST COGNITIVE CORE — TECHNICAL SLICE COMPLETE
+===============================================================================
+
+Commit:
+2f38b47 Add first Cognitive Core
+
+Implemented the first standalone Cognitive Core slice.
+
+FILES
+-----
+ai/cognitive_core.py
+ai/prompts/cognitive_core_system_prompt.txt
+tests/test_cognitive_core.py
+
+ARCHITECTURE
+------------
+Cognitive Core performs one LLM cognitive turn and returns the existing
+CognitiveTurnResult contract.
+
+Input:
+- current user message
+- HumanModel
+- previous ActiveConversationState
+- relevant DialogueHistory
+- Human Experience is explicitly disabled in this first slice
+
+Relevant DialogueHistory consists of:
+- recent dialogue window
+- structurally referenced source messages from HumanModel / ACS
+- deduplicated and ordered by sequence
+
+The Cognitive Core:
+- performs exactly one LLM call
+- uses strict OpenAI Structured Outputs
+- uses the existing CognitiveTurnResult
+- does not persist state
+- does not invoke DiscoveryStateApplier
+- does not integrate with DialogEngine/runtime
+- has no retry
+- has no fallback
+
+Python remains responsible for deterministic state application and persistent
+contract enforcement outside the Cognitive Core.
+
+STRICT STRUCTURED OUTPUT
+------------------------
+The Pydantic-generated CognitiveTurnResult JSON Schema required an API-facing
+normalization for OpenAI strict Structured Outputs.
+
+Every object schema property is presented as required while preserving the
+underlying CognitiveTurnResult contract.
+
+The source Pydantic schema is not mutated.
+
+The complete normalized CognitiveTurnResult schema was verified against the
+real OpenAI Structured Outputs API.
+
+Result:
+FULL_CURRENT_SCHEMA_API_GATE=PASSED
+
+The earlier full-schema request failure could not be reproduced after
+diagnostic isolation.
+
+CONDITIONAL CONTRACT RULES
+--------------------------
+JSON Schema alone cannot express all cross-field invariants enforced by the
+CognitiveTurnResult Pydantic validators.
+
+The Cognitive Core system prompt therefore explicitly communicates the
+important conditional rules, including:
+
+- ItemOperation ADD / REINFORCE / CORRECT requirements
+- RelationOperation requirements
+- evidence/source span requirements
+- existing/local reference exclusivity
+- ProposalMaterialization conditional references
+- reconciliation target cardinality
+- ActionContent / ActionTarget reference rules
+- ReplySegment realization linkage
+
+The strict Pydantic contract remains unchanged and is still the final validator.
+
+TIMEOUT DIAGNOSTIC
+------------------
+The first real CognitiveCore.propose() calls disappeared during the OpenAI
+request.
+
+Diagnostic isolation established:
+
+- raw OpenAI request: PASS
+- minimal Structured Output: PASS
+- complete CognitiveTurnResult schema: PASS
+- real Cognitive Core messages + complete schema without explicit per-request
+  timeout: PASS
+
+The confirmed suspect was the explicit 15-second per-request timeout.
+
+The per-request timeout and the unused CognitiveCore timeout_seconds setting
+were removed.
+
+Timeout configuration is now the responsibility of the injected OpenAI client.
+
+END-TO-END LIVE GATE
+--------------------
+A real CognitiveCore.propose() call using gpt-5-mini successfully completed:
+
+user input
+→ Cognitive Core input construction
+→ system prompt
+→ OpenAI Structured Output
+→ JSON parsing
+→ CognitiveTurnResult.model_validate()
+→ valid CognitiveTurnResult
+
+Observed result:
+
+STATE_PATCH_ITEMS=2
+STATE_PATCH_RELATIONS=0
+RECONCILIATION_COUNT=0
+ACTION_CONTENT_COUNT=1
+ACTION_TARGET_COUNT=1
+REPLY_SEGMENT_COUNT=1
+
+A non-empty ReplySegment was produced.
+
+A later UnicodeEncodeError occurred only in the temporary Windows diagnostic
+harness while printing Russian reply text through cp1252, after propose()
+had already successfully returned.
+
+It is not a Cognitive Core failure.
+
+VALIDATION
+----------
+Targeted Cognitive Core / CognitiveTurn / StateApplier tests:
+49 passed
+
+Full project test suite:
+193 passed
+
+py_compile:
+PASSED
+
+git diff --check:
+PASSED
+
+BOUNDARY
+--------
+This milestone proves that the first standalone Cognitive Core can produce a
+technically valid CognitiveTurnResult through a real LLM call.
+
+It does NOT yet prove consultation quality.
+
+The Cognitive Core is NOT connected to production/runtime.
+
+The next development stage is behavioral evaluation of Cognitive Core reasoning:
+whether it understands the person correctly, chooses useful next actions,
+maintains HumanModel / ACS appropriately, avoids questionnaire behavior, and
+produces natural responses before runtime integration.
+===============================================================================
+
+================================================================================
+COGNITIVE CORE — EVIDENCE BOUNDARY HARDENING COMPLETE
+================================================================================
+
+STATUS
+------
+
+Technical evidence boundary hardening for the standalone Cognitive Core is complete.
+
+Commit:
+
+d799783 Harden Cognitive Core evidence boundary
+
+The commit was pushed to main.
+
+The Cognitive Core remains standalone and is NOT connected to production runtime.
+
+
+WHY THIS STAGE WAS NEEDED
+-------------------------
+
+Behavioral live testing exposed two technical contract failures.
+
+1. LOCAL ID NAMESPACES
+
+The LLM returned local identifiers such as:
+
+ac1
+rt_local_1
+
+instead of the required contract namespaces:
+
+item:
+relation:
+content:
+target:
+segment:
+
+The prompt previously listed the namespaces but did not explicitly map every
+field to its required namespace or prohibit aliases.
+
+The Cognitive Core prompt was hardened so every local ID type has an explicit
+namespace and all references must reuse the exact declared local ID.
+
+This was independently audited against ai/cognitive_turn.py and accepted.
+
+
+2. SOURCE SPAN OWNERSHIP
+
+During the third behavioral turn the LLM repeatedly returned:
+
+source_span = [0, 53)
+
+for a USER message whose exact length was 52 characters.
+
+This happened again even after the prompt explicitly instructed the model to
+respect exact character offsets.
+
+This demonstrated that exact character coordinate calculation is the wrong
+responsibility for the LLM.
+
+Architectural ownership was corrected:
+
+LLM
+    selects semantic evidence as an exact verbatim source_quote
+
+Python
+    deterministically converts source_quote into SourceSpan
+
+The internal CognitiveTurnResult contract still uses numeric SourceSpan.
+StateApplier and the persistent Data Model remain unchanged.
+
+
+SOURCE_QUOTE EVIDENCE BOUNDARY
+------------------------------
+
+The API-facing Cognitive Core schema now uses source_quote instead of numeric
+source_span in all three evidence paths:
+
+- ItemOperation evidence
+- RelationOperation evidence
+- reconciliation evidence
+
+The LLM must return an exact verbatim substring from the CURRENT USER message.
+
+Python then:
+
+1. verifies that the quote is non-empty where required;
+2. searches the unchanged USER message for all exact occurrences;
+3. accepts only one unique exact occurrence;
+4. computes:
+
+   char_start = exact occurrence position
+   char_end   = char_start + len(source_quote)
+
+5. creates the ordinary internal SourceSpan;
+6. validates the resulting CognitiveTurnResult;
+7. performs the existing numeric boundary validation.
+
+No fuzzy matching is used.
+
+No lowercase conversion, whitespace normalization, Unicode normalization,
+punctuation repair or other heuristic correction is used.
+
+If the quote:
+
+- is missing when required;
+- is empty;
+- does not exist in the USER message;
+- occurs more than once;
+
+the Cognitive Core fails with:
+
+CognitiveCoreError(category="validation_failure")
+
+Python does not choose the first duplicate occurrence.
+
+Overlapping duplicate occurrences are also detected.
+
+There is no retry and no fallback.
+
+
+DEFENSIVE VALIDATION
+--------------------
+
+The previous numeric SourceSpan boundary validation remains in CognitiveCore.
+
+For every resulting SourceSpan:
+
+0 <= char_start < char_end <= len(current_user_message.text)
+
+StateApplier keeps its own defensive validation.
+
+Persistent SourceReference validation also remains unchanged.
+
+Therefore the new source_quote adapter does not replace existing protections;
+it adds a deterministic evidence boundary before persistence.
+
+
+LIVE GATE
+---------
+
+The new boundary was tested live on the same third behavioral turn that had
+previously failed.
+
+USER:
+
+"Да просто жрать хочется постоянно. Особенно вечером."
+
+Exact message length:
+
+52
+
+The live strict Structured Output request was accepted.
+
+The LLM selected evidence through source_quote.
+
+Python converted the selected evidence into:
+
+[0, 52)
+
+for:
+
+- state_patch.item_operations[0].source_span
+- state_patch.item_operations[1].source_span
+- reconciliation[0].source_span
+
+Each resulting span pointed exactly to:
+
+"Да просто жрать хочется постоянно. Особенно вечером."
+
+The returned CognitiveTurnResult passed validation.
+
+Previous ACS target reconciliation passed.
+
+All local references resolved.
+
+The targeted ActionContent was realized by ReplySegment.
+
+Exactly one API call was made.
+
+No retry or fallback occurred.
+
+Live gate verdict:
+
+PASSED
+
+
+TEST STATUS
+-----------
+
+After implementation:
+
+Targeted tests:
+100 passed
+
+Full V2 test suite:
+244 passed
+
+py_compile:
+PASS
+
+git diff --check:
+PASS
+
+
+UNCHANGED BOUNDARIES
+--------------------
+
+The following were intentionally NOT changed:
+
+- internal CognitiveTurnResult semantics
+- SourceSpan internal model
+- DiscoveryStateApplier
+- persistent HumanModel
+- persistent Relation model
+- SourceReference
+- DialogueHistory
+- ACS semantics
+- runtime / legacy flow
+- dependencies
+
+No new Engine was introduced.
+
+
+ARCHITECTURAL PRINCIPLE CONFIRMED
+---------------------------------
+
+This stage reinforced the intended Hybrid architecture:
+
+LLM owns:
+
+- semantic understanding
+- interpretation
+- selection of meaningful evidence
+- formulation
+- decision
+- natural response
+
+Python owns:
+
+- exact identifiers
+- exact references
+- exact character coordinates
+- validation
+- persistence invariants
+- deterministic state transitions
+- hard boundaries
+
+The system must not force the LLM to perform deterministic bookkeeping that
+Python can perform exactly.
+
+
+BEHAVIORAL STATUS
+-----------------
+
+The technical Cognitive Core chain has now been demonstrated across consecutive
+turns with:
+
+HumanModel
+→ ACS
+→ next USER message
+→ reconciliation
+→ state patch
+→ next system action
+
+However, behavioral evaluation is NOT complete.
+
+Across the first three behavioral turns the Cognitive Core repeatedly moved
+toward investigating weight-loss attempts, hunger and possible eating triggers.
+
+Observed trajectory:
+
+USER problem / irritation with abdomen
+→ previous attempts
+→ why the attempt was difficult
+→ physical hunger vs habit / emotional eating / boredom
+
+This may indicate a behavioral tendency toward diagnostic questioning about
+weight-loss causes instead of first developing a sufficiently meaningful
+picture of what excess weight has changed in the person's life and why change
+matters to that person now.
+
+This is an observed behavioral issue, NOT yet a technical contract failure.
+
+No behavioral correction was made during this technical stage.
+
+The next development stage is behavioral evaluation of Cognitive Core reasoning
+and dialogue decisions before runtime integration.
+
+================================================================================
+DISCOVERY — MECHANISM / EXPERTISE FUNCTION RESTORED
+================================================================================
+
+STATUS
+------
+
+Architecture clarification complete.
+
+Research source of truth updated and committed:
+
+    9142a7c Clarify Discovery expertise and sufficiency
+
+Commit pushed to main.
+
+This is NOT a new product direction.
+
+It restores an important function of Discovery that existed in the intended
+consultation model but had been underrepresented during formalization of the
+Cognitive Cycle and Product Boundary.
+
+
+WHAT WAS MISSING
+----------------
+
+During behavioral evaluation of the first Cognitive Core turns, Discovery was
+being evaluated too strongly through one major product function:
+
+    HUMAN / MEANINGFUL CHANGE
+
+That function answers questions such as:
+
+    What has the problem changed in this person's life?
+    What does it mean to this person?
+    What does the person want to regain or change?
+
+Desired user effect:
+
+    "Меня действительно поняли."
+
+This remains essential.
+
+However, Previous Attempts / Barriers have another independent product function
+that must also be preserved:
+
+    MECHANISM / EXPERTISE
+
+The consultation should be capable of understanding enough of the person's
+experienced problem mechanism to create a justified sense that the situation
+is professionally recognizable.
+
+Desired user effect:
+
+    "Знакомо.
+     Они понимают, что со мной происходит.
+     Они понимают, почему мои предыдущие попытки не сработали.
+     Похоже, они знают, как с такими ситуациями работать."
+
+Compact internal formulation:
+
+    "Знаем это. Знаем почему. Знаем как решить."
+
+This does NOT authorize the AI to pretend certainty or knowledge that has not
+actually been established.
+
+
+TWO COMPLEMENTARY DISCOVERY LINES
+---------------------------------
+
+Discovery now explicitly recognizes at least two complementary lines of useful
+understanding.
+
+LINE A — HUMAN / MEANINGFUL CHANGE
+
+May include:
+
+    experience
+    Before -> Now
+    life changes
+    limitations
+    adaptations
+    Personal Meaning
+    Desired Change / Return
+
+Primary product value:
+
+    understand the person and what the problem has changed for them.
+
+
+LINE B — MECHANISM / EXPERTISE
+
+May include:
+
+    Previous Attempts
+    why an attempt was not sustainable in the user's experience
+    substantial Barriers
+    recurring mechanisms or patterns
+    discriminating between materially different working explanations
+
+Primary product value:
+
+    understand the problem well enough for professional recognition.
+
+Neither line is a required stage.
+
+There is no mandatory order:
+
+    A -> B
+
+or:
+
+    B -> A
+
+There is no requirement for equal depth in every conversation.
+
+Cognitive Core must compare the expected value of available Decisions in the
+specific conversation.
+
+
+EPISTEMIC BOUNDARY
+------------------
+
+Expert Recognition is NOT Objective Diagnosis.
+
+The user's subjective experience is sufficient for a working model.
+
+The system may understand and test working explanations without claiming that
+it has established an objective physiological, psychological, behavioral, or
+medical cause.
+
+A hypothesis remains a hypothesis.
+
+A user-supported interpretation remains provenance-aware.
+
+Expertise must not be simulated by artificial certainty.
+
+
+VALUE / SUFFICIENCY CLARIFICATION
+---------------------------------
+
+The previous practical question:
+
+    "Will this answer teach us something new?"
+
+is too weak.
+
+Almost any additional question can produce new information.
+
+The opposite restriction:
+
+    "Is this information needed for Meaningful Change Picture?"
+
+is also too narrow.
+
+A question can have legitimate value because it materially improves
+Mechanism / Expertise understanding.
+
+The broader criterion is:
+
+    Will the next answer materially improve useful understanding of the person
+    OR a substantial mechanism of the person's problem within the current
+    product boundary?
+
+A branch should stop when further detail has low expected value for current
+Discovery compared with another available Decision.
+
+Further detail must not be collected merely because it could be useful to a
+future specialist or future solution design.
+
+
+BOUNDARY WITH SOLUTION DESIGN
+-----------------------------
+
+Useful Mechanism / Expertise exploration may:
+
+    distinguish materially different working explanations;
+    clarify why a previous attempt was not sustainable;
+    identify a substantial recurring Barrier;
+    improve the accuracy of Reflection;
+    improve the next Discovery Decision;
+    create justified professional recognition.
+
+It becomes excessive diagnostic exploration when additional detail:
+
+    barely changes the working Formulation;
+    is collected mainly to select or tune a future solution;
+    attempts to establish an objective medical / physiological /
+    psychological cause;
+    continues an already sufficient branch merely because more information
+    can be obtained;
+    has lower expected value than another useful Discovery Decision.
+
+The boundary is semantic and value-based.
+
+It is NOT defined by keywords, a fixed number of questions, required fields,
+or a hardcoded route.
+
+
+BEHAVIORAL AUDIT — REVISED VERDICT
+----------------------------------
+
+Observed Cognitive Core trajectory:
+
+TURN 1
+
+USER:
+
+    "Последние пару лет набрал вес, и больше всего меня раздражает живот."
+
+CORE:
+
+    "Понял — вы набрали вес за последние пару лет, и больше всего вас
+     раздражает живот. Что вы уже пробовали, чтобы с этим справиться?"
+
+Decision:
+
+    Stated Problem -> Previous Attempt
+
+Revised evaluation:
+
+    ACCEPTABLE
+
+Previous Attempts did not have to wait for Personal Meaning.
+Opening the Mechanism / Expertise line is a legitimate Decision.
+
+
+TURN 2
+
+USER:
+
+    "Да особо ничего. Пытался меньше есть, но надолго меня не хватает."
+
+CORE:
+
+    "Понял. Что именно мешало выдерживать уменьшение еды надолго —
+     сильный голод, стресс и занятость, привычки или что-то другое?"
+
+Decision:
+
+    Previous Attempt -> Barrier
+
+Revised evaluation:
+
+    ACCEPTABLE AND VALUABLE
+
+The answer can materially improve understanding of why the user's previous
+attempt was not sustainable.
+
+
+TURN 3
+
+USER:
+
+    "Да просто жрать хочется постоянно. Особенно вечером."
+
+CORE:
+
+    "Понял — особенно вечерами. Это больше физический голод
+     (реально голодны) или скорее привычка/эмоционально
+     (скука, стресс)?"
+
+Decision:
+
+    Barrier -> discriminating mechanism question
+
+Revised evaluation:
+
+    ACCEPTABLE AS ONE DISCRIMINATING STEP
+
+Distinguishing substantially different experienced mechanisms can improve
+professional understanding even before any solution is selected.
+
+However, this turn is now at the SUFFICIENCY BOUNDARY.
+
+After the answer, Cognitive Core should again compare the expected value of
+continuing Mechanism / Expertise with other useful Decisions such as:
+
+    Personal Meaning
+    Desired Change
+    Reflection
+    another meaningful area
+    Transition, when appropriate
+
+A continued sequence of increasingly detailed nutrition / behavior questions
+would require progressively stronger justification.
+
+
+OVERALL BEHAVIORAL VERDICT
+--------------------------
+
+The observed three-turn trajectory is:
+
+    ACCEPTABLE SO FAR, BUT AT THE SUFFICIENCY BOUNDARY.
+
+The three turns do NOT by themselves demonstrate an incorrect diagnostic
+funnel.
+
+They form a compact expert-understanding chain:
+
+    previous attempt
+        ->
+    lack of sustainability
+        ->
+    substantial recurring mechanism
+
+The next Cognitive Core Decision will be particularly informative for
+behavioral evaluation.
+
+
+RESEARCH UPDATED
+----------------
+
+The clarification was integrated only where it represented a real semantic
+gap.
+
+Updated:
+
+    Research/Human_Experience/Weight/00_INDEX.md
+    Research/Human_Experience/Weight/00_INDEX_RU.md
+    Research/Human_Experience/Weight/08_PREVIOUS_ATTEMPTS_BARRIERS.txt
+    Research/Human_Experience/Weight/11_BOUNDARIES.txt
+    Research/Human_Experience/Weight/12_Cognitive_Cycle.txt
+
+Not changed:
+
+    09_REFLECTION_AWARENESS.txt
+    10_TRANSITION_TO_HUMAN_CONSULTANT.txt
+    14_Human_Model.txt
+
+Those documents already support Previous Attempts / Barriers within their
+existing responsibilities.
+
+
+NEXT
+----
+
+Do NOT patch Cognitive Core prompt using the earlier restrictive behavioral
+recommendation.
+
+The source of truth has changed enough that the prompt must be evaluated
+against the restored two-line Discovery model first.
+
+Next behavioral / engineering work should preserve BOTH:
+
+    HUMAN / MEANINGFUL CHANGE
+
+and:
+
+    MECHANISM / EXPERTISE
+
+while strengthening Value / Sufficiency rather than hardcoding a route.
