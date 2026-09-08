@@ -1,5 +1,5 @@
 Ты выполняешь один полный Cognitive Discovery turn. Верни только Structured Output,
-строго соответствующий переданной JSON Schema CognitiveTurnResult. Не раскрывай
+строго соответствующий переданной API-facing JSON Schema. Не раскрывай
 внутренние рассуждения и не добавляй поля вне схемы.
 
 Внутри одного вызова: пойми текущую реплику, сопоставь её с previous ACS, если
@@ -42,16 +42,37 @@ realizes_action_content_ids. semantic_content не обязан буквальн
 
 CONTRACT RULES — these conditional rules are mandatory even when JSON Schema
 allows null or an empty array:
-- Every source_span used for current evidence MUST be non-null, cover at least
-  one character, and identify evidence in the CURRENT USER message.
+LOCAL ID NAMESPACES (mandatory whenever a local ID is non-null):
+- ItemOperation.local_id MUST use item:<name>.
+- RelationOperation.local_id MUST use relation:<name>.
+- ActionContent.local_id MUST use content:<name>.
+- ActionTarget.local_id MUST use target:<name>.
+- ReplySegment.local_id MUST use segment:<name>.
+- References MUST reuse the exact declared local ID including its namespace.
+  If ActionContent.local_id is content:question_1, active_content_local_id,
+  subject.active_content_local_id and realizes_action_content_ids MUST use
+  exactly content:question_1, not question_1, ac1 or another alias.
+- ItemReference.local_item_id and RelationReference.local_relation_id MUST
+  reuse declared item:<name> and relation:<name> IDs respectively, including
+  references in ProposalMaterialization endpoints and action subjects.
+- Reconciliation previous_response_target_ids and ProposalMaterialization
+  resolution_target_id / previous_active_content_id reuse existing persistent
+  rt_ / aci_ IDs from previous ACS, never new local IDs.
+
+- source_quote MUST be a non-empty exact verbatim substring of the CURRENT USER
+  message. Include enough surrounding context for exactly one exact occurrence,
+  including overlapping occurrences. Do not paraphrase, normalize or invent
+  evidence. Python computes evidence coordinates; provide only the quote.
+  Reconciliation source_quote may be null only as allowed by the API contract;
+  item and relation operations always require a non-empty source_quote.
 - ItemOperation: ADD requires local_id and MUST have existing_item_id=null;
-  always provide non-null kind, content, evidence_origin, source_span. REINFORCE
+  always provide non-null kind, content, evidence_origin, source_quote. REINFORCE
   requires existing_item_id, local_id=null, kind=null, content=null, plus
-  non-null evidence_origin and source_span. CORRECT requires both local_id and
-  existing_item_id plus non-null kind, content, evidence_origin, source_span.
+  non-null evidence_origin and source_quote. CORRECT requires both local_id and
+  existing_item_id plus non-null kind, content, evidence_origin, source_quote.
 - RelationOperation follows the same ADD/REINFORCE/CORRECT identity rules.
   ADD/CORRECT require non-empty source_items, target_items and meaning plus
-  evidence_origin/source_span; REINFORCE changes none of those relation fields.
+  evidence_origin/source_quote; REINFORCE changes none of those relation fields.
 - Each ItemReference and RelationReference names exactly one existing ID or one
   local ID, never both. ProposalMaterialization with subject_kind=item has kind
   and content only; subject_kind=relation has endpoints and meaning only.

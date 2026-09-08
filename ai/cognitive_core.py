@@ -54,9 +54,69 @@ def _normalize_strict_schema(source_schema: dict[str, Any]) -> dict[str, Any]:
     return normalized
 
 
-COGNITIVE_TURN_JSON_SCHEMA: dict[str, Any] = _normalize_strict_schema(
-    CognitiveTurnResult.model_json_schema()
-)
+def _api_facing_schema() -> dict[str, Any]:
+    """Derive the wire representation; keep the internal contract unchanged."""
+    schema = CognitiveTurnResult.model_json_schema()
+    for name in ("ItemOperation", "RelationOperation", "TargetResolution"):
+        properties = schema["$defs"][name]["properties"]
+        del properties["source_span"]
+        quote_schema = {"type": "string", "minLength": 1}
+        properties["source_quote"] = (
+            {"anyOf": [quote_schema, {"type": "null"}]}
+            if name == "TargetResolution" else quote_schema
+        )
+    del schema["$defs"]["SourceSpan"]
+    return _normalize_strict_schema(schema)
+
+
+COGNITIVE_TURN_JSON_SCHEMA: dict[str, Any] = _api_facing_schema()
+
+
+def _resolve_source_quotes(payload: Any, message_text: str) -> dict[str, Any]:
+    """Resolve exact, unique evidence on a copy before internal validation."""
+    def fail(path: str, reason: str) -> None:
+        raise CognitiveCoreError("validation_failure", f"{path}: {reason}")
+
+    if not isinstance(payload, dict):
+        fail("$", "expected an object")
+    converted = deepcopy(payload)
+    patch = converted.get("state_patch", {})
+    if not isinstance(patch, dict):
+        fail("state_patch", "expected an object")
+    for path, entries, required in (
+        ("state_patch.item_operations", patch.get("item_operations", []), True),
+        ("state_patch.relation_operations", patch.get("relation_operations", []), True),
+        ("reconciliation", converted.get("reconciliation", []), False),
+    ):
+        if not isinstance(entries, list):
+            fail(path, "expected an array")
+        for index, entry in enumerate(entries):
+            entry_path = f"{path}[{index}]"
+            if not isinstance(entry, dict):
+                fail(entry_path, "expected an object")
+            if "source_span" in entry:
+                fail(f"{entry_path}.source_span", "numeric evidence is not accepted from the API")
+            quote_path = f"{entry_path}.source_quote"
+            if "source_quote" not in entry and required:
+                fail(quote_path, "required quote is missing")
+            quote = entry.pop("source_quote", None)
+            if quote is None and not required:
+                entry["source_span"] = None
+                continue
+            if not isinstance(quote, str) or not quote:
+                fail(quote_path, "expected a non-empty string")
+            matches = []
+            position = message_text.find(quote)
+            while position != -1:
+                matches.append(position)
+                position = message_text.find(quote, position + 1)
+            if len(matches) != 1:
+                fail(quote_path, f"quote={quote!r}; exact matches={len(matches)}; expected exactly one")
+            entry["source_span"] = {
+                "char_start": matches[0],
+                "char_end": matches[0] + len(quote),
+            }
+    return converted
 
 
 class CognitiveCore:
@@ -129,13 +189,36 @@ class CognitiveCore:
                 "parsing_failure", "Cognitive Core response is not valid JSON."
             ) from error
         try:
-            result = CognitiveTurnResult.model_validate(payload)
+            converted_payload = _resolve_source_quotes(payload, current_user_message.text)
+            result = CognitiveTurnResult.model_validate(converted_payload)
+        except CognitiveCoreError as error:
+            self._record_failure(error.category, started_at)
+            raise
         except ValidationError as error:
             self._record_failure("validation_failure", started_at)
             raise CognitiveCoreError(
                 "validation_failure",
                 "Cognitive Core response violates CognitiveTurnResult.",
             ) from error
+
+        message_length = len(current_user_message.text)
+        for path, entries in (
+            ("state_patch.item_operations", result.state_patch.item_operations),
+            ("state_patch.relation_operations", result.state_patch.relation_operations),
+            ("reconciliation", result.reconciliation),
+        ):
+            for index, entry in enumerate(entries):
+                span = entry.source_span
+                if span is not None and not (
+                    0 <= span.char_start < span.char_end <= message_length
+                ):
+                    self._record_failure("validation_failure", started_at)
+                    raise CognitiveCoreError(
+                        "validation_failure",
+                        f"{path}[{index}].source_span [{span.char_start}, "
+                        f"{span.char_end}) is outside the current USER message "
+                        f"(length={message_length}).",
+                    )
 
         self.last_diagnostics = {
             "model": self.model,

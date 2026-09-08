@@ -219,7 +219,7 @@ def test_system_prompt_includes_critical_conditional_contract_rules():
         "CONTRACT RULES",
         "ItemOperation: ADD requires local_id",
         "existing_item_id=null",
-        "non-null kind, content, evidence_origin, source_span",
+        "non-null kind, content, evidence_origin, source_quote",
         "REINFORCE requires existing_item_id",
         "CORRECT requires both local_id and",
         "RelationOperation follows the same ADD/REINFORCE/CORRECT",
@@ -229,6 +229,31 @@ def test_system_prompt_includes_critical_conditional_contract_rules():
         "Every targeted ActionContent MUST be named",
     ):
         assert instruction in prompt
+
+
+def test_system_prompt_requires_local_namespaces_and_exact_reference_reuse():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for field, namespace in (
+        ("ItemOperation.local_id", "item"),
+        ("RelationOperation.local_id", "relation"),
+        ("ActionContent.local_id", "content"),
+        ("ActionTarget.local_id", "target"),
+        ("ReplySegment.local_id", "segment"),
+    ):
+        assert f"{field} MUST use {namespace}:<name>" in prompt
+
+    assert "References MUST reuse the exact declared local ID including its namespace" in prompt
+    for reference in (
+        "active_content_local_id",
+        "subject.active_content_local_id",
+        "realizes_action_content_ids",
+        "ItemReference.local_item_id",
+        "RelationReference.local_relation_id",
+    ):
+        assert reference in prompt
+    assert "exactly content:question_1, not question_1, ac1 or another alias" in prompt
+    assert "rt_ / aci_ IDs from previous ACS, never new local IDs" in prompt
 
 
 def test_history_closure_is_deduplicated_and_sequence_ordered():
@@ -245,6 +270,264 @@ def test_history_closure_is_deduplicated_and_sequence_ordered():
     assert history.messages[0].id in ids  # old Human Model source
     assert history.messages[1].id in ids  # previous ACS system source
     assert {message["sequence"] for message in selected}.issuperset(range(5, 13))
+
+
+def test_system_prompt_requires_exact_unique_current_message_quote():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+    assert "exact verbatim substring of the CURRENT USER message" in prompt
+    assert "exactly one exact occurrence" in prompt
+    assert "Do not paraphrase, normalize or invent" in prompt
+    assert "Python computes evidence coordinates" in prompt
+    assert "Reconciliation source_quote may be null" in prompt
+    for obsolete in ("source_span", "char_start", "char_end", "count characters"):
+        assert obsolete not in prompt
+
+
+def _quote_payload(branch, quote, model, acs):
+    payload = _result().model_dump(mode="json")
+    if branch == "reconciliation":
+        entry = {
+            "previous_response_target_ids": [next(iter(acs.response_targets))],
+            "outcome": "supported",
+            "source_quote": quote,
+        }
+        payload[branch] = [entry]
+    else:
+        field, object_id = (
+            ("existing_item_id", next(iter(model.items)))
+            if branch == "item_operations"
+            else ("existing_relation_id", next(iter(model.relations)))
+        )
+        entry = {
+            "operation": "reinforce",
+            field: object_id,
+            "evidence_origin": "current_user_material",
+            "source_quote": quote,
+        }
+        payload["state_patch"][branch] = [entry]
+    return payload, entry
+
+
+@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
+@pytest.mark.parametrize("overflow", [0, 1])
+def test_current_message_span_boundary_after_single_response(branch, overflow, monkeypatch):
+    current, model, acs, history = _fixture()
+    payload, _ = _quote_payload(branch, current.text, model, acs)
+    resolve = cognitive_core_module._resolve_source_quotes
+    expected = CognitiveTurnResult.model_validate(resolve(payload, current.text))
+    path = f"{'' if branch == 'reconciliation' else 'state_patch.'}{branch}[0].source_span"
+    if overflow:
+        # Simulate an adapter defect: the independent numeric boundary must
+        # still reject a Pydantic-valid, but out-of-message span.
+        def faulty_resolve(raw, text):
+            converted = resolve(raw, text)
+            container = converted if branch == "reconciliation" else converted["state_patch"]
+            container[branch][0]["source_span"]["char_end"] += overflow
+            return converted
+        monkeypatch.setattr(cognitive_core_module, "_resolve_source_quotes", faulty_resolve)
+    client = FakeClient(json.dumps(payload))
+    core = CognitiveCore(client)
+    original_input = current.model_dump()
+    original_content = client.completions.content
+
+    if overflow:
+        with pytest.raises(CognitiveCoreError) as error:
+            core.propose(current, model, acs, history)
+        assert error.value.category == "validation_failure"
+        assert path in str(error.value)
+        assert core.last_diagnostics["success"] is False
+        assert core.last_diagnostics["failure_category"] == "validation_failure"
+    else:
+        result = core.propose(current, model, acs, history)
+        assert result == expected
+        assert core.last_diagnostics["success"] is True
+
+    assert len(client.completions.calls) == 1
+    assert current.model_dump() == original_input
+    assert client.completions.content == original_content
+
+
+@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
+@pytest.mark.parametrize("text,quote", [
+    ("Начало. Хочется есть вечером.", "Хочется есть вечером."),
+    ("🙂 е\u0308ж — текст!", "е\u0308ж"),
+    (" a  b ", " a  b "),
+])
+def test_quote_resolves_exactly_without_mutation(branch, text, quote):
+    _, model, acs, history = _fixture()
+    current = _message(DialogueRole.USER, text, 13)
+    payload, _ = _quote_payload(branch, quote, model, acs)
+    original = deepcopy(payload)
+    converted = cognitive_core_module._resolve_source_quotes(payload, text)
+    assert payload == original
+    client = FakeClient(json.dumps(payload))
+    result = CognitiveCore(client).propose(current, model, acs, history)
+    assert isinstance(result, CognitiveTurnResult)
+    assert result == CognitiveTurnResult.model_validate(converted)
+    rows = result.reconciliation if branch == "reconciliation" else getattr(result.state_patch, branch)
+    assert rows[0].source_span.char_start == text.index(quote)
+    assert rows[0].source_span.char_end == text.index(quote) + len(quote)
+    assert "source_quote" not in result.model_dump_json()
+    assert current.text == text
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("text,quote,reason", [
+    ("Текст", "нет", "exact matches=0"),
+    ("да, да", "да", "exact matches=2"),
+    ("aaaa", "aa", "exact matches=3"),
+    ("Текст", "", "non-empty string"),
+    ("Текст", None, "non-empty string"),
+    ("Текст", 123, "non-empty string"),
+    ("Текст", "текст", "exact matches=0"),
+    ("a  b", "a b", "exact matches=0"),
+    ("é", "e\u0301", "exact matches=0"),
+    ("Текст.", "Текст!", "exact matches=0"),
+    ("Текст", " Текст ", "exact matches=0"),
+])
+def test_bad_quote_fails_after_one_call(text, quote, reason):
+    _, model, acs, history = _fixture()
+    current = _message(DialogueRole.USER, text, 13)
+    payload, _ = _quote_payload("item_operations", quote, model, acs)
+    client = FakeClient(json.dumps(payload))
+    core = CognitiveCore(client)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert "state_patch.item_operations[0].source_quote" in str(error.value)
+    assert reason in str(error.value)
+    assert core.last_diagnostics["failure_category"] == "validation_failure"
+    assert core.last_diagnostics["success"] is False
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("branch", ["item_operations", "relation_operations"])
+@pytest.mark.parametrize("operation", ["add", "reinforce", "correct"])
+@pytest.mark.parametrize("omit_quote", [False, True])
+def test_operation_quote_requirement(branch, operation, omit_quote):
+    current, model, acs, history = _fixture()
+    payload, entry = _quote_payload(branch, current.text, model, acs)
+    entry["operation"] = operation
+    if operation != "reinforce":
+        if branch == "item_operations":
+            entry.update(local_id="item:new", kind="experience", content=current.text)
+            if operation == "add":
+                entry.pop("existing_item_id")
+        else:
+            first, second = model.items
+            entry.update(
+                local_id="relation:new",
+                source_items=[{"existing_item_id": first}],
+                target_items=[{"existing_item_id": second}],
+                meaning="выраженная пользователем связь",
+            )
+            if operation == "add":
+                entry.pop("existing_relation_id")
+    # All other fields satisfy the ordinary contract, isolating evidence.
+    expected = CognitiveTurnResult.model_validate(
+        cognitive_core_module._resolve_source_quotes(payload, current.text)
+    )
+    if omit_quote:
+        del entry["source_quote"]
+    client = FakeClient(json.dumps(payload))
+    core = CognitiveCore(client)
+    if omit_quote:
+        with pytest.raises(CognitiveCoreError) as error:
+            core.propose(current, model, acs, history)
+        assert error.value.category == "validation_failure"
+        assert f"state_patch.{branch}[0].source_quote: required quote is missing" in str(error.value)
+    else:
+        assert core.propose(current, model, acs, history) == expected
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("omit", [False, True])
+def test_reconciliation_quote_can_be_null_or_absent(omit):
+    current, model, acs, history = _fixture()
+    payload, entry = _quote_payload("reconciliation", None, model, acs)
+    if omit:
+        del entry["source_quote"]
+    client = FakeClient(json.dumps(payload))
+    result = CognitiveCore(client).propose(current, model, acs, history)
+    assert result.reconciliation[0].source_span is None
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
+def test_api_numeric_spans_cannot_bypass_quote_resolution(branch):
+    current, model, acs, history = _fixture()
+    payload, entry = _quote_payload(branch, current.text, model, acs)
+    entry["source_span"] = {"char_start": 0, "char_end": len(current.text)}
+    client = FakeClient(json.dumps(payload))
+    with pytest.raises(CognitiveCoreError) as error:
+        CognitiveCore(client).propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert "numeric evidence is not accepted" in str(error.value)
+    assert len(client.completions.calls) == 1
+
+
+def test_api_schema_projects_quotes_without_changing_internal_contract():
+    internal = CognitiveTurnResult.model_json_schema()
+    original = deepcopy(internal)
+    schema = cognitive_core_module._api_facing_schema()
+    assert CognitiveTurnResult.model_json_schema() == original
+    assert "SourceSpan" in internal["$defs"]
+    for name in ("ItemOperation", "RelationOperation", "TargetResolution"):
+        definition = schema["$defs"][name]
+        assert "source_quote" in definition["required"]
+        assert "source_span" in internal["$defs"][name]["properties"]
+        quote = definition["properties"]["source_quote"]
+        if name == "TargetResolution":
+            assert {"type": "null"} in quote["anyOf"]
+        else:
+            assert quote == {"type": "string", "minLength": 1}
+    for removed in ("source_span", "SourceSpan", "char_start", "char_end"):
+        assert removed not in json.dumps(schema)
+    for definition in _objects_with_properties(schema):
+        assert definition["additionalProperties"] is False
+        assert definition["required"] == list(definition["properties"])
+
+
+def test_resolved_quotes_in_all_paths_can_be_applied_without_contract_changes():
+    current, model, acs, history = _fixture()
+    payload = _result().model_dump(mode="json")
+    for branch in ("item_operations", "relation_operations", "reconciliation"):
+        _, entry = _quote_payload(branch, "реплика", model, acs)
+        if branch == "reconciliation":
+            payload[branch] = [entry]
+        else:
+            payload["state_patch"][branch] = [entry]
+    client = FakeClient(json.dumps(payload))
+    result = CognitiveCore(client).propose(current, model, acs, history)
+    system = _message(DialogueRole.SYSTEM, "".join(s.text for s in result.reply_segments), 14)
+    applied = apply_cognitive_turn(model, acs, history, current, system, result)
+    expected = SourceReference(
+        message_id=current.id,
+        char_start=current.text.index("реплика"),
+        char_end=len(current.text),
+    )
+    assert expected in applied.updated_human_model.items[next(iter(model.items))].source_refs
+    assert expected in applied.updated_human_model.relations[next(iter(model.relations))].source_refs
+    assert result.reconciliation[0].source_span.char_end == len(current.text)
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("payload,path", [
+    ([], "$"),
+    ({"state_patch": None}, "state_patch"),
+    ({"state_patch": {"item_operations": None}}, "state_patch.item_operations"),
+    ({"reconciliation": [None]}, "reconciliation[0]"),
+])
+def test_malformed_quote_container_is_validation_failure(payload, path):
+    current, model, acs, history = _fixture()
+    client = FakeClient(json.dumps(payload))
+    core = CognitiveCore(client)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert str(error.value).startswith(path + ":")
+    assert core.last_diagnostics["success"] is False
+    assert len(client.completions.calls) == 1
 
 
 def test_missing_structural_history_reference_fails_explicitly():
