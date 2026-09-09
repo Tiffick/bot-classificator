@@ -14,6 +14,7 @@ from ai.cognitive_turn import (
     ReconciliationOutcome,
     RelationOperation,
     RelationOperationKind,
+    RelationReference,
     ReplySegment,
     SourceSpan,
     StatePatch,
@@ -59,6 +60,40 @@ def _question_action():
         interaction=TargetInteractionKind.OPEN_RESPONSE,
     )
     return SystemAction(contents=(content,), response_targets=(target,))
+
+
+def _turn_with_action_references(*, patch=None, item_refs=(), relation_refs=()):
+    content = ActionContent(
+        local_id="content:reflection",
+        kind=ActiveContentKind.SYSTEM_REFLECTION,
+        semantic_content="собранная картина пользователя",
+        model_item_refs=item_refs,
+        relation_refs=relation_refs,
+    )
+    return _turn(
+        decision_intent=DecisionIntent.REFLECTION,
+        patch=patch,
+        action=SystemAction(contents=(content,)),
+        segments=(
+            ReplySegment(
+                local_id="segment:reflection",
+                text="Правильно ли я собрал общую картину?",
+                realizes_action_content_ids=(content.local_id,),
+            ),
+        ),
+    )
+
+
+def _add_relation(local_id="relation:new"):
+    return RelationOperation(
+        operation=RelationOperationKind.ADD,
+        local_id=local_id,
+        source_items=(ItemReference(existing_item_id=make_id("mi")),),
+        target_items=(ItemReference(existing_item_id=make_id("mi")),),
+        meaning="пользователь связывает эти переживания",
+        evidence_origin=EvidenceOrigin.CURRENT_USER_INTERPRETATION,
+        source_span=SPAN,
+    )
 
 
 def _turn(
@@ -168,6 +203,116 @@ def test_valid_relation_between_two_new_items():
     )
 
     assert result.state_patch.relation_operations[0].local_id == "relation:causal-link"
+
+
+def test_action_content_rejects_unknown_local_item_reference():
+    with pytest.raises(ValidationError, match="unknown local item"):
+        _turn_with_action_references(
+            item_refs=(ItemReference(local_item_id="item:invented"),)
+        )
+
+
+@pytest.mark.parametrize("operation_kind", (ItemOperationKind.ADD, ItemOperationKind.CORRECT))
+def test_action_content_accepts_local_item_declared_in_current_patch(operation_kind):
+    operation = _add("item:declared")
+    if operation_kind == ItemOperationKind.CORRECT:
+        operation = ItemOperation(
+            operation=ItemOperationKind.CORRECT,
+            local_id="item:declared",
+            existing_item_id=make_id("mi"),
+            kind=ModelItemKind.EXPERIENCE,
+            content="уточнённый материал",
+            evidence_origin=EvidenceOrigin.CURRENT_USER_MATERIAL,
+            source_span=SPAN,
+        )
+
+    result = _turn_with_action_references(
+        patch=StatePatch(item_operations=(operation,)),
+        item_refs=(ItemReference(local_item_id="item:declared"),),
+    )
+
+    assert result.system_action.contents[0].model_item_refs[0].local_item_id == "item:declared"
+
+
+def test_action_content_accepts_existing_persistent_item_reference():
+    item_id = make_id("mi")
+
+    result = _turn_with_action_references(
+        item_refs=(ItemReference(existing_item_id=item_id),)
+    )
+
+    assert result.system_action.contents[0].model_item_refs[0].existing_item_id == item_id
+
+
+def test_action_content_accepts_mixed_persistent_and_declared_local_item_references():
+    item_id = make_id("mi")
+
+    result = _turn_with_action_references(
+        patch=StatePatch(item_operations=(_add("item:declared"),)),
+        item_refs=(
+            ItemReference(existing_item_id=item_id),
+            ItemReference(local_item_id="item:declared"),
+        ),
+    )
+
+    assert len(result.system_action.contents[0].model_item_refs) == 2
+
+
+def test_reflection_without_item_operations_accepts_existing_item_reference():
+    result = _turn_with_action_references(
+        patch=StatePatch(item_operations=()),
+        item_refs=(ItemReference(existing_item_id=make_id("mi")),),
+    )
+
+    assert result.state_patch.item_operations == ()
+
+
+def test_reflection_without_item_operations_rejects_invented_local_item_reference():
+    with pytest.raises(ValidationError, match="unknown local item"):
+        _turn_with_action_references(
+            patch=StatePatch(item_operations=()),
+            item_refs=(ItemReference(local_item_id="item:invented"),),
+        )
+
+
+def test_action_content_accepts_declared_local_relation_reference():
+    result = _turn_with_action_references(
+        patch=StatePatch(relation_operations=(_add_relation("relation:declared"),)),
+        relation_refs=(RelationReference(local_relation_id="relation:declared"),),
+    )
+
+    assert result.system_action.contents[0].relation_refs[0].local_relation_id == "relation:declared"
+
+
+def test_action_content_rejects_unknown_local_relation_reference():
+    with pytest.raises(ValidationError, match="unknown local relation"):
+        _turn_with_action_references(
+            relation_refs=(RelationReference(local_relation_id="relation:invented"),)
+        )
+
+
+def test_action_content_accepts_existing_persistent_relation_reference():
+    relation_id = make_id("rel")
+
+    result = _turn_with_action_references(
+        relation_refs=(RelationReference(existing_relation_id=relation_id),)
+    )
+
+    assert result.system_action.contents[0].relation_refs[0].existing_relation_id == relation_id
+
+
+def test_action_content_accepts_mixed_persistent_and_declared_local_relation_references():
+    relation_id = make_id("rel")
+
+    result = _turn_with_action_references(
+        patch=StatePatch(relation_operations=(_add_relation("relation:declared"),)),
+        relation_refs=(
+            RelationReference(existing_relation_id=relation_id),
+            RelationReference(local_relation_id="relation:declared"),
+        ),
+    )
+
+    assert len(result.system_action.contents[0].relation_refs) == 2
 
 
 def test_duplicate_item_local_ids_are_rejected():

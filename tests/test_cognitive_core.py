@@ -258,6 +258,25 @@ def test_system_prompt_requires_local_namespaces_and_exact_reference_reuse():
     assert "rt_ / aci_ IDs from previous ACS, never new local IDs" in prompt
 
 
+def test_system_prompt_defines_item_and_relation_reference_ownership():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "when an item or relation already exists in the supplied HumanModel",
+        "exact persistent ID into existing_item_id (mi_*) or existing_relation_id (rel_*)",
+        "set the corresponding local_*_id to null",
+        "Never create a local alias for an existing persistent object",
+        "local_item_id is allowed only when that exact item:* is declared by an ADD or CORRECT ItemOperation in the CURRENT state_patch",
+        "local_relation_id is allowed only when that exact relation:* is declared by an ADD or CORRECT RelationOperation in the CURRENT state_patch",
+        "every local reference must resolve within this same CognitiveTurnResult",
+        "confirmation, local reflection, working-picture Reflection",
+        "creates no new ModelItem/Relation",
+        "exact existing mi_*/rel_* ID",
+        "leave the corresponding refs list empty",
+    ):
+        assert instruction in prompt
+
+
 def test_system_prompt_explains_active_content_target_ownership():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 

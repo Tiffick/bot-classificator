@@ -182,6 +182,22 @@ LOCAL ID NAMESPACES (mandatory whenever a local ID is non-null):
 - ItemReference.local_item_id and RelationReference.local_relation_id MUST
   reuse declared item:<name> and relation:<name> IDs respectively, including
   references in ProposalMaterialization endpoints and action subjects.
+- REFERENCE OWNERSHIP: when an item or relation already exists in the supplied
+  HumanModel, copy its exact persistent ID into existing_item_id (mi_*) or
+  existing_relation_id (rel_*), and set the corresponding local_*_id to null.
+  Never create a local alias for an existing persistent object.
+- A local_item_id is allowed only when that exact item:* is declared by an ADD
+  or CORRECT ItemOperation in the CURRENT state_patch. A local_relation_id is
+  allowed only when that exact relation:* is declared by an ADD or CORRECT
+  RelationOperation in the CURRENT state_patch. Local IDs are not short names
+  for persistent objects, and Python will not guess or normalize an unknown
+  local alias: every local reference must resolve within this same
+  CognitiveTurnResult.
+- On a confirmation, local reflection, working-picture Reflection or other turn
+  that creates no new ModelItem/Relation, do not invent item:* or relation:*
+  aliases merely to populate ActionContent references. Refer to accumulated
+  HumanModel material with its exact existing mi_*/rel_* ID, or leave the
+  corresponding refs list empty when no semantic reference is needed.
 - Reconciliation previous_response_target_ids and ProposalMaterialization
   resolution_target_id / previous_active_content_id reuse existing persistent
   rt_ / aci_ IDs from previous ACS, never new local IDs.
