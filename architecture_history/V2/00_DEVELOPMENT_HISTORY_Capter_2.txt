@@ -853,3 +853,125 @@ c318ed4 Clarify Cognitive Core consent semantics
 Цель — проверить полный маршрут Discovery после устранения технического blocker и отдельно оценить уже обнаруженные behavioral issues: 
 баланс Human / Meaningful Change и Mechanism / Expertise, Value / Sufficiency, преждевременный solution design, Reflection и 
 естественный Transition / Stop.
+=======================================================================================================================================
+
+=======================================================================================================================================
+
+COGNITIVE CORE — VALUE / SUFFICIENCY AND PRODUCT BOUNDARY HARDENING
+
+Второй полный end-to-end Conversation Lab после исправления CONSENT / DECLINED технически завершился успешно:
+
+- 9 Cognitive Core calls;
+- все CognitiveTurnResult валидны;
+- все DiscoveryStateApplier applications успешны;
+- финальный ACS=None;
+- предыдущий технический blocker устранён.
+
+Behavioral audit выявил устойчивый drift:
+
+Stated Problem
+→ Previous Attempts
+→ Barrier / Mechanism
+→ concrete behavioral experiment
+→ refusal
+→ alternative proposal
+→ future-return proposal
+→ Stop.
+
+Human / Meaningful Change почти не исследовалась, Reflection отсутствовала.
+
+Главный архитектурный вывод:
+проблема не в выборе Mechanism / Expertise как линии Discovery.
+Human / Meaningful Change и Mechanism / Expertise остаются двумя полноценными
+линиями без обязательного порядка и одинаковой глубины.
+
+Root cause:
+утверждённая в Research семантика Value / Sufficiency и продуктовой границы
+была недостаточно полно перенесена в runtime Cognitive Core prompt.
+
+Локальная понятность одного механизма не означает готовность перейти к решению.
+
+Перед следующим действием Cognitive Core должен динамически сравнивать
+ожидаемую ценность допустимых действий внутри текущей продуктовой границы.
+
+Новый Discovery question оправдан, только если ответ способен существенно
+изменить:
+- полезное понимание человека;
+- существенный механизм проблемы;
+- следующий допустимый Decision.
+
+При снижении дополнительной ценности текущей ветки Core должен сравнить её
+с другими допустимыми кандидатами:
+- другой Discovery-линией;
+- Reflection;
+- Transition;
+- Respect Pause / Refusal;
+- Stop Exploration.
+
+Отдельно зафиксирована product eligibility boundary.
+
+Текущий Discovery:
+понять человека
+→ отразить рабочую картину
+→ понять значимые Previous Attempts / Barriers / Mechanisms
+→ показать ценность следующего шага
+→ Transition к живому консультанту с meaningful consent.
+
+Concrete behavioral experiment, recommendation, plan, practice и подбор
+конкретного решения не являются обычными действиями текущего Discovery.
+
+Понятность локального механизма сама по себе не разрешает concrete solution.
+
+SYSTEM_PROPOSAL как action kind не запрещён.
+Он остаётся допустимым для содержательных действий внутри Discovery,
+например проверяемой системной версии.
+Ограничение относится к семантическому содержанию и продуктовой функции,
+а не к enum.
+
+Reflection остаётся value-based candidate, а не обязательным ритуалом.
+
+После DECLINED:
+- отклонённое действие теряет ценность;
+- соседний вариант того же решения не должен предлагаться автоматически;
+- Respect Pause / Refusal и Stop Exploration получают высокий приоритет;
+- причина отказа исследуется только если это существенно меняет допустимый
+  Decision внутри Discovery и не создаёт давления.
+
+Отказ от system proposal сам по себе не является BARRIER исходной проблемы.
+Reconciliation уже способен хранить факт отклонения предложения.
+
+Новые persistent state, field, score, Engine или slot architecture не нужны.
+
+Реализация:
+изменены только:
+- ai/prompts/cognitive_core_system_prompt.txt
+- tests/test_cognitive_core.py
+
+Добавлен runtime prompt block:
+VALUE / SUFFICIENCY AND PRODUCT ELIGIBILITY.
+
+Добавлены focused prompt-contract tests.
+
+Не изменялись:
+- Research;
+- CognitiveTurn contract;
+- DiscoveryStateApplier;
+- Data Contracts;
+- runtime integration.
+
+Проверки:
+- focused Cognitive Core: 66 passed;
+- full pytest: 250 passed;
+- git diff --check: PASS.
+
+Commit:
+4b2363b Enforce Cognitive Core discovery boundary
+
+Следующий этап:
+новый полный end-to-end Conversation Lab текущего Cognitive Core.
+Цель — проверить, изменился ли реальный Decision trajectory:
+не уходит ли Core преждевременно в solution design,
+умеет ли покидать достаточную Mechanism-ветку,
+возникает ли Human / Meaningful Change,
+появляется ли Reflection,
+и корректно ли обрабатываются Refusal / Transition / Stop.
