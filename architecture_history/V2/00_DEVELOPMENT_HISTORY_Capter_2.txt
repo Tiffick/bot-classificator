@@ -1099,3 +1099,199 @@ Commit:
 особенно Value / Sufficiency, баланс Human/Mechanism,
 Product Boundary, Reflection и обработку отказа.
 ================================================================================
+================================================================================
+COGNITIVE CORE — OPERATIONAL DECISION POLICY
+================================================================================
+
+После внедрения Minimal Decision Contract был проведён полный Conversation Lab
+на commit 6c3bf73.
+
+Технический результат:
+- 19 последовательных live Cognitive Core вызовов;
+- 19 валидных CognitiveTurnResult;
+- 0 retry/fallback;
+- 0 contract/state failures;
+- естественная остановка после просьбы пользователя.
+
+Minimal Decision Contract выполнил свою задачу:
+decision_intent стал наблюдаемым и соответствовал фактическому типу действия.
+
+При этом behavioral verdict Conversation Lab: FAIL.
+
+Основная обнаруженная проблема:
+Core систематически выбирал MECHANISM_DISCOVERY после того,
+как marginal value этой ветки уже стала низкой.
+
+Decision trajectory:
+
+HUMAN_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ MECHANISM_DISCOVERY
+→ MECHANISM_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ REFLECTION
+→ MECHANISM_DISCOVERY
+→ MECHANISM_DISCOVERY
+→ MECHANISM_DISCOVERY
+→ RESPECT_PAUSE_OR_REFUSAL
+→ RESPECT_PAUSE_OR_REFUSAL
+
+Распределение:
+- HUMAN_DISCOVERY: 1
+- MECHANISM_DISCOVERY: 10
+- REFLECTION: 6
+- RESPECT_PAUSE_OR_REFUSAL: 2
+
+Положительные изменения относительно предыдущего Lab:
+- исчезла физиологическая ветка fat/bloating/diastasis;
+- исчезла домашняя self-check;
+- исчез premature solution design;
+- Product Boundary не нарушался;
+- после refusal отклонённое действие не повторялось;
+- refusal не материализовался как BARRIER;
+- остановка без обязательного Transition прошла корректно.
+
+Главные behavioral проблемы:
+1. Value/Sufficiency не управлял выбором следующего действия достаточно устойчиво.
+2. Human / Meaningful Change практически не исследовалась.
+3. REFLECTION преимущественно использовалась как local confirmation,
+   а не как сборка целостной working picture.
+
+Offline design audit установил:
+
+PRIMARY ROOT CAUSE:
+DECISION POLICY GAP.
+
+Secondary:
+- PROMPT TRANSFER GAP;
+- частичный STATE VISIBILITY GAP.
+
+Не обнаружено необходимости менять:
+- DecisionIntent contract;
+- Discovery Data Model;
+- persistent state;
+- StateApplier;
+- количество LLM calls.
+
+Ключевой вывод аудита:
+
+UNKNOWN является полноценным Discovery result.
+
+Подтверждённое:
+«не знаю» / «не наблюдал» / «не могу определить»
+может завершать semantic axis.
+
+UNKNOWN не означает:
+«задать тот же вопрос другими словами».
+
+Mechanism Sufficiency в исследованном диалоге была достигнута
+не позднее USER turn 6:
+
+Attempt:
+меньше есть
+
+→ Barrier:
+сильное вечернее желание поесть
+
+→ Result:
+ограничение невозможно долго поддерживать
+
+→ Uncertainty:
+пользователь не знает, физический это голод или привычка.
+
+Дополнительные сведения могут быть полезны,
+но их возможность сама по себе не оправдывает продолжение ветки.
+
+Архитектурное решение:
+
+Не добавлять:
+- fixed Human → Mechanism flow;
+- обязательное чередование линий;
+- лимиты количества вопросов;
+- numeric Value scores;
+- slots/required fields;
+- saturation counters;
+- keyword rules;
+- deterministic Python semantic policy;
+- отдельный DecisionEngine;
+- второй LLM call;
+- persistent Decision/Value/Sufficiency;
+- chain-of-thought.
+
+Вместо этого усилить существующий один Cognitive LLM call
+операциональной процедурой выбора следующего DecisionIntent.
+
+Реализация:
+
+В cognitive_core_system_prompt.txt добавлен
+OPERATIONAL CANDIDATE-SELECTION PROTOCOL.
+
+Перед окончательным выбором decision_intent Cognitive Core должен:
+
+1. INTEGRATE CURRENT RESULT
+   Определить фактический результат текущей реплики,
+   включая supported uncertainty и отсутствие доступного знания.
+
+2. CLOSE EXHAUSTED SEMANTIC AXIS
+   Не продолжать ту же semantic axis,
+   если следующий вопрос только дробит уже подтверждённую uncertainty
+   и не меняет working picture или следующий допустимый Decision.
+
+3. GENERATE DISTINCT ELIGIBLE CANDIDATES
+   Рассмотреть содержательно различные уместные Cognitive actions.
+
+4. COMPARE EXPECTED VALUE
+   Сравнить, что каждый кандидат реально способен изменить,
+   и выбрать наиболее ценный следующий Cognitive action,
+   а не просто следующий локально логичный вопрос.
+
+5. COMPARE DISCOVERY LINES
+   Human / Meaningful Change и Mechanism / Expertise
+   не имеют фиксированного порядка, квот или обязательного чередования.
+   Уже глубокая линия не должна продолжаться только потому,
+   что в ней можно получить ещё детали.
+
+6. REFLECTION DISTINCTION
+   Различать:
+   - local confirmation / repair;
+   - multi-element working-picture Reflection.
+
+   REFLECTION не должна автоматически означать
+   пересказ последней пользовательской реплики.
+
+7. PRODUCT BOUNDARY
+   Детали, полезные преимущественно для solution design,
+   plan selection, home diagnostics или objective diagnosis,
+   не оправдывают продолжение Discovery.
+
+Persistent Data Model не изменён.
+DecisionIntent contract не изменён.
+Python runtime не изменён.
+Research не изменён.
+Один Cognitive LLM call сохранён.
+
+Изменены только:
+- ai/prompts/cognitive_core_system_prompt.txt
+- tests/test_cognitive_core.py
+
+Проверки:
+- Cognitive Core focused tests: 72 passed
+- full pytest: 283 passed
+- py_compile tests/test_cognitive_core.py: PASS
+- git diff --check: PASS
+
+Commit:
+43acc50 Improve Cognitive Core decision policy
+
+Следующий этап:
+полный live Conversation Lab на новой Decision Policy
+с тем же синтетическим профилем для прямого сравнения
+с предыдущими behavioral runs.
