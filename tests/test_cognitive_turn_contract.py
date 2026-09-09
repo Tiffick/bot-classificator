@@ -6,6 +6,7 @@ from ai.cognitive_turn import (
     ActionSubjectReference,
     ActionTarget,
     CognitiveTurnResult,
+    DecisionIntent,
     EvidenceOrigin,
     ItemOperation,
     ItemOperationKind,
@@ -60,9 +61,17 @@ def _question_action():
     return SystemAction(contents=(content,), response_targets=(target,))
 
 
-def _turn(*, patch=None, action=None, segments=None, reconciliation=()):
+def _turn(
+    *,
+    decision_intent=DecisionIntent.HUMAN_DISCOVERY,
+    patch=None,
+    action=None,
+    segments=None,
+    reconciliation=(),
+):
     action = action or _question_action()
     return CognitiveTurnResult(
+        decision_intent=decision_intent,
         state_patch=patch or StatePatch(),
         reconciliation=reconciliation,
         system_action=action,
@@ -346,6 +355,7 @@ def test_targeted_content_requires_realizing_segment():
 
 def test_empty_system_action_is_valid():
     result = _turn(
+        decision_intent=DecisionIntent.STOP_EXPLORATION,
         action=SystemAction(),
         segments=(ReplySegment(local_id="segment:reply", text="Фактический ответ."),),
     )
@@ -356,3 +366,204 @@ def test_empty_system_action_is_valid():
 def test_unknown_fields_are_forbidden():
     with pytest.raises(ValidationError):
         SourceSpan(char_start=0, char_end=1, unsupported=True)
+
+
+def _content_only_action(kind):
+    content = ActionContent(
+        local_id="content:action",
+        kind=kind,
+        semantic_content="содержание действия",
+    )
+    return SystemAction(contents=(content,)), (
+        ReplySegment(
+            local_id="segment:action",
+            text="Содержание действия.",
+            realizes_action_content_ids=(content.local_id,),
+        ),
+    )
+
+
+def _transition_action(interaction=TargetInteractionKind.CONSENT):
+    content = ActionContent(
+        local_id="content:transition",
+        kind=ActiveContentKind.SYSTEM_TRANSITION,
+        semantic_content="предложить переход к консультанту",
+    )
+    action = SystemAction(
+        contents=(content,),
+        response_targets=(
+            ActionTarget(
+                local_id="target:transition",
+                active_content_local_id=content.local_id,
+                subject=ActionSubjectReference(
+                    kind=TargetSubjectKind.ACTIVE_CONTENT,
+                    active_content_local_id=content.local_id,
+                ),
+                interaction=interaction,
+            ),
+        ),
+    )
+    segments = (
+        ReplySegment(
+            local_id="segment:transition",
+            text="Хотите перейти к консультанту?",
+            realizes_action_content_ids=(content.local_id,),
+        ),
+    )
+    return action, segments
+
+
+def test_decision_intent_is_required_and_unknown_value_is_rejected():
+    payload = _turn().model_dump(mode="json")
+    payload.pop("decision_intent")
+    with pytest.raises(ValidationError):
+        CognitiveTurnResult.model_validate(payload)
+
+    payload["decision_intent"] = "unknown_decision"
+    with pytest.raises(ValidationError):
+        CognitiveTurnResult.model_validate(payload)
+
+
+@pytest.mark.parametrize("intent", tuple(DecisionIntent))
+def test_all_decision_intents_round_trip(intent):
+    if intent in (DecisionIntent.HUMAN_DISCOVERY, DecisionIntent.MECHANISM_DISCOVERY):
+        result = _turn(decision_intent=intent)
+    elif intent == DecisionIntent.REFLECTION:
+        action, segments = _content_only_action(ActiveContentKind.SYSTEM_REFLECTION)
+        result = _turn(decision_intent=intent, action=action, segments=segments)
+    elif intent == DecisionIntent.RECOGNITION:
+        action, segments = _content_only_action(ActiveContentKind.RECOGNITION_OPTION)
+        result = _turn(decision_intent=intent, action=action, segments=segments)
+    elif intent == DecisionIntent.TRANSITION:
+        action, segments = _content_only_action(ActiveContentKind.SYSTEM_TRANSITION)
+        result = _turn(decision_intent=intent, action=action, segments=segments)
+    else:
+        result = _turn(
+            decision_intent=intent,
+            action=SystemAction(),
+            segments=(ReplySegment(local_id="segment:reply", text="Ответ."),),
+        )
+
+    assert CognitiveTurnResult.model_validate_json(result.model_dump_json()) == result
+
+
+@pytest.mark.parametrize(
+    ("intent", "expected"),
+    (
+        (DecisionIntent.REFLECTION, "SYSTEM_REFLECTION"),
+        (DecisionIntent.RECOGNITION, "RECOGNITION_OPTION"),
+        (DecisionIntent.TRANSITION, "SYSTEM_TRANSITION"),
+    ),
+)
+def test_typed_decision_requires_matching_action_content(intent, expected):
+    with pytest.raises(ValidationError, match=expected):
+        _turn(decision_intent=intent)
+
+
+def test_transition_response_target_must_use_consent():
+    action, segments = _transition_action()
+    result = _turn(
+        decision_intent=DecisionIntent.TRANSITION,
+        action=action,
+        segments=segments,
+    )
+    assert result.system_action.response_targets[0].interaction == TargetInteractionKind.CONSENT
+
+    with pytest.raises(ValidationError, match="CONSENT"):
+        action, segments = _transition_action(TargetInteractionKind.OPEN_RESPONSE)
+        _turn(
+            decision_intent=DecisionIntent.TRANSITION,
+            action=action,
+            segments=segments,
+        )
+
+
+def test_stop_exploration_rejects_response_target():
+    with pytest.raises(ValidationError, match="must not create a response target"):
+        _turn(decision_intent=DecisionIntent.STOP_EXPLORATION)
+
+
+@pytest.mark.parametrize(
+    "intent", (DecisionIntent.HUMAN_DISCOVERY, DecisionIntent.MECHANISM_DISCOVERY)
+)
+def test_discovery_decision_accepts_response_target_and_requires_one(intent):
+    assert _turn(decision_intent=intent).system_action.response_targets
+    with pytest.raises(ValidationError, match="require a response target"):
+        _turn(
+            decision_intent=intent,
+            action=SystemAction(),
+            segments=(ReplySegment(local_id="segment:reply", text="Ответ."),),
+        )
+
+
+@pytest.mark.parametrize(
+    "interaction",
+    (TargetInteractionKind.OPEN_RESPONSE, TargetInteractionKind.CLARIFICATION),
+)
+def test_respect_pause_does_not_open_discovery_target(interaction):
+    content = ActionContent(
+        local_id="content:pause",
+        kind=ActiveContentKind.SYSTEM_STATEMENT,
+        semantic_content="уважить паузу",
+    )
+    action = SystemAction(
+        contents=(content,),
+        response_targets=(
+            ActionTarget(
+                local_id="target:pause",
+                active_content_local_id=content.local_id,
+                subject=ActionSubjectReference(
+                    kind=TargetSubjectKind.ACTIVE_CONTENT,
+                    active_content_local_id=content.local_id,
+                ),
+                interaction=interaction,
+            ),
+        ),
+    )
+    with pytest.raises(ValidationError, match="must not open a Discovery"):
+        _turn(
+            decision_intent=DecisionIntent.RESPECT_PAUSE_OR_REFUSAL,
+            action=action,
+            segments=(
+                ReplySegment(
+                    local_id="segment:pause",
+                    text="Уважаю вашу паузу.",
+                    realizes_action_content_ids=(content.local_id,),
+                ),
+            ),
+        )
+
+
+def test_consent_subject_cannot_be_system_reflection():
+    reflection = ActionContent(
+        local_id="content:reflection",
+        kind=ActiveContentKind.SYSTEM_REFLECTION,
+        semantic_content="рабочая картина",
+    )
+    with pytest.raises(ValidationError, match="SYSTEM_PROPOSAL or SYSTEM_TRANSITION"):
+        SystemAction(
+            contents=(reflection,),
+            response_targets=(
+                ActionTarget(
+                    local_id="target:consent",
+                    active_content_local_id=reflection.local_id,
+                    subject=ActionSubjectReference(
+                        kind=TargetSubjectKind.ACTIVE_CONTENT,
+                        active_content_local_id=reflection.local_id,
+                    ),
+                    interaction=TargetInteractionKind.CONSENT,
+                ),
+            ),
+        )
+
+
+def test_decision_contract_does_not_keyword_validate_product_semantics():
+    result = _turn(decision_intent=DecisionIntent.MECHANISM_DISCOVERY)
+    payload = result.model_dump(mode="json")
+    payload["system_action"]["contents"][0]["semantic_content"] = (
+        "предложить конкретную домашнюю самопроверку"
+    )
+
+    assert CognitiveTurnResult.model_validate(payload).decision_intent == (
+        DecisionIntent.MECHANISM_DISCOVERY
+    )

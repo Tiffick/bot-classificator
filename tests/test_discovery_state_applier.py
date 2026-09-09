@@ -7,6 +7,7 @@ from ai.cognitive_turn import (
     ActionSubjectReference,
     ActionTarget,
     CognitiveTurnResult,
+    DecisionIntent,
     EvidenceOrigin,
     ItemOperation,
     ItemOperationKind,
@@ -99,8 +100,23 @@ def _action(*, count=1, interaction=TargetInteractionKind.OPEN_RESPONSE, content
     return SystemAction(contents=contents, response_targets=targets)
 
 
-def _result(*, user_text, reply, patch=None, action=None, reconciliation=(), materializations=(), segments=None):
+def _result(
+    *,
+    user_text,
+    reply,
+    decision_intent=None,
+    patch=None,
+    action=None,
+    reconciliation=(),
+    materializations=(),
+    segments=None,
+):
     action = action if action is not None else _action()
+    decision_intent = decision_intent or (
+        DecisionIntent.HUMAN_DISCOVERY
+        if action.response_targets
+        else DecisionIntent.STOP_EXPLORATION
+    )
     patch = patch or StatePatch()
     if materializations:
         patch = StatePatch(
@@ -117,6 +133,7 @@ def _result(*, user_text, reply, patch=None, action=None, reconciliation=(), mat
             ),
         )
     return CognitiveTurnResult(
+        decision_intent=decision_intent,
         state_patch=patch,
         reconciliation=tuple(reconciliation),
         system_action=action,
@@ -575,6 +592,26 @@ def test_no_targets_creates_no_acs():
     applied = _apply_first_turn(result, text, reply)
 
     assert applied.new_acs is None
+
+
+def test_decision_intent_is_not_persisted_in_human_model_acs_or_history():
+    text = "Мне важно понять, что изменилось."
+    reply = "Что стало иначе за последнее время?"
+    result = _result(
+        user_text=text,
+        reply=reply,
+        decision_intent=DecisionIntent.HUMAN_DISCOVERY,
+    )
+
+    applied = _apply_first_turn(result, text, reply)
+
+    assert "decision_intent" not in applied.updated_human_model.model_dump()
+    assert applied.new_acs is not None
+    assert "decision_intent" not in applied.new_acs.model_dump()
+    assert all(
+        "decision_intent" not in message.model_dump()
+        for message in applied.updated_history.messages
+    )
 
 
 def test_empathy_and_question_segments_and_multiple_contents_are_valid():

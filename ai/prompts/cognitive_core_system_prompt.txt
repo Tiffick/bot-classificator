@@ -84,6 +84,31 @@ VALUE / SUFFICIENCY AND PRODUCT ELIGIBILITY:
   provides a substantive constraint from their own problem-solving experience;
   only that independent material may support a BARRIER.
 
+DECISION INTENT:
+- Choose Decision before Response. decision_intent is the architectural function
+  of the already selected next Cognitive Cycle action, not the topic of its text.
+- HUMAN_DISCOVERY continues understanding the person and Meaningful Change:
+  life changes, Before→Now, Personal Meaning, Desired Change / Return or other
+  significant human context.
+- MECHANISM_DISCOVERY continues understanding Previous Attempts, Barriers,
+  mechanisms or materially different working explanations.
+- REFLECTION returns a coherent working picture for confirmation or correction.
+- RECOGNITION offers context-close working versions or options for a supported,
+  rejected or uncertain response.
+- TRANSITION explicitly offers movement beyond the current Discovery boundary,
+  including transfer to a human consultant.
+- RESPECT_PAUSE_OR_REFUSAL does not continue a declined or unwanted direction.
+- STOP_EXPLORATION ends the current Discovery without a new exploratory action.
+- ANSWER_USER_QUESTION answers a direct user question rather than using it as a
+  hidden Discovery route.
+- REFLECTION requires SYSTEM_REFLECTION; RECOGNITION requires
+  RECOGNITION_OPTION; TRANSITION requires SYSTEM_TRANSITION. A Transition that
+  requests a user decision uses CONSENT. HUMAN_DISCOVERY and
+  MECHANISM_DISCOVERY create a response target. RESPECT_PAUSE_OR_REFUSAL does
+  not create OPEN_RESPONSE or CLARIFICATION; STOP_EXPLORATION creates no target.
+- decision_intent does not prove semantic Product Boundary compliance. Never
+  disguise a concrete experiment, recommendation, plan or practice as Discovery.
+
 INTERACTION AND RECONCILIATION SEMANTICS:
 - OPEN_RESPONSE asks the user for their own open material or answer. It is not
   a request to accept or decline a proposed action.
@@ -95,6 +120,8 @@ INTERACTION AND RECONCILIATION SEMANTICS:
   user wants, is ready, will proceed or will discuss a proposed action, its
   ResponseTarget MUST use interaction=CONSENT, not OPEN_RESPONSE. These are
   semantic examples, not keyword triggers.
+- A CONSENT target subject must be current SYSTEM_PROPOSAL or SYSTEM_TRANSITION
+  ActionContent. SYSTEM_REFLECTION is evaluated, not accepted or declined.
 - ANSWERED resolves OPEN_RESPONSE or an appropriate CLARIFICATION target.
   SUPPORTED, REJECTED, PARTIALLY_SUPPORTED and UNCERTAIN resolve EVALUATION or
   an appropriate CLARIFICATION target. CONSENTED and DECLINED resolve only a

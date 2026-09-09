@@ -17,6 +17,7 @@ from ai.cognitive_turn import (
     ActionSubjectReference,
     ActionTarget,
     CognitiveTurnResult,
+    DecisionIntent,
     ReplySegment,
     SystemAction,
 )
@@ -71,6 +72,7 @@ def _result(reply="Что для тебя сейчас важнее?"):
         semantic_content="уточнить значимую область",
     )
     return CognitiveTurnResult(
+        decision_intent=DecisionIntent.HUMAN_DISCOVERY,
         system_action=SystemAction(
             contents=(content,),
             response_targets=(
@@ -341,6 +343,50 @@ def test_system_prompt_respects_declined_without_inventing_problem_barrier():
         "only that independent material may support a BARRIER",
     ):
         assert instruction in prompt
+
+
+def test_system_prompt_defines_ephemeral_decision_intents_and_structural_limits():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "Choose Decision before Response",
+        "architectural function of the already selected next Cognitive Cycle action",
+        "not the topic of its text",
+        "HUMAN_DISCOVERY continues understanding the person and Meaningful Change",
+        "MECHANISM_DISCOVERY continues understanding Previous Attempts, Barriers",
+        "REFLECTION returns a coherent working picture",
+        "RECOGNITION offers context-close working versions or options",
+        "TRANSITION explicitly offers movement beyond the current Discovery boundary",
+        "RESPECT_PAUSE_OR_REFUSAL does not continue a declined or unwanted direction",
+        "STOP_EXPLORATION ends the current Discovery",
+        "ANSWER_USER_QUESTION answers a direct user question",
+        "decision_intent does not prove semantic Product Boundary compliance",
+        "Never disguise a concrete experiment, recommendation, plan or practice as Discovery",
+        "A CONSENT target subject must be current SYSTEM_PROPOSAL or SYSTEM_TRANSITION",
+        "SYSTEM_REFLECTION is evaluated, not accepted or declined",
+    ):
+        assert instruction in prompt
+
+
+def test_api_schema_requires_all_decision_intent_values():
+    properties = COGNITIVE_TURN_JSON_SCHEMA["properties"]
+    assert "decision_intent" in properties
+    assert "decision_intent" in COGNITIVE_TURN_JSON_SCHEMA["required"]
+    decision_schema = properties["decision_intent"]
+    definition_name = decision_schema["$ref"].rsplit("/", 1)[-1]
+    assert set(COGNITIVE_TURN_JSON_SCHEMA["$defs"][definition_name]["enum"]) == {
+        intent.value for intent in DecisionIntent
+    }
+
+
+def test_core_returns_explicit_decision_after_exactly_one_llm_call():
+    current, model, acs, history = _fixture()
+    core, client = _core()
+
+    result = core.propose(current, model, acs, history)
+
+    assert result.decision_intent is DecisionIntent.HUMAN_DISCOVERY
+    assert len(client.completions.calls) == 1
 
 
 def test_history_closure_is_deduplicated_and_sequence_ordered():

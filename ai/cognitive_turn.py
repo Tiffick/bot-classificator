@@ -67,6 +67,19 @@ class EvidenceOrigin(str, Enum):
     CURRENT_OTHER_PERSON_REPORT = "current_other_person_report"
 
 
+class DecisionIntent(str, Enum):
+    """Ephemeral architectural function selected for the current turn."""
+
+    HUMAN_DISCOVERY = "human_discovery"
+    MECHANISM_DISCOVERY = "mechanism_discovery"
+    REFLECTION = "reflection"
+    RECOGNITION = "recognition"
+    TRANSITION = "transition"
+    RESPECT_PAUSE_OR_REFUSAL = "respect_pause_or_refusal"
+    STOP_EXPLORATION = "stop_exploration"
+    ANSWER_USER_QUESTION = "answer_user_question"
+
+
 class SourceSpan(EphemeralModel):
     char_start: int = Field(ge=0)
     char_end: int = Field(ge=0)
@@ -365,14 +378,37 @@ class SystemAction(EphemeralModel):
         _validate_unique(content_ids, "SystemAction content IDs")
         _validate_unique(target_ids, "SystemAction target IDs")
         known_contents = set(content_ids)
+        content_by_id = {content.local_id: content for content in self.contents}
         for target in self.response_targets:
             if target.active_content_local_id not in known_contents:
                 raise ValueError("ActionTarget must reference an ActionContent in SystemAction.")
+            owner_content = content_by_id[target.active_content_local_id]
+            subject_content = None
             if (
                 target.subject.kind == TargetSubjectKind.ACTIVE_CONTENT
                 and target.subject.active_content_local_id not in known_contents
             ):
                 raise ValueError("Action target subject must reference an ActionContent in SystemAction.")
+            if target.subject.kind == TargetSubjectKind.ACTIVE_CONTENT:
+                subject_content = content_by_id[target.subject.active_content_local_id]
+            if (
+                owner_content.kind == ActiveContentKind.SYSTEM_TRANSITION
+                or (
+                    subject_content is not None
+                    and subject_content.kind == ActiveContentKind.SYSTEM_TRANSITION
+                )
+            ) and target.interaction != TargetInteractionKind.CONSENT:
+                raise ValueError("A targeted SYSTEM_TRANSITION must use CONSENT.")
+            if target.interaction == TargetInteractionKind.CONSENT:
+                if target.subject.kind != TargetSubjectKind.ACTIVE_CONTENT:
+                    raise ValueError("CONSENT target subject must reference current ActionContent.")
+                if subject_content.kind not in (
+                    ActiveContentKind.SYSTEM_PROPOSAL,
+                    ActiveContentKind.SYSTEM_TRANSITION,
+                ):
+                    raise ValueError(
+                        "CONSENT target subject must be SYSTEM_PROPOSAL or SYSTEM_TRANSITION."
+                    )
         return self
 
 
@@ -400,6 +436,7 @@ class StatePatch(EphemeralModel):
 
 
 class CognitiveTurnResult(EphemeralModel):
+    decision_intent: DecisionIntent
     state_patch: StatePatch = Field(default_factory=StatePatch)
     reconciliation: tuple[TargetResolution, ...] = ()
     system_action: SystemAction = Field(default_factory=SystemAction)
@@ -479,6 +516,41 @@ class CognitiveTurnResult(EphemeralModel):
         }
         if not targeted_contents.issubset(realized_contents):
             raise ValueError("Every targetable ActionContent must be realized by a ReplySegment.")
+
+        content_kinds = {content.kind for content in self.system_action.contents}
+        if (
+            self.decision_intent == DecisionIntent.REFLECTION
+            and ActiveContentKind.SYSTEM_REFLECTION not in content_kinds
+        ):
+            raise ValueError("REFLECTION decision requires SYSTEM_REFLECTION content.")
+        if (
+            self.decision_intent == DecisionIntent.RECOGNITION
+            and ActiveContentKind.RECOGNITION_OPTION not in content_kinds
+        ):
+            raise ValueError("RECOGNITION decision requires RECOGNITION_OPTION content.")
+        if self.decision_intent == DecisionIntent.TRANSITION:
+            if ActiveContentKind.SYSTEM_TRANSITION not in content_kinds:
+                raise ValueError("TRANSITION decision requires SYSTEM_TRANSITION content.")
+        if self.decision_intent == DecisionIntent.RESPECT_PAUSE_OR_REFUSAL and any(
+            target.interaction in (
+                TargetInteractionKind.OPEN_RESPONSE,
+                TargetInteractionKind.CLARIFICATION,
+            )
+            for target in self.system_action.response_targets
+        ):
+            raise ValueError(
+                "RESPECT_PAUSE_OR_REFUSAL must not open a Discovery response target."
+            )
+        if (
+            self.decision_intent == DecisionIntent.STOP_EXPLORATION
+            and self.system_action.response_targets
+        ):
+            raise ValueError("STOP_EXPLORATION must not create a response target.")
+        if self.decision_intent in (
+            DecisionIntent.HUMAN_DISCOVERY,
+            DecisionIntent.MECHANISM_DISCOVERY,
+        ) and not self.system_action.response_targets:
+            raise ValueError("Discovery decisions require a response target.")
 
         resolved_targets: list[str] = []
         for resolution in self.reconciliation:
