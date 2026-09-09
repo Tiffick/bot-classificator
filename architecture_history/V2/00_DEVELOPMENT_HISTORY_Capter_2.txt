@@ -1295,3 +1295,319 @@ Commit:
 полный live Conversation Lab на новой Decision Policy
 с тем же синтетическим профилем для прямого сравнения
 с предыдущими behavioral runs.
+
+================================================================================
+COGNITIVE CORE — REFERENCE OWNERSHIP HARDENING
+================================================================================
+
+КОНТЕКСТ
+
+После внедрения Operational Decision Policy был проведён новый полный
+Conversation Lab на commit:
+
+eb5f764 Document Cognitive Core decision policy
+
+Поведенчески первые пять успешных ходов показали существенное улучшение:
+
+- HUMAN_DISCOVERY начал реально развиваться;
+- появились multi-element working-picture Reflection;
+- преждевременный Mechanism route не возник;
+- Product Boundary сохранялся;
+- вопросы имели заметно более высокую ожидаемую ценность.
+
+Однако Turn 6 завершился техническим failure до StateApplier:
+
+CognitiveCoreError
+category=validation_failure
+
+Pydantic cause:
+
+ActionContent references an unknown local item.
+
+USER turn:
+
+«Да, так.»
+
+Structured Output API:
+PASS
+
+JSON parsing:
+PASS
+
+Source quote adapter:
+PASS до Pydantic
+
+CognitiveTurnResult validation:
+FAIL
+
+StateApplier:
+не вызван
+
+Persistent state:
+не изменён
+
+Retry/fallback:
+не выполнялся
+
+Поэтому полный behavioral regression gate Operational Decision Policy
+не был завершён.
+
+────────────────────────────────────
+OFFLINE CONTRACT-BOUNDARY AUDIT
+────────────────────────────────────
+
+После failure был проведён отдельный offline audit без изменений кода.
+
+Установленный data path:
+
+OpenAI Structured Output
+→ JSON parsing
+→ source_quote adaptation
+→ CognitiveTurnResult.model_validate()
+→ CognitiveTurnResult cross-reference validation
+→ DiscoveryStateApplier
+
+Ошибка была обнаружена на границе CognitiveTurnResult до StateApplier.
+
+Внутренний CognitiveTurn contract уже выражал правильную семантику ссылок.
+
+Local namespaces текущего CognitiveTurnResult включают:
+
+item:*
+relation:*
+content:*
+target:*
+segment:*
+
+Persistent model references используют:
+
+mi_*
+rel_*
+aci_*
+rt_*
+
+Для ActionContent.model_item_refs допустимы:
+
+1. existing persistent HumanModel item:
+
+existing_item_id = exact mi_*
+local_item_id = null
+
+2. current-turn local item:
+
+local_item_id = exact item:*
+existing_item_id = null
+
+При этом local item обязан быть объявлен ADD или CORRECT ItemOperation
+текущего StatePatch.
+
+Аналогичное правило действует для relation references.
+
+Local alias не является сокращённым именем существующего persistent object.
+
+────────────────────────────────────
+ROOT CAUSE
+────────────────────────────────────
+
+PRIMARY:
+
+STOCHASTIC CONTRACT VIOLATION
+
+LLM сгенерировала local item reference, который не был объявлен
+текущим StatePatch.
+
+Существующий Pydantic validator корректно отверг результат.
+
+Secondary:
+
+1. API SCHEMA AMBIGUITY
+
+Wire schema обеспечивает shape Structured Output, но не может гарантировать
+динамическое membership-условие:
+
+local reference
+MUST belong to
+local declarations текущего result.
+
+2. PROMPT REFERENCE RULE GAP
+
+Общие правила local references уже существовали, но confirmation/reflection
+сценарий без нового state не был сформулирован достаточно операционально.
+
+3. OBSERVABILITY GAP
+
+При validation_failure текущий CognitiveCoreError не сохраняет raw structured
+payload, поэтому exact offending local reference после Lab установить
+не удалось.
+
+Observability признана отдельной задачей и в текущий fix не включалась.
+
+────────────────────────────────────
+АРХИТЕКТУРНОЕ РЕШЕНИЕ
+────────────────────────────────────
+
+Не менять:
+
+- CognitiveTurn internal Data Contract;
+- persistent Data Model;
+- DiscoveryStateApplier;
+- source_quote adapter;
+- one-LLM-call architecture;
+- DecisionIntent;
+- Operational Decision Policy;
+- runtime state;
+- retry/fallback.
+
+Не выполнять semantic normalization:
+
+item:* → mi_*
+
+Python не должен угадывать, какой persistent semantic object имела в виду
+модель под неизвестным local alias.
+
+Невалидный CognitiveTurnResult должен по-прежнему fail closed.
+
+Выбран минимальный generation-reliability hardening:
+
+PROMPT REFERENCE OWNERSHIP CLARIFICATION
++
+DIRECT CONTRACT TEST COVERAGE
+
+────────────────────────────────────
+РЕАЛИЗАЦИЯ
+────────────────────────────────────
+
+Изменены только:
+
+ai/prompts/cognitive_core_system_prompt.txt
+tests/test_cognitive_core.py
+tests/test_cognitive_turn_contract.py
+
+Prompt теперь явно требует:
+
+EXISTING PERSISTENT REFERENCES
+
+Если item/relation уже существует в переданном HumanModel:
+
+- использовать точный persistent ID;
+- item → existing_item_id = exact mi_*;
+- relation → existing_relation_id = exact rel_*;
+- соответствующий local_*_id = null.
+
+Запрещено создавать новый local alias для существующего persistent object.
+
+CURRENT-TURN LOCAL REFERENCES
+
+local_item_id допустим только если exact item:* объявлен
+ADD или CORRECT ItemOperation текущего StatePatch.
+
+local_relation_id допустим только если exact relation:* объявлен
+ADD или CORRECT RelationOperation текущего StatePatch.
+
+CONFIRMATION / REFLECTION WITHOUT NEW STATE
+
+Если turn подтверждает или отражает уже накопленную картину
+без создания нового ModelItem/Relation:
+
+- не создавать искусственный local alias;
+- при необходимости использовать существующий mi_*/rel_*;
+- если semantic reference не нужен, refs list может быть пустым.
+
+NO GUESSING / NO NORMALIZATION
+
+Python не угадывает значение неизвестного local alias.
+
+Каждый emitted local reference обязан разрешаться через declarations
+этого же CognitiveTurnResult.
+
+────────────────────────────────────
+TEST COVERAGE
+────────────────────────────────────
+
+Добавлены прямые positive/negative tests для:
+
+ITEM REFERENCES
+
+- unknown local item → FAIL;
+- valid declared local item → PASS;
+- existing persistent mi_* → PASS;
+- mixed persistent + valid local → PASS;
+- reflection/confirmation без новых item operations
+  с existing mi_* → PASS;
+- reflection/confirmation без новых item operations
+  с invented item:* → FAIL.
+
+RELATION REFERENCES
+
+- valid declared local relation → PASS;
+- unknown local relation → FAIL;
+- existing persistent rel_* → PASS;
+- mixed persistent + valid local relation → PASS.
+
+Также добавлен focused prompt-contract test,
+проверяющий существенные reference ownership instructions
+без привязки ко всему тексту prompt.
+
+────────────────────────────────────
+ПРОВЕРКИ
+────────────────────────────────────
+
+CognitiveTurn contract:
+
+53 passed
+
+CognitiveCore:
+
+73 passed
+
+Совместный focused-прогон:
+
+126 passed
+
+Полный pytest:
+
+295 passed in 27.76s
+
+py_compile:
+PASS
+
+git diff --check:
+PASS
+
+Live API:
+не запускался
+
+Conversation Lab:
+не запускался
+
+────────────────────────────────────
+COMMIT
+────────────────────────────────────
+
+d0b4b62 Harden Cognitive Core reference ownership
+
+Commit отправлен в main.
+
+────────────────────────────────────
+ТЕКУЩЕЕ СОСТОЯНИЕ
+────────────────────────────────────
+
+Generation reliability для local/persistent reference ownership усилена.
+
+Fail-closed semantic cross-reference validation сохранена.
+
+Persistent Data Model не изменён.
+
+CognitiveTurn production contract не изменён.
+
+StateApplier не изменён.
+
+One-LLM-call architecture сохранена.
+
+Operational Decision Policy не изменена.
+
+Следующий этап:
+
+повторный полный live Conversation Lab на том же синтетическом профиле
+для завершения behavioral regression gate Operational Decision Policy
+и проверки, устранён ли Turn 6 reference failure.
