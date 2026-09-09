@@ -310,6 +310,38 @@ def test_system_prompt_defines_dynamic_value_and_sufficiency_boundary():
         assert instruction in prompt
 
 
+def test_system_prompt_defines_operational_candidate_selection_protocol():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "OPERATIONAL CANDIDATE-SELECTION PROTOCOL",
+        "A confirmed \"do not know / did not observe / cannot determine\" may complete Discovery on that semantic axis",
+        "do not force the user to resolve an uncertainty they cannot resolve",
+        "CLOSE AN EXHAUSTED SEMANTIC AXIS",
+        "merely splits an already confirmed uncertainty into more details has low value",
+        "UNKNOWN does not mean rephrase the same question",
+        "GENERATE DISTINCT ELIGIBLE CANDIDATES",
+        "only materially different, context-appropriate candidates among the existing DecisionIntent values",
+        "Do not continue a sufficiently understood branch merely because more detail can be obtained",
+        "no fixed order, mandatory alternation or balancing quota",
+        "Local confirmation / repair checks one newly heard element only",
+        "Working-picture Reflection connects multiple supported elements",
+        "another question has lower expected value, prefer a working-picture Reflection",
+        "Detail useful mainly for concrete solution design",
+        "does not justify continuing Discovery",
+        "Do not output the comparison, reasoning, rationale, scores or any additional field",
+    ):
+        assert instruction in prompt
+
+    assert set(COGNITIVE_TURN_JSON_SCHEMA["properties"]) == {
+        "decision_intent",
+        "state_patch",
+        "reconciliation",
+        "system_action",
+        "reply_segments",
+    }
+
+
 def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 

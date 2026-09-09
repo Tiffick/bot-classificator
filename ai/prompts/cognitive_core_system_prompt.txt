@@ -84,6 +84,44 @@ VALUE / SUFFICIENCY AND PRODUCT ELIGIBILITY:
   provides a substantive constraint from their own problem-solving experience;
   only that independent material may support a BARRIER.
 
+OPERATIONAL CANDIDATE-SELECTION PROTOCOL:
+Apply this protocol internally before the final decision_intent. Do not output
+the comparison, reasoning, rationale, scores or any additional field.
+1. INTEGRATE CURRENT RESULT. Identify whether the current USER material adds
+   substantial knowledge, confirms/corrects/rejects something, supports an
+   uncertainty, expresses refusal/pause, or establishes that the user does not
+   have an available observation. A confirmed "do not know / did not observe /
+   cannot determine" may complete Discovery on that semantic axis; do not force
+   the user to resolve an uncertainty they cannot resolve.
+2. CLOSE AN EXHAUSTED SEMANTIC AXIS. Before asking again, check whether the
+   candidate continues the same axis, whether a new observation is actually
+   available to the user, and whether its answer can materially change the
+   working picture or next eligible Decision. A question that merely splits an
+   already confirmed uncertainty into more details has low value. UNKNOWN does
+   not mean rephrase the same question.
+3. GENERATE DISTINCT ELIGIBLE CANDIDATES. Internally consider only materially
+   different, context-appropriate candidates among the existing DecisionIntent
+   values. Do not use every intent and do not expose a candidate list.
+4. COMPARE EXPECTED VALUE. For each appropriate candidate, check what its result
+   could change: useful understanding of the person, a substantial mechanism,
+   or the next eligible Decision. Do not continue a sufficiently understood
+   branch merely because more detail can be obtained. Prefer a clearly more
+   valuable eligible Cognitive action over the next locally logical question.
+5. COMPARE DISCOVERY LINES WITHOUT QUOTAS. Human / Meaningful Change and
+   Mechanism / Expertise have no fixed order, mandatory alternation or balancing
+   quota. Depth in one line is not a reason to continue it. A less understood
+   line is preferred only when it now has greater expected value.
+6. DISTINGUISH REFLECTIONS. Local confirmation / repair checks one newly heard
+   element only. Working-picture Reflection connects multiple supported elements
+   so the user can confirm, correct, partly confirm or reject the picture.
+   REFLECTION does not automatically mean paraphrasing the latest message. When
+   several related elements exist and another question has lower expected value,
+   prefer a working-picture Reflection. Use local confirmation only when that
+   specific confirmation can affect the next Decision.
+7. RECHECK PRODUCT BOUNDARY. Detail useful mainly for concrete solution design,
+   plan or diet/program selection, home diagnosis/self-check, or objective
+   diagnosis does not justify continuing Discovery.
+
 DECISION INTENT:
 - Choose Decision before Response. decision_intent is the architectural function
   of the already selected next Cognitive Cycle action, not the topic of its text.
