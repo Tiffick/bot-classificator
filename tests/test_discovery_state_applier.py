@@ -524,6 +524,50 @@ def test_action_creates_acs_with_exact_system_message_and_multiple_targets():
     assert applied.new_acs.source_system_message_id == applied.updated_history.messages[-1].id
 
 
+def test_action_persists_distinct_owner_and_active_content_subject():
+    text = "Вечером особенно трудно."
+    reply = "Похоже, вечерний голод мешает устойчивости. Насколько это похоже на ваш опыт?"
+    reflection = ActionContent(
+        local_id="content:reflection",
+        kind=ActiveContentKind.SYSTEM_REFLECTION,
+        semantic_content="вечерний голод мешает устойчивости",
+    )
+    question = ActionContent(
+        local_id="content:question",
+        kind=ActiveContentKind.SYSTEM_QUESTION,
+        semantic_content="насколько это похоже на опыт пользователя",
+    )
+    action = SystemAction(
+        contents=(reflection, question),
+        response_targets=(
+            ActionTarget(
+                local_id="target:question",
+                active_content_local_id=question.local_id,
+                subject=ActionSubjectReference(
+                    kind=TargetSubjectKind.ACTIVE_CONTENT,
+                    active_content_local_id=reflection.local_id,
+                ),
+                interaction=TargetInteractionKind.EVALUATION,
+            ),
+        ),
+    )
+    result = _result(user_text=text, reply=reply, action=action)
+
+    applied = _apply_first_turn(result, text, reply)
+
+    assert applied.new_acs is not None
+    assert len(applied.new_acs.active_content) == 2
+    target = next(iter(applied.new_acs.response_targets.values()))
+    owner = applied.new_acs.active_content[target.active_content_id]
+    subject = applied.new_acs.active_content[target.subject.id]
+    assert owner.content == question.semantic_content
+    assert subject.content == reflection.semantic_content
+    assert target.active_content_id != target.subject.id
+    validate_discovery_memory(
+        applied.updated_human_model, applied.new_acs, applied.updated_history
+    )
+
+
 def test_no_targets_creates_no_acs():
     text, reply = "Вопрос", "Вот краткий ответ."
     result = _result(user_text=text, reply=reply, action=SystemAction())

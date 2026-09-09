@@ -218,6 +218,111 @@ def test_action_target_cannot_point_to_missing_content():
         )
 
 
+def test_action_target_rejects_persistent_active_content_id():
+    with pytest.raises(ValidationError, match="content"):
+        ActionTarget(
+            local_id="target:question",
+            active_content_local_id=make_id("aci"),
+            subject=ActionSubjectReference(
+                kind=TargetSubjectKind.ACTIVE_CONTENT,
+                active_content_local_id="content:question",
+            ),
+            interaction=TargetInteractionKind.OPEN_RESPONSE,
+        )
+
+
+def test_action_subject_rejects_persistent_active_content_id():
+    with pytest.raises(ValidationError, match="content"):
+        ActionSubjectReference(
+            kind=TargetSubjectKind.ACTIVE_CONTENT,
+            active_content_local_id=make_id("aci"),
+        )
+
+
+@pytest.mark.parametrize(
+    ("owner_id", "subject_id"),
+    (
+        ("content:missing", "content:reflection"),
+        ("content:question", "content:missing"),
+    ),
+)
+def test_action_owner_and_subject_must_belong_to_current_system_action(
+    owner_id, subject_id
+):
+    contents = (
+        ActionContent(
+            local_id="content:reflection",
+            kind=ActiveContentKind.SYSTEM_REFLECTION,
+            semantic_content="вечерний голод мешает устойчивости",
+        ),
+        ActionContent(
+            local_id="content:question",
+            kind=ActiveContentKind.SYSTEM_QUESTION,
+            semantic_content="насколько это похоже на опыт пользователя",
+        ),
+    )
+
+    with pytest.raises(ValidationError, match="ActionContent"):
+        SystemAction(
+            contents=contents,
+            response_targets=(
+                ActionTarget(
+                    local_id="target:question",
+                    active_content_local_id=owner_id,
+                    subject=ActionSubjectReference(
+                        kind=TargetSubjectKind.ACTIVE_CONTENT,
+                        active_content_local_id=subject_id,
+                    ),
+                    interaction=TargetInteractionKind.EVALUATION,
+                ),
+            ),
+        )
+
+
+def test_action_owner_and_active_content_subject_may_be_distinct():
+    reflection = ActionContent(
+        local_id="content:reflection",
+        kind=ActiveContentKind.SYSTEM_REFLECTION,
+        semantic_content="вечерний голод мешает устойчивости",
+    )
+    question = ActionContent(
+        local_id="content:question",
+        kind=ActiveContentKind.SYSTEM_QUESTION,
+        semantic_content="насколько это похоже на опыт пользователя",
+    )
+
+    action = SystemAction(
+        contents=(reflection, question),
+        response_targets=(
+            ActionTarget(
+                local_id="target:question",
+                active_content_local_id=question.local_id,
+                subject=ActionSubjectReference(
+                    kind=TargetSubjectKind.ACTIVE_CONTENT,
+                    active_content_local_id=reflection.local_id,
+                ),
+                interaction=TargetInteractionKind.EVALUATION,
+            ),
+        ),
+    )
+    result = _turn(
+        action=action,
+        segments=(
+            ReplySegment(
+                local_id="segment:question",
+                text="Насколько это похоже на ваш опыт?",
+                realizes_action_content_ids=(question.local_id,),
+            ),
+        ),
+    )
+
+    assert result.system_action.response_targets[0].active_content_local_id == question.local_id
+    assert (
+        result.system_action.response_targets[0].subject.active_content_local_id
+        == reflection.local_id
+    )
+
+
 def test_reply_segment_cannot_point_to_missing_content():
     with pytest.raises(ValidationError):
         _turn(

@@ -370,18 +370,23 @@ def _apply_materializations(
 def _build_acs(turn_result, system_message, items, relations, item_ids, relation_ids):
     if not turn_result.system_action.response_targets:
         return None, {}, {}
-    targeted_content_ids = {
+    required_content_ids = {
         target.active_content_local_id
         for target in turn_result.system_action.response_targets
     }
+    required_content_ids.update(
+        target.subject.active_content_local_id
+        for target in turn_result.system_action.response_targets
+        if target.subject.kind == TargetSubjectKind.ACTIVE_CONTENT
+    )
     content_id_mapping: dict[str, str] = {
-        local_id: make_id("aci") for local_id in targeted_content_ids
+        local_id: make_id("aci") for local_id in required_content_ids
     }
     active_content = {}
     content_by_local_id = {
         content.local_id: content for content in turn_result.system_action.contents
     }
-    for local_id in targeted_content_ids:
+    for local_id in required_content_ids:
         content = content_by_local_id[local_id]
         active_content[content_id_mapping[local_id]] = ActiveContentItem(
             id=content_id_mapping[local_id],

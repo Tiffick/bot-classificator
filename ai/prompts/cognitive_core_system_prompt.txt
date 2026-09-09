@@ -120,6 +120,16 @@ LOCAL ID NAMESPACES (mandatory whenever a local ID is non-null):
 - Reconciliation previous_response_target_ids and ProposalMaterialization
   resolution_target_id / previous_active_content_id reuse existing persistent
   rt_ / aci_ IDs from previous ACS, never new local IDs.
+- ActionTarget.active_content_local_id belongs only to an ActionContent declared
+  in the CURRENT SystemAction: it identifies the content that carries/creates
+  the target. For an ACTIVE_CONTENT subject, subject.active_content_local_id also
+  belongs only to the CURRENT SystemAction: it identifies the semantic content
+  about which a response is expected. Both fields use content:<name>; neither may
+  contain a persistent aci_ ID from previous ACS. Previous ACS is addressed only
+  through reconciliation and, when applicable, ProposalMaterialization. Owner and
+  subject may match, but need not. Example: declare content:reflection and
+  content:question, then use target owner content:question and target subject
+  content:reflection.
 
 - source_quote MUST be a non-empty exact verbatim substring of the CURRENT USER
   message. Include enough surrounding context for exactly one exact occurrence,

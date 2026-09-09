@@ -66,6 +66,29 @@ def _api_facing_schema() -> dict[str, Any]:
             if name == "TargetResolution" else quote_schema
         )
     del schema["$defs"]["SourceSpan"]
+
+    content_reference_pattern = r"^content:[A-Za-z0-9][A-Za-z0-9._-]*$"
+    action_target_reference = schema["$defs"]["ActionTarget"]["properties"][
+        "active_content_local_id"
+    ]
+    action_target_reference.update(
+        pattern=content_reference_pattern,
+        description=(
+            "Local ID of the ActionContent in the current SystemAction that carries "
+            "this target; persistent aci_ IDs are invalid."
+        ),
+    )
+    subject_reference = schema["$defs"]["ActionSubjectReference"]["properties"][
+        "active_content_local_id"
+    ]
+    subject_reference["description"] = (
+        "When kind is active_content, the semantic subject must be an ActionContent "
+        "in the current SystemAction; persistent aci_ IDs are invalid."
+    )
+    for branch in subject_reference["anyOf"]:
+        if branch.get("type") == "string":
+            branch["pattern"] = content_reference_pattern
+
     return _normalize_strict_schema(schema)
 
 

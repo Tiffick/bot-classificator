@@ -256,6 +256,22 @@ def test_system_prompt_requires_local_namespaces_and_exact_reference_reuse():
     assert "rt_ / aci_ IDs from previous ACS, never new local IDs" in prompt
 
 
+def test_system_prompt_explains_active_content_target_ownership():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "ActionTarget.active_content_local_id belongs only to an ActionContent declared in the CURRENT SystemAction",
+        "content that carries/creates the target",
+        "subject.active_content_local_id also belongs only to the CURRENT SystemAction",
+        "semantic content about which a response is expected",
+        "neither may contain a persistent aci_ ID from previous ACS",
+        "Previous ACS is addressed only through reconciliation",
+        "Owner and subject may match, but need not",
+        "target owner content:question and target subject content:reflection",
+    ):
+        assert instruction in prompt
+
+
 def test_system_prompt_distinguishes_consent_from_open_response():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
@@ -647,6 +663,25 @@ def test_strict_schema_normalization_requires_every_property_recursively():
     assert object_schemas
     for schema in object_schemas:
         assert schema["required"] == list(schema["properties"])
+
+
+def test_api_schema_restricts_active_content_local_references_to_current_namespace():
+    definitions = COGNITIVE_TURN_JSON_SCHEMA["$defs"]
+    target_reference = definitions["ActionTarget"]["properties"][
+        "active_content_local_id"
+    ]
+    subject_reference = definitions["ActionSubjectReference"]["properties"][
+        "active_content_local_id"
+    ]
+    subject_string = next(
+        branch for branch in subject_reference["anyOf"] if branch.get("type") == "string"
+    )
+
+    expected_pattern = r"^content:[A-Za-z0-9][A-Za-z0-9._-]*$"
+    assert target_reference["pattern"] == expected_pattern
+    assert subject_string["pattern"] == expected_pattern
+    assert "current SystemAction" in target_reference["description"]
+    assert "current SystemAction" in subject_reference["description"]
 
 
 def test_schema_normalization_does_not_mutate_pydantic_source_schema():
