@@ -274,6 +274,59 @@ def test_system_prompt_distinguishes_consent_from_open_response():
         assert instruction in prompt
 
 
+def test_system_prompt_defines_dynamic_value_and_sufficiency_boundary():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "compare the expected value of eligible actions inside the current product boundary",
+        "materially change useful understanding of the person",
+        "a substantial mechanism of the problem",
+        "the next eligible Decision",
+        "the other Discovery line, Reflection, Transition, Respect Pause / Refusal or Stop Exploration",
+        "Human / Meaningful Change and Mechanism / Expertise are both full Discovery lines",
+        "no mandatory order",
+        "required slots, completion checklist or sufficiency score",
+        "Local sufficiency means stop or leave THAT branch",
+        "It never means that permission for a concrete solution has been earned",
+    ):
+        assert instruction in prompt
+
+
+def test_system_prompt_enforces_solution_action_product_boundary():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "First check whether the proposed action is eligible",
+        "Transition to a human consultant with meaningful consent",
+        "does not select or tune a concrete solution for the user",
+        "concrete behavioral experiment, recommendation, plan, practice",
+        "beginning of solution-option selection by the Core",
+        "Apparent usefulness and local mechanism sufficiency do not make such content eligible",
+        "SYSTEM_PROPOSAL remains available for semantically valid in-scope content",
+        "The action kind itself does not authorize solution content",
+        "Answer a direct user question normally",
+        "does not automatically authorize program or solution selection",
+        "Reflection is a value-based candidate",
+        "not a ritual after a fixed number of turns",
+    ):
+        assert instruction in prompt
+
+
+def test_system_prompt_respects_declined_without_inventing_problem_barrier():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "After DECLINED, the declined action loses value",
+        "Do not automatically offer a neighbouring variant of the same solution",
+        "Give Respect Pause / Refusal and Stop Exploration high priority",
+        "Ask why only when the answer can materially change an eligible in-scope action without pressure",
+        "Declining a system proposal does not automatically create a BARRIER",
+        "Reconciliation is sufficient unless the user also provides a substantive constraint",
+        "only that independent material may support a BARRIER",
+    ):
+        assert instruction in prompt
+
+
 def test_history_closure_is_deduplicated_and_sequence_ordered():
     current, model, acs, history = _fixture()
     core, client = _core()
