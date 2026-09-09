@@ -975,3 +975,127 @@ Commit:
 возникает ли Human / Meaningful Change,
 появляется ли Reflection,
 и корректно ли обрабатываются Refusal / Transition / Stop.
+
+================================================================================
+COGNITIVE CORE — MINIMAL DECISION CONTRACT
+================================================================================
+
+После полного Conversation Lab и последующего offline architecture audit
+было установлено, что Value / Sufficiency и Product Boundary существовали
+в runtime прежде всего как инструкции Cognitive LLM, но выбранный Decision
+не имел явного представления в CognitiveTurnResult.
+
+До изменения runtime имел вид:
+
+INPUT
+→ one Cognitive LLM call
+→ CognitiveTurnResult {
+    state_patch,
+    reconciliation,
+    system_action,
+    reply_segments
+  }
+→ DiscoveryStateApplier.
+
+Из system_action можно было лишь косвенно восстанавливать выбранное действие.
+Python не имел явной информации о том, продолжает ли Core Human Discovery,
+Mechanism Discovery, делает Reflection, Recognition, Transition,
+уважает отказ, завершает Discovery или отвечает на прямой вопрос.
+
+Принято архитектурное решение:
+Decision должен стать минимальной ephemeral частью CognitiveTurnResult,
+не создавая отдельного DecisionEngine и не сохраняя reasoning.
+
+Добавлен обязательный DecisionIntent:
+
+- HUMAN_DISCOVERY
+- MECHANISM_DISCOVERY
+- REFLECTION
+- RECOGNITION
+- TRANSITION
+- RESPECT_PAUSE_OR_REFUSAL
+- STOP_EXPLORATION
+- ANSWER_USER_QUESTION
+
+Добавлено обязательное поле:
+
+CognitiveTurnResult.decision_intent
+
+DecisionIntent:
+- создаётся тем же единственным Cognitive LLM call;
+- выбирается до Response;
+- описывает функцию выбранного действия Cognitive Cycle, а не тему текста;
+- ephemeral;
+- не сохраняется в HumanModel;
+- не сохраняется в ACS;
+- не сохраняется в DialogueHistory;
+- не содержит reasoning, rationale или score.
+
+Добавлены coarse deterministic invariants:
+
+- REFLECTION требует SYSTEM_REFLECTION;
+- RECOGNITION требует RECOGNITION_OPTION;
+- TRANSITION требует SYSTEM_TRANSITION;
+- target для SYSTEM_TRANSITION требует CONSENT;
+- STOP_EXPLORATION не создаёт ResponseTarget;
+- HUMAN_DISCOVERY и MECHANISM_DISCOVERY требуют ResponseTarget;
+- RESPECT_PAUSE_OR_REFUSAL не открывает новый OPEN_RESPONSE/CLARIFICATION;
+- CONSENT может адресовать только SYSTEM_PROPOSAL или SYSTEM_TRANSITION;
+- SYSTEM_REFLECTION не может быть предметом CONSENT;
+- корректный owner/subject lifecycle из предыдущего hardening сохранён.
+
+Сознательно НЕ реализованы:
+
+- semantic Product Boundary classifier;
+- keyword/phrase matching;
+- Python-интерпретация semantic_content;
+- автоматическое различение Human и Mechanism по словам;
+- rejected-action registry;
+- общий запрет BARRIER после DECLINED;
+- reasoning/rationale;
+- expected-value/sufficiency scores;
+- persistent Decision;
+- дополнительный LLM call;
+- retry/fallback.
+
+ВАЖНО:
+Minimal Decision Contract не решает semantic Product Boundary полностью.
+
+LLM теоретически всё ещё может объявить
+decision_intent = MECHANISM_DISCOVERY,
+но фактически сформулировать concrete experiment/practice.
+
+Python намеренно не пытается обнаруживать это по ключевым словам.
+Семантическое соответствие declared Decision реальному содержанию действия
+остаётся ответственностью Cognitive LLM и предметом Conversation Lab /
+дальнейшего semantic boundary design.
+
+Таким образом граница HYBRID архитектуры стала явнее:
+
+LLM:
+понимает человеческий смысл и выбирает semantic Decision.
+
+Python:
+проверяет contract, structural consistency, state boundary
+и coarse architectural invariants.
+
+Persistent Discovery Data Model не изменён.
+Production DiscoveryStateApplier не изменён.
+CognitiveCore по-прежнему использует один LLM call.
+
+Проверки:
+- focused tests: 138 passed;
+- full pytest: 282 passed;
+- py_compile: PASS;
+- git diff --check: PASS.
+
+Commit:
+059f180 Add Cognitive Core decision intent contract
+
+Следующий этап:
+после фиксации истории провести новый полный Conversation Lab
+с реальным CognitiveCore и DiscoveryStateApplier и проверить,
+изменило ли явное DecisionIntent фактическое поведение Core,
+особенно Value / Sufficiency, баланс Human/Mechanism,
+Product Boundary, Reflection и обработку отказа.
+================================================================================
