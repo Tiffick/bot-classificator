@@ -800,3 +800,56 @@ and:
     MECHANISM / EXPERTISE
 
 while strengthening Value / Sufficiency rather than hardcoding a route.
+=============================================================================================
+
+=============================================================================================
+
+COGNITIVE CORE — CONSENT / DECLINED CONTRACT HARDENING
+
+Первый полный end-to-end Conversation Lab run дошёл до шестого пользовательского хода и выявил технический blocker на границе CognitiveTurnResult → DiscoveryStateApplier.
+
+Сценарий:
+SYSTEM_PROPOSAL:
+«Хотите обсудить варианты или пока не менять ничего?»
+
+Следующий USER:
+«Пока не хочу ничего пробовать.»
+
+Предыдущий ResponseTarget был ошибочно сформирован Cognitive Core как OPEN_RESPONSE, хотя по смыслу системное действие запрашивало принятие или 
+отклонение предлагаемого действия и должно было иметь interaction=CONSENT.
+
+Естественный outcome DECLINED поэтому образовывал несовместимую пару:
+
+OPEN_RESPONSE → DECLINED
+
+и DiscoveryStateApplier корректно атомарно отвергал turn.
+
+Offline audit подтвердил:
+- контракт уже способен выразить естественный сценарий как CONSENT → DECLINED;
+- расширять DECLINED на OPEN_RESPONSE неправильно;
+- StateApplier validation ослаблять не требуется;
+- первичная проблема находилась в семантическом моделировании SystemAction / ResponseTarget;
+- дополнительная причина — недостаточно явная семантика interaction/outcome в Cognitive Core prompt.
+
+Исправление:
+- в Cognitive Core system prompt явно определены OPEN_RESPONSE, CLARIFICATION, EVALUATION и CONSENT;
+- запрос принятия/отклонения конкретного действия, перехода или следующего шага должен использовать CONSENT;
+- CONSENTED / DECLINED относятся к CONSENT;
+- REFUSED не используется как замена DECLINED для обхода compatibility validation;
+- добавлены focused tests на корректный CONSENT → DECLINED и запрещённый OPEN_RESPONSE → DECLINED;
+- StateApplier compatibility matrix не изменялась.
+
+Проверки:
+- focused suite: 103 passed;
+- full suite: 247 passed;
+- py_compile: PASS;
+- git diff --check: PASS.
+
+Commit:
+c318ed4 Clarify Cognitive Core consent semantics
+
+Следующий этап:
+повторный полный end-to-end Conversation Lab run текущего Cognitive Core без ручного вмешательства между ходами. 
+Цель — проверить полный маршрут Discovery после устранения технического blocker и отдельно оценить уже обнаруженные behavioral issues: 
+баланс Human / Meaningful Change и Mechanism / Expertise, Value / Sufficiency, преждевременный solution design, Reflection и 
+естественный Transition / Stop.
