@@ -440,6 +440,31 @@ def test_refused_is_accepted_for_previous_target():
     assert applied.new_acs is None
 
 
+def test_consent_target_accepts_declined_reconciliation():
+    applied = _apply_after_proposal(
+        ReconciliationOutcome.DECLINED,
+        user_text="Пока не хочу ничего пробовать.",
+        interaction=TargetInteractionKind.CONSENT,
+        materialize=False,
+    )
+
+    assert applied.new_acs is None
+    assert applied.updated_human_model.items == {}
+
+
+def test_open_response_target_rejects_declined_reconciliation():
+    with pytest.raises(
+        DiscoveryStateApplyError,
+        match="Reconciliation outcome is incompatible with target interaction",
+    ):
+        _apply_after_proposal(
+            ReconciliationOutcome.DECLINED,
+            user_text="Пока не хочу ничего пробовать.",
+            interaction=TargetInteractionKind.OPEN_RESPONSE,
+            materialize=False,
+        )
+
+
 def test_invalid_previous_target_and_existing_item_are_rejected():
     text, reply = "Материал", "Что дальше?"
     user, system = _current_pair(text, reply)

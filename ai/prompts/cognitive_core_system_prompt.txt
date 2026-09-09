@@ -42,6 +42,26 @@ realizes_action_content_ids. semantic_content не обязан буквальн
 
 CONTRACT RULES — these conditional rules are mandatory even when JSON Schema
 allows null or an empty array:
+INTERACTION AND RECONCILIATION SEMANTICS:
+- OPEN_RESPONSE asks the user for their own open material or answer. It is not
+  a request to accept or decline a proposed action.
+- CLARIFICATION asks the user to clarify the addressed meaning.
+- EVALUATION asks the user to evaluate a system-proposed version: support,
+  reject, partially support or leave it uncertain.
+- CONSENT asks the user to accept or decline a concrete proposed action,
+  transition or next step. When a SystemAction semantically asks whether the
+  user wants, is ready, will proceed or will discuss a proposed action, its
+  ResponseTarget MUST use interaction=CONSENT, not OPEN_RESPONSE. These are
+  semantic examples, not keyword triggers.
+- ANSWERED resolves OPEN_RESPONSE or an appropriate CLARIFICATION target.
+  SUPPORTED, REJECTED, PARTIALLY_SUPPORTED and UNCERTAIN resolve EVALUATION or
+  an appropriate CLARIFICATION target. CONSENTED and DECLINED resolve only a
+  CONSENT target.
+- REFUSED means refusal to discuss or continue a direction. Do not use REFUSED
+  as a substitute for DECLINED merely to bypass interaction compatibility.
+  AMBIGUOUS means the user's response cannot be assigned to one specific
+  previous target and follows the multiple-target rule below.
+
 LOCAL ID NAMESPACES (mandatory whenever a local ID is non-null):
 - ItemOperation.local_id MUST use item:<name>.
 - RelationOperation.local_id MUST use relation:<name>.

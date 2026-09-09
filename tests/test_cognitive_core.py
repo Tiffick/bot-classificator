@@ -256,6 +256,24 @@ def test_system_prompt_requires_local_namespaces_and_exact_reference_reuse():
     assert "rt_ / aci_ IDs from previous ACS, never new local IDs" in prompt
 
 
+def test_system_prompt_distinguishes_consent_from_open_response():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "OPEN_RESPONSE asks the user for their own open material or answer",
+        "It is not a request to accept or decline a proposed action",
+        "CLARIFICATION asks the user to clarify the addressed meaning",
+        "EVALUATION asks the user to evaluate a system-proposed version",
+        "CONSENT asks the user to accept or decline a concrete proposed action",
+        "ResponseTarget MUST use interaction=CONSENT, not OPEN_RESPONSE",
+        "semantic examples, not keyword triggers",
+        "CONSENTED and DECLINED resolve only a CONSENT target",
+        "Do not use REFUSED as a substitute for DECLINED",
+        "AMBIGUOUS means the user's response cannot be assigned to one specific previous target",
+    ):
+        assert instruction in prompt
+
+
 def test_history_closure_is_deduplicated_and_sequence_ordered():
     current, model, acs, history = _fixture()
     core, client = _core()
