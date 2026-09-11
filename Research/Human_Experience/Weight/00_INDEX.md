@@ -344,6 +344,8 @@ Epistemic, conversational, ethical, product, and architectural boundaries.
 Approved semantic model of one repeating Cognitive Cycle:
 Perception → Integration → Formulation → Decision → Impact →
 Emotional Adaptation → Response → Persist.
+The production Decision boundary is selected-only; candidate / consideration
+materialization remains external Conversation Lab diagnostic tooling.
 
 ### `13_Active_Conversation_State.txt`
 Semantic ACS contract. Current minimum:
@@ -382,6 +384,8 @@ At the semantic architecture level:
 - Human Experience exists separately;
 - Discovery Progress is not a set of mandatory slots;
 - Sufficiency is evaluated dynamically inside Decision;
+- the production Decision boundary exposes one selected DecisionIntent and
+  does not expose or persist candidate / consideration materialization;
 - Human Model must preserve provenance, status, relations,
   rejected / corrected / uncertain material;
 - ACS contains addressable Active Content and one or more Response Targets;

@@ -475,6 +475,61 @@ Decision сравнивает ожидаемую ценность их прод�
 
 
 ------------------------------------------------------------
+PRODUCTION DECISION BOUNDARY — SELECTED-ONLY
+------------------------------------------------------------
+
+Production Cognitive Cycle возвращает наружу
+только уже выбранное следующее действие:
+
+- один DecisionIntent;
+- соответствующий System Action;
+- Response;
+- необходимые для текущего хода изменения состояния
+  и reconciliation.
+
+Возможное внутреннее сравнение вариантов моделью
+не является частью production contract.
+
+Production contract НЕ должен требовать или сохранять:
+
+- список considered possibilities;
+- candidate list;
+- candidate ranking;
+- материализованное search space;
+- rationale;
+- chain-of-thought;
+- выбор победителя из явного persistent/API candidate set.
+
+Production boundary:
+
+CURRENT STATE
+→ ONE COGNITIVE LLM CALL
+→ SELECTED DECISIONINTENT + SYSTEM ACTION + RESPONSE
+→ DETERMINISTIC PYTHON STATE APPLIER
+
+Candidate / consideration materialization допустима
+только во внешнем Conversation Lab / diagnostic tooling.
+Она не переносится в production Cognitive Cycle.
+
+Conversation Lab может сравнивать выбранное действие
+с независимо и заранее зафиксированными challengers.
+Такое сравнение позволяет наблюдать
+MISSED HIGH-VALUE ALTERNATIVE.
+
+Оно НЕ позволяет делать выводы о latent consideration,
+hidden cognition или внутреннем chain-of-thought модели.
+
+Frozen Matched Three-condition Lab на HEAD 7674220 показал,
+что candidate materialization и explicit consideration
+сами являются intervention: они могут менять выбранный Decision
+и при этом не гарантируют полноту альтернатив.
+
+Архитектурное решение по условиям B / C:
+
+НЕ ПЕРЕНОСИТЬ В PRODUCTION.
+
+
+------------------------------------------------------------
 НЕСКОЛЬКО ЗНАЧИМЫХ ОБЛАСТЕЙ
 ------------------------------------------------------------
 

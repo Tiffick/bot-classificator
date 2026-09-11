@@ -495,6 +495,48 @@ EMOTIONAL ADAPTATION
 в текущем Cognitive Cycle
 из актуальных входов.
 
+
+------------------------------------------------------------
+PRODUCTION DECISION BOUNDARY
+------------------------------------------------------------
+
+Production output Decision является SELECTED-ONLY.
+
+Один Cognitive LLM call получает текущее состояние
+и возвращает один выбранный DecisionIntent,
+соответствующий System Action, Response,
+а также необходимые state / reconciliation данные.
+
+После этого deterministic Python State Applier
+проверяет и применяет допустимые изменения состояния.
+
+Candidate list, considered possibilities, ranking,
+материализованное search space, rationale и chain-of-thought:
+
+- не являются production requirement;
+- не входят в persistent Discovery Memory;
+- не должны становиться production API/persistent candidate set;
+- не нужны State Applier для применения выбранного хода.
+
+Такие структуры допустимы только во внешнем
+Conversation Lab / diagnostic tooling.
+
+Лаборатория может сравнивать selected action
+с independently frozen challengers
+и фиксировать наблюдаемый дефект
+MISSED HIGH-VALUE ALTERNATIVE.
+
+Из такого сравнения нельзя выводить,
+какие варианты модель латентно рассматривала
+или как выглядело её скрытое рассуждение.
+
+Frozen Matched Three-condition Lab на HEAD 7674220
+закрыл вопрос о переносе candidate / consideration
+materialization в production:
+
+НЕ ПЕРЕНОСИТЬ.
+
+
 Если часть результата должна пережить ход,
 она должна быть преобразована
 в соответствующую персистентную информацию:
