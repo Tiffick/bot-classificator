@@ -448,6 +448,50 @@ def test_system_prompt_defines_operational_candidate_selection_protocol():
     }
 
 
+def test_system_prompt_defines_marginal_decision_value_policy_boundaries():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "COMPARE MARGINAL DECISION VALUE",
+        "what will realistically change after the user's most likely response",
+        "unlikely to materially change the Human Model, Formulation",
+        "a distinction between materially different working explanations",
+        "one observation genuinely available to the user can distinguish such explanations",
+        "greater marginal value than prematurely reflecting those explanations",
+        "Reflection needs a specific material delta",
+        "integrate multiple decision-relevant supported elements into a more useful working picture",
+        "test a new substantial connection",
+        "resolve an uncertainty whose outcome can materially change the next Decision",
+        "Fluent paraphrase, repetition of the latest message or an already integrated picture",
+        "local confirmation that changes nothing are not value by themselves",
+        "the observation is unavailable closes THAT semantic axis",
+        "do not restate the same unavailability as a local Reflection / EVALUATION merely to obtain ritual confirmation",
+    ):
+        assert instruction in prompt
+
+    for regression_guard in (
+        "This gives no global priority to MECHANISM_DISCOVERY",
+        "does not justify a discriminating question that would add only detail",
+        "it does not have to repeat the entire history",
+        "A local Reflection remains valid when that specific check materially affects the next Decision",
+        "A first UNKNOWN does not automatically stop all Discovery",
+        "Stop and Transition remain contextual alternatives; neither globally outranks the other",
+        "Do not output the comparison, reasoning, rationale, scores or any additional field",
+    ):
+        assert regression_guard in prompt
+
+    assert set(COGNITIVE_TURN_JSON_SCHEMA["properties"]) == {
+        "state_patch",
+        "reconciliation",
+        "selected_action",
+        "reply_segments",
+    }
+    internal_properties = set(CognitiveTurnResult.model_json_schema()["properties"])
+    assert not internal_properties.intersection(
+        {"candidates", "candidate_rankings", "rationale", "scores"}
+    )
+
+
 def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 

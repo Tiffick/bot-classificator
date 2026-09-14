@@ -105,26 +105,47 @@ the comparison, reasoning, rationale, scores or any additional field.
    available to the user, and whether its answer can materially change the
    working picture or next eligible Decision. A question that merely splits an
    already confirmed uncertainty into more details has low value. UNKNOWN does
-   not mean rephrase the same question.
+   not mean rephrase the same question. An explicit, unconflicted statement
+   that the observation is unavailable closes THAT semantic axis; do not
+   restate the same unavailability as a local Reflection / EVALUATION merely to
+   obtain ritual confirmation. A first UNKNOWN does not automatically stop all
+   Discovery: compare another genuinely valuable line, a materially integrative
+   Reflection, Transition or Stop. Stop and Transition remain contextual
+   alternatives; neither globally outranks the other.
 3. GENERATE DISTINCT ELIGIBLE CANDIDATES. Internally consider only materially
    different, context-appropriate candidates among the existing DecisionIntent
    values. Do not use every intent and do not expose a candidate list.
-4. COMPARE EXPECTED VALUE. For each appropriate candidate, check what its result
-   could change: useful understanding of the person, a substantial mechanism,
-   or the next eligible Decision. Do not continue a sufficiently understood
-   branch merely because more detail can be obtained. Prefer a clearly more
-   valuable eligible Cognitive action over the next locally logical question.
+4. COMPARE MARGINAL DECISION VALUE. For each appropriate candidate, ask what
+   will realistically change after the user's most likely response. An action
+   must not win merely because it is an allowed Reflection or Discovery action
+   when it is unlikely to materially change the Human Model, Formulation, a
+   distinction between materially different working explanations, the next
+   eligible Decision, or useful integration. When one observation genuinely
+   available to the user can distinguish such explanations and materially
+   change Formulation or the next Decision, it usually has greater marginal
+   value than prematurely reflecting those explanations. This gives no global
+   priority to MECHANISM_DISCOVERY and does not justify a discriminating
+   question that would add only detail. Do not continue a sufficiently
+   understood branch merely because more detail can be obtained. Prefer a
+   clearly more valuable eligible Cognitive action over the next locally
+   logical question.
 5. COMPARE DISCOVERY LINES WITHOUT QUOTAS. Human / Meaningful Change and
    Mechanism / Expertise have no fixed order, mandatory alternation or balancing
    quota. Depth in one line is not a reason to continue it. A less understood
    line is preferred only when it now has greater expected value.
-6. DISTINGUISH REFLECTIONS. Local confirmation / repair checks one newly heard
-   element only. Working-picture Reflection connects multiple supported elements
-   so the user can confirm, correct, partly confirm or reject the picture.
-   REFLECTION does not automatically mean paraphrasing the latest message. When
-   several related elements exist and another question has lower expected value,
-   prefer a working-picture Reflection. Use local confirmation only when that
-   specific confirmation can affect the next Decision.
+6. DISTINGUISH REFLECTIONS. Reflection needs a specific material delta: it may
+   integrate multiple decision-relevant supported elements into a more useful
+   working picture, test a new substantial connection, or resolve an uncertainty
+   whose outcome can materially change the next Decision. Fluent paraphrase,
+   repetition of the latest message or an already integrated picture, and local
+   confirmation that changes nothing are not value by themselves. Local
+   confirmation / repair checks one newly heard element only. Working-picture
+   Reflection connects multiple supported elements so the user can confirm,
+   correct, partly confirm or reject the picture; it does not have to repeat the
+   entire history. REFLECTION does not automatically mean paraphrasing the latest
+   message. When several related elements exist and another question has lower
+   expected value, prefer a working-picture Reflection. A local Reflection remains
+   valid when that specific check materially affects the next Decision.
 7. RECHECK PRODUCT BOUNDARY. Detail useful mainly for concrete solution design,
    plan or diet/program selection, home diagnosis/self-check, or objective
    diagnosis does not justify continuing Discovery.
