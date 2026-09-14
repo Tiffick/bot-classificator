@@ -11,16 +11,25 @@ import json
 from copy import deepcopy
 from pathlib import Path
 from time import monotonic
-from typing import Any, Optional
+from typing import Any, Literal, Optional, Union
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, ValidationError
 
-from ai.cognitive_turn import CognitiveTurnResult
+from ai.cognitive_turn import (
+    ActionContent,
+    ActionSubjectReference,
+    ActionTarget,
+    CognitiveTurnResult,
+    DecisionIntent,
+)
 from ai.discovery_data_model import (
+    ActiveContentKind,
     ActiveConversationState,
     DialogueHistory,
     DialogueMessage,
     HumanModel,
+    TargetInteractionKind,
+    TargetSubjectKind,
 )
 
 
@@ -33,6 +42,115 @@ class CognitiveCoreError(RuntimeError):
 
 
 _PROMPT_PATH = Path(__file__).with_name("prompts") / "cognitive_core_system_prompt.txt"
+
+
+class _WireModel(BaseModel):
+    """Strict, immutable API-only structure; never part of Discovery state."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+
+class _WireReflectionContent(ActionContent):
+    kind: Literal[ActiveContentKind.SYSTEM_REFLECTION]
+
+
+class _WireRecognitionContent(ActionContent):
+    kind: Literal[ActiveContentKind.RECOGNITION_OPTION]
+
+
+class _WireTransitionContent(ActionContent):
+    kind: Literal[ActiveContentKind.SYSTEM_TRANSITION]
+
+
+class _WireOpenResponseTarget(ActionTarget):
+    interaction: Literal[TargetInteractionKind.OPEN_RESPONSE]
+
+
+class _WireClarificationTarget(ActionTarget):
+    interaction: Literal[TargetInteractionKind.CLARIFICATION]
+
+
+class _WireEvaluationTarget(ActionTarget):
+    interaction: Literal[TargetInteractionKind.EVALUATION]
+
+
+class _WireConsentSubject(ActionSubjectReference):
+    kind: Literal[TargetSubjectKind.ACTIVE_CONTENT]
+    active_content_local_id: str
+    item_reference: None
+    relation_reference: None
+
+
+class _WireConsentTarget(ActionTarget):
+    subject: _WireConsentSubject
+    interaction: Literal[TargetInteractionKind.CONSENT]
+
+
+_WireActionTarget = Union[
+    _WireOpenResponseTarget,
+    _WireClarificationTarget,
+    _WireEvaluationTarget,
+    _WireConsentTarget,
+]
+_WireNonDiscoveryTarget = Union[_WireEvaluationTarget, _WireConsentTarget]
+
+
+class _WireSelectedActionBase(_WireModel):
+    primary_content: Optional[ActionContent]
+    additional_contents: tuple[ActionContent, ...]
+    response_targets: tuple[_WireActionTarget, ...]
+
+
+class _WireHumanDiscovery(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.HUMAN_DISCOVERY]
+    response_targets: tuple[_WireActionTarget, ...] = Field(min_length=1)
+
+
+class _WireMechanismDiscovery(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.MECHANISM_DISCOVERY]
+    response_targets: tuple[_WireActionTarget, ...] = Field(min_length=1)
+
+
+class _WireReflection(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.REFLECTION]
+    primary_content: _WireReflectionContent
+
+
+class _WireRecognition(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.RECOGNITION]
+    primary_content: _WireRecognitionContent
+
+
+class _WireTransition(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.TRANSITION]
+    primary_content: _WireTransitionContent
+
+
+class _WireRespectPauseOrRefusal(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.RESPECT_PAUSE_OR_REFUSAL]
+    response_targets: tuple[_WireNonDiscoveryTarget, ...]
+
+
+class _WireStopExploration(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.STOP_EXPLORATION]
+    response_targets: tuple[_WireActionTarget, ...] = Field(max_length=0)
+
+
+class _WireAnswerUserQuestion(_WireSelectedActionBase):
+    decision_intent: Literal[DecisionIntent.ANSWER_USER_QUESTION]
+
+
+_WireSelectedAction = Union[
+    _WireHumanDiscovery,
+    _WireMechanismDiscovery,
+    _WireReflection,
+    _WireRecognition,
+    _WireTransition,
+    _WireRespectPauseOrRefusal,
+    _WireStopExploration,
+    _WireAnswerUserQuestion,
+]
+_WIRE_SELECTED_ACTION_ADAPTER = TypeAdapter(_WireSelectedAction)
 
 
 def _normalize_strict_schema(source_schema: dict[str, Any]) -> dict[str, Any]:
@@ -57,6 +175,15 @@ def _normalize_strict_schema(source_schema: dict[str, Any]) -> dict[str, Any]:
 def _api_facing_schema() -> dict[str, Any]:
     """Derive the wire representation; keep the internal contract unchanged."""
     schema = CognitiveTurnResult.model_json_schema()
+    selected_action_schema = _WIRE_SELECTED_ACTION_ADAPTER.json_schema()
+    schema["$defs"].update(selected_action_schema.pop("$defs"))
+    properties = schema["properties"]
+    schema["properties"] = {
+        "state_patch": properties["state_patch"],
+        "reconciliation": properties["reconciliation"],
+        "selected_action": selected_action_schema,
+        "reply_segments": properties["reply_segments"],
+    }
     for name in ("ItemOperation", "RelationOperation", "TargetResolution"):
         properties = schema["$defs"][name]["properties"]
         del properties["source_span"]
@@ -93,6 +220,52 @@ def _api_facing_schema() -> dict[str, Any]:
 
 
 COGNITIVE_TURN_JSON_SCHEMA: dict[str, Any] = _api_facing_schema()
+
+
+def _adapt_api_payload(payload: Any) -> dict[str, Any]:
+    """Losslessly flatten the API-only selected action for the internal contract."""
+    if not isinstance(payload, dict):
+        raise CognitiveCoreError("validation_failure", "$: expected an object")
+    expected_root = {
+        "state_patch",
+        "reconciliation",
+        "selected_action",
+        "reply_segments",
+    }
+    if set(payload) != expected_root:
+        raise CognitiveCoreError(
+            "validation_failure",
+            "$: API payload must contain exactly the wire-contract fields",
+        )
+    try:
+        selected = _WIRE_SELECTED_ACTION_ADAPTER.validate_python(
+            payload["selected_action"]
+        )
+    except ValidationError as error:
+        raise CognitiveCoreError(
+            "validation_failure", "selected_action: invalid wire contract"
+        ) from error
+
+    action = selected.model_dump(mode="json")
+    primary_content = action.pop("primary_content")
+    additional_contents = action.pop("additional_contents")
+    decision_intent = action.pop("decision_intent")
+    response_targets = action.pop("response_targets")
+    if action:
+        raise CognitiveCoreError(
+            "validation_failure", "selected_action: adapter would discard data"
+        )
+    contents = ([] if primary_content is None else [primary_content]) + additional_contents
+    return {
+        "decision_intent": decision_intent,
+        "state_patch": deepcopy(payload["state_patch"]),
+        "reconciliation": deepcopy(payload["reconciliation"]),
+        "system_action": {
+            "contents": contents,
+            "response_targets": response_targets,
+        },
+        "reply_segments": deepcopy(payload["reply_segments"]),
+    }
 
 
 def _resolve_source_quotes(payload: Any, message_text: str) -> dict[str, Any]:
@@ -212,7 +385,10 @@ class CognitiveCore:
                 "parsing_failure", "Cognitive Core response is not valid JSON."
             ) from error
         try:
-            converted_payload = _resolve_source_quotes(payload, current_user_message.text)
+            internal_payload = _adapt_api_payload(payload)
+            converted_payload = _resolve_source_quotes(
+                internal_payload, current_user_message.text
+            )
             result = CognitiveTurnResult.model_validate(converted_payload)
         except CognitiveCoreError as error:
             self._record_failure(error.category, started_at)

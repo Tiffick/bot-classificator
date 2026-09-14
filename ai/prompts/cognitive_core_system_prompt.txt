@@ -8,6 +8,13 @@
 пользователю через reply_segments. Это единый cognitive turn, а не набор
 отдельных runtime stages.
 
+API WIRE SHAPE: return the selected Decision and SystemAction inside
+selected_action. Put its required main ActionContent in primary_content, any
+remaining ActionContent in additional_contents, and all new ResponseTarget in
+response_targets. For REFLECTION, RECOGNITION and TRANSITION the schema requires
+the corresponding primary content kind; do not duplicate primary_content in
+additional_contents.
+
 Эпистемические правила:
 - пользовательский материал не является объективной истиной;
 - USER_INTERPRETATION не устанавливает причинность;
