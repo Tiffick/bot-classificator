@@ -1,0 +1,165 @@
+{
+  "source": {
+    "head": "7674220",
+    "pairwise_artifact": "three_condition_matched_live_7674220_pairwise.json",
+    "pairwise_sha256": "AFDBAEAC1663E3569C99476FC396AE25C588C966BFE97DEA59C23D4EDC8EE0C0",
+    "state_sha256": {
+      "T6": "E9F54D5806D61AF3952388A53DE4807E21BA970182B4285E4515000CC12C6CD6",
+      "T12": "C93D283943D135AD3CF740181BD684A42640D2B757A375663CF206E79AAC4225",
+      "T14": "90E2ECE68C97E793A27449CA9F4195EE0BB1CF8682EBF8C996F0B3C7196B021D"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "T6-S2-B",
+      "snapshot": "T6",
+      "selected_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Clarify what reducing abdominal size would change for the user in everyday life, beyond the already established preference over overall weight loss, to understand what would make the change meaningful.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "msg_57c16b8df72e430da2bc8f17b0743c9f"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Explore what normally happens after the urge and the sequence of the episode.",
+        "basis_evidence_refs": [
+          "mi_c2234f4bcedd468885c2a80dc6525814",
+          "msg_4f7eeaf9aa734f20be9c07ca44c85608"
+        ]
+      },
+      "selected_on_left": [true, false, true],
+      "blind_verdicts": ["RIGHT_HIGHER", "LEFT_HIGHER", "RIGHT_HIGHER"],
+      "expected": "CHALLENGER_HIGHER"
+    },
+    {
+      "case_id": "T6-S1-A",
+      "snapshot": "T6",
+      "selected_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Clarify whether the strong evening desire to eat occurs mainly during attempts to eat less or also when eating as usual, to distinguish a restriction-linked difficulty from a broader evening pattern.",
+        "basis_evidence_refs": [
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_9a5081dd65e34bac8afc179b4723f7ec",
+          "mi_cdcc1dec03ce43b8bc9abe245498f304",
+          "msg_4f7eeaf9aa734f20be9c07ca44c85608"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Explore the unobserved immediate context of a typical evening urge.",
+        "basis_evidence_refs": [
+          "mi_c2234f4bcedd468885c2a80dc6525814",
+          "msg_c055ceaabced43178e601ba279485740"
+        ]
+      },
+      "selected_on_left": [true, false, true],
+      "blind_verdicts": ["LEFT_HIGHER", "RIGHT_HIGHER", "LEFT_HIGHER"],
+      "expected": "SELECTED_HIGHER"
+    },
+    {
+      "case_id": "T12-S2-B",
+      "snapshot": "T12",
+      "selected_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to conclude Discovery on the confirmed working picture: reducing abdominal size is the priority, and strong evening urges to eat undermine attempts to eat less. Leave the underlying cause unresolved rather than requiring further detail or selecting an intervention.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "aci_09fc1f72b78d4f22b1b94ba6592accb1",
+          "msg_919df321bc7e429aa6de408566de961a"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Explore still-thin personal meaning and everyday impact.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3"
+        ]
+      },
+      "selected_on_left": [false, true, false],
+      "blind_verdicts": ["RIGHT_HIGHER", "LEFT_HIGHER", "RIGHT_HIGHER"],
+      "expected": "SELECTED_HIGHER"
+    },
+    {
+      "case_id": "T14-S2-A",
+      "snapshot": "T14",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "Conclude discovery with the confirmed goal and evening-eating pattern; end further probing of untracked details without claiming that the cause of the evening urge or abdominal weight gain is established.",
+        "basis_evidence_refs": [
+          "msg_049274912c7d4a9db2af2abdd7410f89",
+          "aci_17e451a8bc0b48d681b07b94aefed6e7",
+          "msg_f31a1f32e374435aa8d5376bae626c5d"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Explore still-thin personal meaning and everyday impact.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3"
+        ]
+      },
+      "selected_on_left": [true, false, true],
+      "blind_verdicts": ["LEFT_HIGHER", "RIGHT_HIGHER", "LEFT_HIGHER"],
+      "expected": "SELECTED_HIGHER"
+    },
+    {
+      "case_id": "T12-S1-A",
+      "snapshot": "T12",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "Завершить исследование подтверждённого паттерна: сильное вечернее желание поесть дома мешает удерживать ограничения. Оставить природу этого желания неустановленной, не запрашивать повторно неотслеженные детали и не переходить к подбору решений.",
+        "basis_evidence_refs": [
+          "msg_919df321bc7e429aa6de408566de961a",
+          "aci_09fc1f72b78d4f22b1b94ba6592accb1",
+          "mi_e5d9573d4a4148c98287a37eb595a31d",
+          "mi_0aaca9eef9c0482d9246d21db5bfe314",
+          "msg_4c13e495e39e4d2eb08c6e4fda9675c5"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to move beyond Discovery using the confirmed sufficient picture.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_919df321bc7e429aa6de408566de961a"
+        ]
+      },
+      "selected_on_left": [true, false, true],
+      "blind_verdicts": ["EQUIVALENT_OR_BOTH_ACCEPTABLE", "EQUIVALENT_OR_BOTH_ACCEPTABLE", "EQUIVALENT_OR_BOTH_ACCEPTABLE"],
+      "expected": "EQUIVALENT_OR_BOTH_ACCEPTABLE"
+    },
+    {
+      "case_id": "T14-S1-B",
+      "snapshot": "T14",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "End further probing of evening eating: the user has confirmed the useful working picture, and the remaining observational details are unavailable. Leave the cause of the evening urge unresolved rather than request more detail or confirmation.",
+        "basis_evidence_refs": [
+          "msg_049274912c7d4a9db2af2abdd7410f89",
+          "aci_17e451a8bc0b48d681b07b94aefed6e7",
+          "msg_f31a1f32e374435aa8d5376bae626c5d",
+          "mi_e5d9573d4a4148c98287a37eb595a31d"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to move beyond Discovery using the repeatedly confirmed sufficient picture.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_049274912c7d4a9db2af2abdd7410f89"
+        ]
+      },
+      "selected_on_left": [false, true, false],
+      "blind_verdicts": ["EQUIVALENT_OR_BOTH_ACCEPTABLE", "EQUIVALENT_OR_BOTH_ACCEPTABLE", "EQUIVALENT_OR_BOTH_ACCEPTABLE"],
+      "expected": "EQUIVALENT_OR_BOTH_ACCEPTABLE"
+    }
+  ]
+}
