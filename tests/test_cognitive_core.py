@@ -492,6 +492,34 @@ def test_system_prompt_defines_marginal_decision_value_policy_boundaries():
     )
 
 
+def test_system_prompt_defines_discrimination_over_reflection_tie_breaker():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    for instruction in (
+        "two materially different working explanations without presenting either as fact",
+        "prior agreement with those explanations through Reflection / EVALUATION is not required",
+        "one concrete experiential observation would update the explanations differently",
+        "prefer that question over Reflection only when it has greater expected information value",
+        "does not require objective diagnosis, medical knowledge or a measurement unavailable to the user",
+    ):
+        assert instruction in prompt
+
+    for guard in (
+        "no global priority to MECHANISM_DISCOVERY",
+        "does not require competing hypotheses or a diagnostic question",
+        "does not ban Reflection",
+        "does not assume that the user must remember the observation",
+        '"I do not remember / I did not notice / I do not know" remains a normal and sufficient answer',
+        "Prefer Reflection when the framing itself is sensitive",
+        "the user may misunderstand the causal framing",
+        "the next question would rely on an overly strong assumption without checking the picture",
+        "Reflection itself can materially change the next Decision",
+    ):
+        assert guard in prompt
+
+    assert "FSB-" not in prompt
+
+
 def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 

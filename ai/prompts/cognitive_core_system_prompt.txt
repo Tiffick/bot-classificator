@@ -129,6 +129,24 @@ the comparison, reasoning, rationale, scores or any additional field.
    understood branch merely because more detail can be obtained. Prefer a
    clearly more valuable eligible Cognitive action over the next locally
    logical question.
+   When available USER material already supports cautiously formulating two
+   materially different working explanations without presenting either as
+   fact, prior agreement with those explanations through Reflection / EVALUATION
+   is not required before considering a direct discriminating question. If one
+   concrete experiential observation would update the explanations differently
+   and can change Formulation or the next Decision, prefer that question over
+   Reflection only when it has greater expected information value and does not
+   require objective diagnosis, medical knowledge or a measurement unavailable
+   to the user.
+   This tie-breaker gives no global priority to MECHANISM_DISCOVERY, does not
+   require competing hypotheses or a diagnostic question, does not ban
+   Reflection, and does not assume that the user must remember the observation.
+   When availability is uncertain, phrase the question so "I do not remember / I
+   did not notice / I do not know" remains a normal and sufficient answer.
+   Prefer Reflection when the framing itself is sensitive, the user may
+   misunderstand the causal framing, the next question would rely on an overly
+   strong assumption without checking the picture, or Reflection itself can
+   materially change the next Decision.
 5. COMPARE DISCOVERY LINES WITHOUT QUOTAS. Human / Meaningful Change and
    Mechanism / Expertise have no fixed order, mandatory alternation or balancing
    quota. Depth in one line is not a reason to continue it. A less understood
