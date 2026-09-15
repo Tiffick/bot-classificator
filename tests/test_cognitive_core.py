@@ -517,6 +517,17 @@ def test_system_prompt_defines_discrimination_over_reflection_tie_breaker():
     ):
         assert guard in prompt
 
+    for clarification in (
+        "Mere non-confirmation or uncertainty of cautiously stated working explanations",
+        "is not by itself such a reason",
+        "tests rather than asserts causation",
+        "only when the available USER material gives a concrete reason",
+        "the user has misunderstood or disputed it",
+        "the question actually presupposes disputed causation",
+        "Reflection has greater expected effect on the next Decision",
+    ):
+        assert clarification in prompt
+
     assert "FSB-" not in prompt
 
 
