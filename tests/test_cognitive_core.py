@@ -1,5 +1,6 @@
 import json
 import inspect
+import re
 from copy import deepcopy
 from types import SimpleNamespace
 
@@ -400,7 +401,7 @@ def test_system_prompt_defines_dynamic_value_and_sufficiency_boundary():
         "materially change useful understanding of the person",
         "a substantial mechanism of the problem",
         "the next eligible Decision",
-        "the other Discovery line, Reflection, Transition, Respect Pause / Refusal or Stop Exploration",
+        "the other Discovery line, Recognition / Evaluation of a testable working version, Reflection, Transition, Respect Pause / Refusal or Stop Exploration",
         "Human / Meaningful Change and Mechanism / Expertise are both full Discovery lines",
         "no mandatory order",
         "required slots, completion checklist or sufficiency score",
@@ -456,8 +457,9 @@ def test_system_prompt_defines_marginal_decision_value_policy_boundaries():
         "what will realistically change after the user's most likely response",
         "unlikely to materially change the Human Model, Formulation",
         "a distinction between materially different working explanations",
-        "one observation genuinely available to the user can distinguish such explanations",
-        "greater marginal value than prematurely reflecting those explanations",
+        "Reduction of system uncertainty itself is not user value",
+        "Compare the expected useful delta of direct experiential discrimination with Evaluation of a grounded, testable working version",
+        "do not ask for another detail merely to make the Core more certain",
         "Reflection needs a specific material delta",
         "integrate multiple decision-relevant supported elements into a more useful working picture",
         "test a new substantial connection",
@@ -492,43 +494,98 @@ def test_system_prompt_defines_marginal_decision_value_policy_boundaries():
     )
 
 
-def test_system_prompt_defines_discrimination_over_reflection_tie_breaker():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
+def _marginal_value_policy_block(prompt):
+    return " ".join(
+        prompt.split("4. COMPARE MARGINAL DECISION VALUE.", 1)[1]
+        .split("5. COMPARE DISCOVERY LINES WITHOUT QUOTAS.", 1)[0]
+        .split()
+    )
 
-    for instruction in (
-        "two materially different working explanations without presenting either as fact",
-        "prior agreement with those explanations through Reflection / EVALUATION is not required",
-        "one concrete experiential observation would update the explanations differently",
-        "prefer that question over Reflection only when it has greater expected information value",
-        "does not require objective diagnosis, medical knowledge or a measurement unavailable to the user",
-    ):
-        assert instruction in prompt
+
+def _assert_symmetric_value_policy(prompt):
+    policy = _marginal_value_policy_block(prompt)
+    assert re.search(
+        r"reduction of system uncertainty\b[^.;]{0,80}\bnot\b[^.;]{0,30}\buser value",
+        policy,
+        re.IGNORECASE,
+    ), "system uncertainty must not be treated as user value"
+    assert re.search(
+        r"compare the expected useful delta of direct experiential discrimination "
+        r"with Evaluation of a grounded, testable working version",
+        policy,
+        re.IGNORECASE,
+    ), "both actions must be compared by expected useful delta"
+    assert re.search(
+        r"existing USER material supports a cautious working version\b.*?"
+        r"Evaluation may materially improve the Human Model or next Decision; "
+        r"an additional epistemic question is not required",
+        policy,
+        re.IGNORECASE,
+    ), "grounded Evaluation must be able to make another question unnecessary"
+    assert re.search(
+        r"direct discrimination remains eligible.*?one concrete observation "
+        r"genuinely available to the user.*?materially different working "
+        r"explanations.*?greater expected useful delta than Evaluation for "
+        r"Formulation, that distinction, or the next useful Decision",
+        policy,
+        re.IGNORECASE,
+    ), "higher-value direct discrimination must remain preferable"
+    assert not re.search(
+        r"\b(?:always|by default|generally|usually)\s+"
+        r"(?:prefer|choose|select|prioriti[sz]e)\s+"
+        r"(?:direct (?:experiential )?discrimination|(?:a )?discriminating "
+        r"question|Recognition|(?:a )?testable working version)\b",
+        policy,
+        re.IGNORECASE,
+    ), "unconditional priority contradicts the useful-delta comparison"
+
+
+def test_system_prompt_compares_discrimination_and_testable_version_by_useful_delta():
+    prompt = CognitiveCore._system_prompt()
+    _assert_symmetric_value_policy(prompt)
+    normalized_prompt = " ".join(prompt.split())
 
     for guard in (
-        "no global priority to MECHANISM_DISCOVERY",
+        "Keep that version system-proposed, not established USER evidence",
+        "Human Experience is not evidence about this user",
+        "without presenting a hypothesis as fact",
+        "existing USER material supports a cautious working version",
+        "support, partially support, reject, correct or leave it uncertain",
+        "generic ungrounded causal guess, objective/medical/psychological diagnosis",
+        "a rejected version again without new grounding",
+        "never use Recognition to press for agreement",
+        "no global priority to MECHANISM_DISCOVERY or Recognition",
         "does not require competing hypotheses or a diagnostic question",
-        "does not ban Reflection",
-        "does not assume that the user must remember the observation",
         '"I do not remember / I did not notice / I do not know" remains a normal and sufficient answer',
-        "Prefer Reflection when the framing itself is sensitive",
-        "the user may misunderstand the causal framing",
-        "the next question would rely on an overly strong assumption without checking the picture",
-        "Reflection itself can materially change the next Decision",
+        "Reflection remains eligible when checking a sensitive or misunderstood framing",
+        "Neither Reflection nor a question wins merely because the working explanations remain unconfirmed",
     ):
-        assert guard in prompt
+        assert guard in normalized_prompt
 
-    for clarification in (
-        "Mere non-confirmation or uncertainty of cautiously stated working explanations",
-        "is not by itself such a reason",
-        "tests rather than asserts causation",
-        "only when the available USER material gives a concrete reason",
-        "the user has misunderstood or disputed it",
-        "the question actually presupposes disputed causation",
-        "Reflection has greater expected effect on the next Decision",
-    ):
-        assert clarification in prompt
+    assert "bare yes при нескольких targets не подтверждает их все" in normalized_prompt
+    assert "the observation is unavailable closes THAT semantic axis" in normalized_prompt
+    assert "SYSTEM_TRANSITION должен быть явным и иметь CONSENT target" in normalized_prompt
+    assert "greater marginal value than prematurely reflecting" not in normalized_prompt
+    assert "greater expected information value" not in normalized_prompt
+    assert "Reflection may override" not in normalized_prompt
+    assert "FSB-" not in normalized_prompt
 
-    assert "FSB-" not in prompt
+
+@pytest.mark.parametrize(
+    "unconditional_rule",
+    (
+        "Always prefer direct discrimination whenever a discriminating question is available.",
+        "Always prefer Recognition whenever a grounded working version can be formulated.",
+    ),
+)
+def test_symmetric_value_policy_rejects_unconditional_priority_mutations(unconditional_rule):
+    prompt = CognitiveCore._system_prompt()
+    marker = "5. COMPARE DISCOVERY LINES WITHOUT QUOTAS."
+    mutated_prompt = prompt.replace(marker, unconditional_rule + "\n" + marker, 1)
+    assert mutated_prompt != prompt
+
+    with pytest.raises(AssertionError, match="unconditional priority"):
+        _assert_symmetric_value_policy(mutated_prompt)
 
 
 def test_system_prompt_enforces_solution_action_product_boundary():

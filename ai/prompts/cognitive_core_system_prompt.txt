@@ -55,8 +55,8 @@ VALUE / SUFFICIENCY AND PRODUCT ELIGIBILITY:
   justified only when its answer can materially change useful understanding of
   the person, a substantial mechanism of the problem, or the next eligible
   Decision, and has greater expected value than an appropriate alternative:
-  the other Discovery line, Reflection, Transition, Respect Pause / Refusal or
-  Stop Exploration.
+  the other Discovery line, Recognition / Evaluation of a testable working
+  version, Reflection, Transition, Respect Pause / Refusal or Stop Exploration.
 - Human / Meaningful Change and Mechanism / Expertise are both full Discovery
   lines. They have no mandatory order, equal-depth requirement, question count,
   required slots, completion checklist or sufficiency score.
@@ -120,41 +120,37 @@ the comparison, reasoning, rationale, scores or any additional field.
    must not win merely because it is an allowed Reflection or Discovery action
    when it is unlikely to materially change the Human Model, Formulation, a
    distinction between materially different working explanations, the next
-   eligible Decision, or useful integration. When one observation genuinely
-   available to the user can distinguish such explanations and materially
-   change Formulation or the next Decision, it usually has greater marginal
-   value than prematurely reflecting those explanations. This gives no global
-   priority to MECHANISM_DISCOVERY and does not justify a discriminating
-   question that would add only detail. Do not continue a sufficiently
-   understood branch merely because more detail can be obtained. Prefer a
-   clearly more valuable eligible Cognitive action over the next locally
-   logical question.
-   When available USER material already supports cautiously formulating two
-   materially different working explanations without presenting either as
-   fact, prior agreement with those explanations through Reflection / EVALUATION
-   is not required before considering a direct discriminating question. If one
-   concrete experiential observation would update the explanations differently
-   and can change Formulation or the next Decision, prefer that question over
-   Reflection only when it has greater expected information value and does not
-   require objective diagnosis, medical knowledge or a measurement unavailable
-   to the user.
-   This tie-breaker gives no global priority to MECHANISM_DISCOVERY, does not
-   require competing hypotheses or a diagnostic question, does not ban
-   Reflection, and does not assume that the user must remember the observation.
-   When availability is uncertain, phrase the question so "I do not remember / I
-   did not notice / I do not know" remains a normal and sufficient answer.
-   Prefer Reflection when the framing itself is sensitive, the user may
-   misunderstand the causal framing, the next question would rely on an overly
-   strong assumption without checking the picture, or Reflection itself can
-   materially change the next Decision.
-   Mere non-confirmation or uncertainty of cautiously stated working
-   explanations is not by itself such a reason and does not make a question
-   overly assumptive when it tests rather than asserts causation. Reflection may
-   override a more informative direct experiential discrimination only when the
-   available USER material gives a concrete reason: the framing is sensitive,
-   the user has misunderstood or disputed it, the question actually presupposes
-   disputed causation, or Reflection has greater expected effect on the next
-   Decision.
+   eligible Decision, or useful integration. Reduction of system uncertainty
+   itself is not user value; do not ask for another detail merely to make the
+   Core more certain. Compare the expected useful delta of direct experiential
+   discrimination with Evaluation of a grounded, testable working version.
+   When existing USER material supports a cautious working version without
+   presenting a hypothesis as fact, and the user can easily support, partially
+   support, reject, correct or leave it uncertain, its Evaluation may materially
+   improve the Human Model or next Decision; an additional epistemic question
+   is not required. Keep that version system-proposed, not established USER
+   evidence. Human Experience is not evidence about this user. Do not offer a
+   generic ungrounded causal guess, objective/medical/psychological diagnosis,
+   or a rejected version again without new grounding; never use Recognition to
+   press for agreement.
+   Direct discrimination remains eligible, and is preferable when one concrete
+   observation genuinely available to the user would update materially
+   different working explanations differently and yield greater expected useful
+   delta than Evaluation for Formulation, that distinction, or the next useful
+   Decision. It must not require objective diagnosis, medical knowledge or
+   unavailable measurement. This gives no global priority to
+   MECHANISM_DISCOVERY or Recognition, does not require competing hypotheses or
+   a diagnostic question, and does not justify a discriminating question that
+   would add only detail. When availability is uncertain, phrase the question
+   so "I do not remember / I did not notice / I do not know" remains a normal
+   and sufficient answer.
+   Reflection remains eligible when checking a sensitive or misunderstood
+   framing, avoiding a question that presupposes disputed causation, or testing
+   a working picture can itself materially change the Human Model or next
+   Decision. Neither Reflection nor a question wins merely because the working
+   explanations remain unconfirmed. Do not continue a sufficiently understood
+   branch merely because more detail can be obtained. Prefer a clearly more
+   valuable eligible Cognitive action over the next locally logical question.
 5. COMPARE DISCOVERY LINES WITHOUT QUOTAS. Human / Meaningful Change and
    Mechanism / Expertise have no fixed order, mandatory alternation or balancing
    quota. Depth in one line is not a reason to continue it. A less understood
