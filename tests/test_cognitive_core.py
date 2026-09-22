@@ -1,28 +1,31 @@
 import json
-import inspect
-import re
 from copy import deepcopy
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
-from pydantic import ValidationError
-
 from ai.cognitive_core import (
-    COGNITIVE_TURN_JSON_SCHEMA,
     CognitiveCore,
     CognitiveCoreError,
-    _adapt_api_payload,
     _normalize_strict_schema,
 )
-import ai.cognitive_core as cognitive_core_module
+from ai.cognitive_semantic_wire import SEMANTIC_TURN_JSON_SCHEMA, adapt_semantic_turn
+from test_cognitive_semantic_wire import (
+    COMPLEX_TEXT,
+    MI_A,
+    MI_B,
+    MSG_A,
+    RT_A,
+    SIMPLE_QUOTE,
+    SIMPLE_TEXT,
+    _acs as semantic_acs,
+    _complex as semantic_complex,
+    _model as semantic_model,
+    _simple as semantic_simple,
+)
 from ai.cognitive_turn import (
-    ActionContent,
-    ActionSubjectReference,
-    ActionTarget,
     CognitiveTurnResult,
     DecisionIntent,
-    ReplySegment,
-    SystemAction,
 )
 from ai.discovery_data_model import (
     ActiveContentItem,
@@ -66,38 +69,6 @@ class FakeClient:
 
 def _message(role, text, sequence):
     return DialogueMessage(role=role, text=text, sequence=sequence)
-
-
-def _result(reply="Что для тебя сейчас важнее?"):
-    content = ActionContent(
-        local_id="content:question",
-        kind=ActiveContentKind.SYSTEM_QUESTION,
-        semantic_content="уточнить значимую область",
-    )
-    return CognitiveTurnResult(
-        decision_intent=DecisionIntent.HUMAN_DISCOVERY,
-        system_action=SystemAction(
-            contents=(content,),
-            response_targets=(
-                ActionTarget(
-                    local_id="target:question",
-                    active_content_local_id=content.local_id,
-                    subject=ActionSubjectReference(
-                        kind=TargetSubjectKind.ACTIVE_CONTENT,
-                        active_content_local_id=content.local_id,
-                    ),
-                    interaction=TargetInteractionKind.OPEN_RESPONSE,
-                ),
-            ),
-        ),
-        reply_segments=(
-            ReplySegment(
-                local_id="segment:reply",
-                text=reply,
-                realizes_action_content_ids=(content.local_id,),
-            ),
-        ),
-    )
 
 
 def _fixture(with_acs=True):
@@ -163,43 +134,18 @@ def _fixture(with_acs=True):
     return current, model, acs, DialogueHistory(messages=history_messages)
 
 
-def _wire_payload(result):
-    internal = result.model_dump(mode="json")
-    intent = internal.pop("decision_intent")
-    action = internal.pop("system_action")
-    required_kind = {
-        DecisionIntent.REFLECTION.value: ActiveContentKind.SYSTEM_REFLECTION.value,
-        DecisionIntent.RECOGNITION.value: ActiveContentKind.RECOGNITION_OPTION.value,
-        DecisionIntent.TRANSITION.value: ActiveContentKind.SYSTEM_TRANSITION.value,
-    }.get(intent)
-    contents = action["contents"]
-    primary_index = next(
-        (
-            index
-            for index, content in enumerate(contents)
-            if required_kind is None or content["kind"] == required_kind
-        ),
-        None,
-    )
-    primary = None if primary_index is None else contents[primary_index]
-    additional = [
-        content for index, content in enumerate(contents) if index != primary_index
-    ]
-    return {
-        "state_patch": internal["state_patch"],
-        "reconciliation": internal["reconciliation"],
-        "selected_action": {
-            "decision_intent": intent,
-            "primary_content": primary,
-            "additional_contents": additional,
-            "response_targets": action["response_targets"],
-        },
-        "reply_segments": internal["reply_segments"],
+def _semantic_baseline():
+    payload = semantic_simple()
+    payload["state_patch"] = {
+        "item_changes": [], "relation_changes": [], "proposal_materializations": []
     }
+    payload["reconciliation"] = []
+    payload["selected_action"]["primary_content"]["model_item_refs"] = []
+    return payload
 
 
 def _core(result=None):
-    client = FakeClient(json.dumps(_wire_payload(result or _result())))
+    client = FakeClient(json.dumps(_semantic_baseline(), ensure_ascii=False))
     return CognitiveCore(client=client), client
 
 
@@ -219,47 +165,15 @@ def _objects_with_properties(schema):
 
 
 def _selected_action_schema(intent):
-    for branch in COGNITIVE_TURN_JSON_SCHEMA["properties"]["selected_action"][
+    for branch in SEMANTIC_TURN_JSON_SCHEMA["properties"]["selected_action"][
         "anyOf"
     ]:
-        definition = COGNITIVE_TURN_JSON_SCHEMA["$defs"][
+        definition = SEMANTIC_TURN_JSON_SCHEMA["$defs"][
             branch["$ref"].rsplit("/", 1)[-1]
         ]
         if definition["properties"]["decision_intent"]["const"] == intent.value:
             return definition
     raise AssertionError(f"Missing wire branch for {intent}")
-
-
-def _typed_result(intent, kind, *, interaction=None):
-    content = ActionContent(
-        local_id="content:primary",
-        kind=kind,
-        semantic_content="unchanged semantic content",
-    )
-    targets = ()
-    if interaction is not None:
-        targets = (
-            ActionTarget(
-                local_id="target:primary",
-                active_content_local_id=content.local_id,
-                subject=ActionSubjectReference(
-                    kind=TargetSubjectKind.ACTIVE_CONTENT,
-                    active_content_local_id=content.local_id,
-                ),
-                interaction=interaction,
-            ),
-        )
-    return CognitiveTurnResult(
-        decision_intent=intent,
-        system_action=SystemAction(contents=(content,), response_targets=targets),
-        reply_segments=(
-            ReplySegment(
-                local_id="segment:primary",
-                text="Unchanged reply.",
-                realizes_action_content_ids=(content.local_id,),
-            ),
-        ),
-    )
 
 
 def test_input_view_includes_current_message_model_and_disabled_he():
@@ -301,60 +215,34 @@ def test_system_prompt_includes_critical_conditional_contract_rules():
 
     for instruction in (
         "CONTRACT RULES",
-        "ItemOperation: ADD requires local_id",
-        "existing_item_id=null",
-        "non-null kind, content, evidence_origin, source_quote",
-        "REINFORCE requires existing_item_id",
-        "CORRECT requires both local_id and",
-        "RelationOperation follows the same ADD/REINFORCE/CORRECT",
-        "exactly one existing ID or one local ID",
-        "ProposalMaterialization with subject_kind=item",
-        "outcome AMBIGUOUS names multiple distinct previous targets",
-        "Every targeted ActionContent MUST be named",
+        "ADD item/relation declares a new handle",
+        "CORRECT declares a new handle AND explicitly names the existing object",
+        "REINFORCE names only the existing object",
+        "source_items, target_items and meaning",
+        "AMBIGUOUS reconciliation names multiple distinct previous targets",
+        "Every targeted content must be realized by a segment",
     ):
         assert instruction in prompt
 
 
-def test_system_prompt_requires_local_namespaces_and_exact_reference_reuse():
+def test_system_prompt_requires_shared_handles_and_exact_reference_reuse():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
-    for field, namespace in (
-        ("ItemOperation.local_id", "item"),
-        ("RelationOperation.local_id", "relation"),
-        ("ActionContent.local_id", "content"),
-        ("ActionTarget.local_id", "target"),
-        ("ReplySegment.local_id", "segment"),
-    ):
-        assert f"{field} MUST use {namespace}:<name>" in prompt
-
-    assert "References MUST reuse the exact declared local ID including its namespace" in prompt
-    for reference in (
-        "active_content_local_id",
-        "subject.active_content_local_id",
-        "realizes_action_content_ids",
-        "ItemReference.local_item_id",
-        "RelationReference.local_relation_id",
-    ):
-        assert reference in prompt
-    assert "exactly content:question_1, not question_1, ac1 or another alias" in prompt
-    assert "rt_ / aci_ IDs from previous ACS, never new local IDs" in prompt
+    assert "semantic handles" in prompt
+    assert "одном общем namespace" in prompt
+    assert "каждый объявленный handle уникален" in prompt
+    assert "A handle is valid only for its declaration in this response" in prompt
+    assert "exact persistent IDs from previous ACS" in prompt
 
 
 def test_system_prompt_defines_item_and_relation_reference_ownership():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "when an item or relation already exists in the supplied HumanModel",
-        "exact persistent ID into existing_item_id (mi_*) or existing_relation_id (rel_*)",
-        "set the corresponding local_*_id to null",
-        "Never create a local alias for an existing persistent object",
-        "local_item_id is allowed only when that exact item:* is declared by an ADD or CORRECT ItemOperation in the CURRENT state_patch",
-        "local_relation_id is allowed only when that exact relation:* is declared by an ADD or CORRECT RelationOperation in the CURRENT state_patch",
-        "every local reference must resolve within this same CognitiveTurnResult",
-        "confirmation, local reflection, working-picture Reflection",
-        "creates no new ModelItem/Relation",
-        "exact existing mi_*/rel_* ID",
-        "leave the corresponding refs list empty",
+        "exact existing_id from HumanModel OR the handle of a current ADD/CORRECT declaration",
+        "never as an alias for an existing HumanModel object",
+        "confirmation or Reflection without new operations",
+        "existing IDs or use empty reference lists",
     ):
         assert instruction in prompt
 
@@ -363,14 +251,10 @@ def test_system_prompt_explains_active_content_target_ownership():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "ActionTarget.active_content_local_id belongs only to an ActionContent declared in the CURRENT SystemAction",
-        "content that carries/creates the target",
-        "subject.active_content_local_id also belongs only to the CURRENT SystemAction",
-        "semantic content about which a response is expected",
-        "neither may contain a persistent aci_ ID from previous ACS",
-        "Previous ACS is addressed only through reconciliation",
-        "Owner and subject may match, but need not",
-        "target owner content:question and target subject content:reflection",
+        "owner_content handle names the current content carrying the interaction",
+        "subject independently names current content",
+        "Owner and subject may differ",
+        "ReplySegment.realizes names the current content",
     ):
         assert instruction in prompt
 
@@ -393,232 +277,190 @@ def test_system_prompt_distinguishes_consent_from_open_response():
         assert instruction in prompt
 
 
-def test_system_prompt_defines_dynamic_value_and_sufficiency_boundary():
+def test_system_prompt_uses_simple_consultant_policy():
     prompt = " ".join(CognitiveCore._system_prompt().split())
-
-    for instruction in (
-        "compare the expected value of eligible actions inside the current product boundary",
-        "materially change useful understanding of the person",
-        "a substantial mechanism of the problem",
-        "the next eligible Decision",
-        "the other Discovery line, Recognition / Evaluation of a testable working version, Reflection, Transition, Respect Pause / Refusal or Stop Exploration",
-        "Human / Meaningful Change and Mechanism / Expertise are both full Discovery lines",
-        "no mandatory order",
-        "required slots, completion checklist or sufficiency score",
-        "Local sufficiency means stop or leave THAT branch",
-        "It never means that permission for a concrete solution has been earned",
+    for principle in (
+        "опытным дружелюбным консультантом",
+        "сам, внутренне реши, нужна ли дополнительная информация",
+        "Уменьшение неопределённости системы само по себе не является ценностью",
+        "мягкое и легко исправляемое предположение",
+        "не предлагая отдельную Evaluation каждого такого предположения",
+        "Если пользователь поправил, прими поправку",
+        "существенно разные правдоподобные трактовки",
+        "разумное предположение может заметно увести его не туда",
+        "Ясно сказанное не требует",
+        "Отдельный эпизод можно принять как достаточный контекст",
+        "не расследуй автоматически его точный механизм",
+        "можно коротко спросить, повторяется ли ситуация",
+        "это не обязательный вопрос после каждого эпизода",
+        "существенный или повторяющийся паттерн",
+        "Reflection нужна, когда она соединяет части истории",
+        "Не повторяй последнюю понятную реплику ради подтверждения",
+        "Не добывай ту же деталь снова",
+        "Можно перейти к другой важной части истории",
+        "ни один тип действия не имеет глобального приоритета",
     ):
-        assert instruction in prompt
+        assert principle in prompt
 
-
-def test_system_prompt_defines_operational_candidate_selection_protocol():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
-
-    for instruction in (
+    for removed_concept in (
         "OPERATIONAL CANDIDATE-SELECTION PROTOCOL",
-        "A confirmed \"do not know / did not observe / cannot determine\" may complete Discovery on that semantic axis",
-        "do not force the user to resolve an uncertainty they cannot resolve",
-        "CLOSE AN EXHAUSTED SEMANTIC AXIS",
-        "merely splits an already confirmed uncertainty into more details has low value",
-        "UNKNOWN does not mean rephrase the same question",
         "GENERATE DISTINCT ELIGIBLE CANDIDATES",
-        "only materially different, context-appropriate candidates among the existing DecisionIntent values",
-        "Do not continue a sufficiently understood branch merely because more detail can be obtained",
-        "no fixed order, mandatory alternation or balancing quota",
-        "Local confirmation / repair checks one newly heard element only",
-        "Working-picture Reflection connects multiple supported elements",
-        "another question has lower expected value, prefer a working-picture Reflection",
-        "Detail useful mainly for concrete solution design",
-        "does not justify continuing Discovery",
-        "Do not output the comparison, reasoning, rationale, scores or any additional field",
-    ):
-        assert instruction in prompt
-
-    assert set(COGNITIVE_TURN_JSON_SCHEMA["properties"]) == {
-        "state_patch",
-        "reconciliation",
-        "selected_action",
-        "reply_segments",
-    }
-    assert set(CognitiveTurnResult.model_json_schema()["properties"]) == {
-        "decision_intent",
-        "state_patch",
-        "reconciliation",
-        "system_action",
-        "reply_segments",
-    }
-
-
-def test_system_prompt_defines_marginal_decision_value_policy_boundaries():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
-
-    for instruction in (
         "COMPARE MARGINAL DECISION VALUE",
-        "what will realistically change after the user's most likely response",
-        "unlikely to materially change the Human Model, Formulation",
-        "a distinction between materially different working explanations",
-        "Reduction of system uncertainty itself is not user value",
-        "Compare the expected useful delta of direct experiential discrimination with Evaluation of a grounded, testable working version",
-        "do not ask for another detail merely to make the Core more certain",
-        "Reflection needs a specific material delta",
-        "integrate multiple decision-relevant supported elements into a more useful working picture",
-        "test a new substantial connection",
-        "resolve an uncertainty whose outcome can materially change the next Decision",
-        "Fluent paraphrase, repetition of the latest message or an already integrated picture",
-        "local confirmation that changes nothing are not value by themselves",
-        "the observation is unavailable closes THAT semantic axis",
-        "do not restate the same unavailability as a local Reflection / EVALUATION merely to obtain ritual confirmation",
+        "decision hinge",
+        "strongest eligible alternative",
+        "each likely response class",
+        "COMMIT THE WINNER",
     ):
-        assert instruction in prompt
+        assert removed_concept not in prompt
+    assert "FSB-" not in prompt
 
-    for regression_guard in (
-        "This gives no global priority to MECHANISM_DISCOVERY",
-        "does not justify a discriminating question that would add only detail",
-        "it does not have to repeat the entire history",
-        "A local Reflection remains valid when that specific check materially affects the next Decision",
-        "A first UNKNOWN does not automatically stop all Discovery",
-        "Stop and Transition remain contextual alternatives; neither globally outranks the other",
-        "Do not output the comparison, reasoning, rationale, scores or any additional field",
+
+def test_more_information_criterion_is_internal_not_user_facing_meta_choice():
+    source = (
+        Path(__file__).parents[1]
+        / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+    ).read_text(encoding="utf-8")
+    policy_sections = (
+        CognitiveCore._system_prompt().split("CONSULTANT POLICY:", 1)[1]
+        .split("PRODUCT BOUNDARY:", 1)[0],
+        source.split("VALUE / SUFFICIENCY ВНУТРИ DECISION", 1)[1]
+        .split("PRODUCTION DECISION BOUNDARY", 1)[0],
+    )
+    for section in policy_sections:
+        policy = " ".join(section.casefold().split())
+        assert "внутренне" in policy
+        assert "нужна ли дополнительная информация" in policy
+        assert "не вопрос пользователю" in policy
+        assert "не проговар" in policy
+        assert "уточнять или продолжать" in policy
+        assert "разговор о процессе консультации" in policy
+        assert "уменьшение неопределённости системы само по себе" in policy
+        assert "существенно разные" in policy
+        assert "сначала спроси" not in policy
+        assert "сначала спросить" not in policy
+
+
+def test_cognitive_cycle_uses_working_memory_not_decision_optimizer():
+    source = (
+        Path(__file__).parents[1]
+        / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+    ).read_text(encoding="utf-8")
+    normalized = " ".join(source.split())
+    for principle in (
+        "опытный дружелюбный консультант",
+        "Human Model служит рабочей памятью консультанта",
+        "мягкое предположение можно использовать в разговоре без отдельной проверки",
+        "Уточнение нужно, когда одновременно есть существенно разные",
+        "Отдельный эпизод не требует расследования точной причинной цепочки",
+        "Такой вопрос не обязателен для каждого эпизода",
+        "Stop Exploration является допустимым действием",
     ):
-        assert regression_guard in prompt
+        assert principle.lower() in normalized.lower()
+    for removed_concept in (
+        "decision hinge",
+        "классы ответа пользователя наиболее вероятны",
+        "лучшей содержательно отличающейся альтернативы",
+    ):
+        assert removed_concept not in normalized
 
-    assert set(COGNITIVE_TURN_JSON_SCHEMA["properties"]) == {
+
+def test_simple_policy_preserves_safety_and_structural_guards():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+    for guard in (
+        "серьёзная медицинская или психологическая гипотеза не является фактом",
+        "Human Experience отключён и не является evidence",
+        "rejected не возвращай в иной формулировке",
+        "bare yes при нескольких targets не подтверждает их все",
+        "отказ, паузу и коррекцию уважай",
+        "SYSTEM_TRANSITION должен быть явным и иметь CONSENT target",
+        "не выбирай за человека привычку, практику, изменение среды",
+        "SYSTEM_PROPOSAL не разрешает скрытый solution design",
+        "после DECLINED не продавливай соседний вариант",
+        "Отказ от предложения сам по себе не доказывает BARRIER",
+        "meaningful consent, не добавляя параллельное AI-предложение решения",
+    ):
+        assert guard in prompt
+    assert set(SEMANTIC_TURN_JSON_SCHEMA["properties"]) == {
         "state_patch",
         "reconciliation",
         "selected_action",
         "reply_segments",
     }
-    internal_properties = set(CognitiveTurnResult.model_json_schema()["properties"])
-    assert not internal_properties.intersection(
+    assert not set(CognitiveTurnResult.model_json_schema()["properties"]).intersection(
         {"candidates", "candidate_rankings", "rationale", "scores"}
     )
-
-
-def _marginal_value_policy_block(prompt):
-    return " ".join(
-        prompt.split("4. COMPARE MARGINAL DECISION VALUE.", 1)[1]
-        .split("5. COMPARE DISCOVERY LINES WITHOUT QUOTAS.", 1)[0]
-        .split()
-    )
-
-
-def _assert_symmetric_value_policy(prompt):
-    policy = _marginal_value_policy_block(prompt)
-    assert re.search(
-        r"reduction of system uncertainty\b[^.;]{0,80}\bnot\b[^.;]{0,30}\buser value",
-        policy,
-        re.IGNORECASE,
-    ), "system uncertainty must not be treated as user value"
-    assert re.search(
-        r"compare the expected useful delta of direct experiential discrimination "
-        r"with Evaluation of a grounded, testable working version",
-        policy,
-        re.IGNORECASE,
-    ), "both actions must be compared by expected useful delta"
-    assert re.search(
-        r"existing USER material supports a cautious working version\b.*?"
-        r"Evaluation may materially improve the Human Model or next Decision; "
-        r"an additional epistemic question is not required",
-        policy,
-        re.IGNORECASE,
-    ), "grounded Evaluation must be able to make another question unnecessary"
-    assert re.search(
-        r"direct discrimination remains eligible.*?one concrete observation "
-        r"genuinely available to the user.*?materially different working "
-        r"explanations.*?greater expected useful delta than Evaluation for "
-        r"Formulation, that distinction, or the next useful Decision",
-        policy,
-        re.IGNORECASE,
-    ), "higher-value direct discrimination must remain preferable"
-    assert not re.search(
-        r"\b(?:always|by default|generally|usually)\s+"
-        r"(?:prefer|choose|select|prioriti[sz]e)\s+"
-        r"(?:direct (?:experiential )?discrimination|(?:a )?discriminating "
-        r"question|Recognition|(?:a )?testable working version)\b",
-        policy,
-        re.IGNORECASE,
-    ), "unconditional priority contradicts the useful-delta comparison"
-
-
-def test_system_prompt_compares_discrimination_and_testable_version_by_useful_delta():
-    prompt = CognitiveCore._system_prompt()
-    _assert_symmetric_value_policy(prompt)
-    normalized_prompt = " ".join(prompt.split())
-
-    for guard in (
-        "Keep that version system-proposed, not established USER evidence",
-        "Human Experience is not evidence about this user",
-        "without presenting a hypothesis as fact",
-        "existing USER material supports a cautious working version",
-        "support, partially support, reject, correct or leave it uncertain",
-        "generic ungrounded causal guess, objective/medical/psychological diagnosis",
-        "a rejected version again without new grounding",
-        "never use Recognition to press for agreement",
-        "no global priority to MECHANISM_DISCOVERY or Recognition",
-        "does not require competing hypotheses or a diagnostic question",
-        '"I do not remember / I did not notice / I do not know" remains a normal and sufficient answer',
-        "Reflection remains eligible when checking a sensitive or misunderstood framing",
-        "Neither Reflection nor a question wins merely because the working explanations remain unconfirmed",
-    ):
-        assert guard in normalized_prompt
-
-    assert "bare yes при нескольких targets не подтверждает их все" in normalized_prompt
-    assert "the observation is unavailable closes THAT semantic axis" in normalized_prompt
-    assert "SYSTEM_TRANSITION должен быть явным и иметь CONSENT target" in normalized_prompt
-    assert "greater marginal value than prematurely reflecting" not in normalized_prompt
-    assert "greater expected information value" not in normalized_prompt
-    assert "Reflection may override" not in normalized_prompt
-    assert "FSB-" not in normalized_prompt
-
-
-@pytest.mark.parametrize(
-    "unconditional_rule",
-    (
-        "Always prefer direct discrimination whenever a discriminating question is available.",
-        "Always prefer Recognition whenever a grounded working version can be formulated.",
-    ),
-)
-def test_symmetric_value_policy_rejects_unconditional_priority_mutations(unconditional_rule):
-    prompt = CognitiveCore._system_prompt()
-    marker = "5. COMPARE DISCOVERY LINES WITHOUT QUOTAS."
-    mutated_prompt = prompt.replace(marker, unconditional_rule + "\n" + marker, 1)
-    assert mutated_prompt != prompt
-
-    with pytest.raises(AssertionError, match="unconditional priority"):
-        _assert_symmetric_value_policy(mutated_prompt)
 
 
 def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "First check whether the proposed action is eligible",
-        "Transition to a human consultant with meaningful consent",
-        "does not select or tune a concrete solution for the user",
-        "concrete behavioral experiment, recommendation, plan, practice",
-        "beginning of solution-option selection by the Core",
-        "Apparent usefulness and local mechanism sufficiency do not make such content eligible",
-        "SYSTEM_PROPOSAL remains available for semantically valid in-scope content",
-        "The action kind itself does not authorize solution content",
-        "Answer a direct user question normally",
-        "does not automatically authorize program or solution selection",
-        "Reflection is a value-based candidate",
-        "not a ritual after a fixed number of turns",
+        "Discovery помогает понять проблему и существенные паттерны",
+        "Общее объяснение обоснованного механизма допустимо ради понимания",
+        "не применяй его как персональное решение",
+        "не выбирай за человека привычку, практику, изменение среды",
+        "SYSTEM_PROPOSAL не разрешает скрытый solution design",
+        "ANSWER_USER_QUESTION не отменяет Product Boundary",
+        "сначала дай полезное обоснованное понимание проблемы",
+        "а не персональную рекомендацию",
+        "не делай переход автоматическим по форме вопроса",
+        "meaningful consent, не добавляя параллельное AI-предложение решения",
+        "Never disguise a concrete experiment, recommendation, plan or practice as Discovery",
     ):
         assert instruction in prompt
+
+
+def test_direct_solution_question_keeps_explanation_inside_product_boundary():
+    policy = " ".join(
+        CognitiveCore._system_prompt()
+        .split("PRODUCT BOUNDARY:", 1)[1]
+        .split("DECISION INTENT:", 1)[0]
+        .split()
+    ).casefold()
+
+    # The direct question has a useful, grounded answer route, not a forced handoff.
+    assert "answer_user_question не отменяет product boundary" in policy
+    assert "сначала дай полезное обоснованное понимание проблемы" in policy
+    assert "опирайся на уже известный материал" in policy
+    assert "можно объяснить общий принцип" in policy
+    assert "не делай переход автоматическим по форме вопроса" in policy
+
+    # General education cannot become invented user-specific causes or an AI offer
+    # to select a personal solution from a menu of techniques.
+    assert "не выдавай типовые причины за установленную причину именно этого человека" in policy
+    assert "не превращай объяснение в меню способов действий" in policy
+    assert "ai выберет, адаптирует или разработает для него персональное решение" in policy
+    assert "если следующий полезный шаг требует такого выбора" in policy
+    assert "transition к живому консультанту с meaningful consent" in policy
+
+
+def test_source_of_truth_separates_explanation_from_personal_solution_design():
+    root = Path(__file__).parents[1] / "Research/Human_Experience/Weight"
+    boundaries = " ".join((root / "11_BOUNDARIES.txt").read_text(encoding="utf-8").split())
+    cycle = " ".join((root / "12_Cognitive_Cycle.txt").read_text(encoding="utf-8").split())
+    transition = " ".join(
+        (root / "10_TRANSITION_TO_HUMAN_CONSULTANT.txt")
+        .read_text(encoding="utf-8").split()
+    )
+
+    assert "Общее объяснение не равно проектированию решения" in boundaries
+    assert "Текущий AI не должен: - выбирать конкретные привычки" in boundaries
+    assert "Прямой вопрос пользователя не отменяет эту границу" in boundaries
+    assert "Прямой вопрос не отменяет Product Boundary" in cycle
+    assert "не выбирать практику или план для этого человека" in cycle
+    assert "не делая переход автоматическим по форме вопроса" in cycle
+    assert "AI не подбирает программу питания или лечения" in cycle
+    assert "на слое Discovery не должна" in transition
+    assert "не должна обязательно" not in transition
 
 
 def test_system_prompt_respects_declined_without_inventing_problem_barrier():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "After DECLINED, the declined action loses value",
-        "Do not automatically offer a neighbouring variant of the same solution",
-        "Give Respect Pause / Refusal and Stop Exploration high priority",
-        "Ask why only when the answer can materially change an eligible in-scope action without pressure",
-        "Declining a system proposal does not automatically create a BARRIER",
-        "Reconciliation is sufficient unless the user also provides a substantive constraint",
-        "only that independent material may support a BARRIER",
+        "Отказ и паузу уважай",
+        "после DECLINED не продавливай соседний вариант",
+        "Отказ от предложения сам по себе не доказывает BARRIER проблемы",
     ):
         assert instruction in prompt
 
@@ -646,598 +488,319 @@ def test_system_prompt_defines_ephemeral_decision_intents_and_structural_limits(
         assert instruction in prompt
 
 
-def test_api_schema_requires_all_decision_intent_values():
-    assert COGNITIVE_TURN_JSON_SCHEMA["type"] == "object"
-    assert "anyOf" not in COGNITIVE_TURN_JSON_SCHEMA
+def test_api_schema_is_strict_semantic_turn():
+    schema = SEMANTIC_TURN_JSON_SCHEMA
+    assert schema["type"] == "object"
+    assert set(schema["properties"]) == {
+        "state_patch", "reconciliation", "selected_action", "reply_segments"
+    }
+    assert "anyOf" not in schema
+    assert all(
+        node.get("additionalProperties") is False
+        and set(node["required"]) == set(node["properties"])
+        for node in _objects_with_properties(schema)
+    )
+    assert len(schema["properties"]["selected_action"]["anyOf"]) == len(DecisionIntent)
     assert {
         _selected_action_schema(intent)["properties"]["decision_intent"]["const"]
         for intent in DecisionIntent
-    } == {
-        intent.value for intent in DecisionIntent
-    }
+    } == {intent.value for intent in DecisionIntent}
+    serialized = json.dumps(schema)
+    for obsolete in ("source_span", "local_item_id", "local_relation_id", "local_id"):
+        assert obsolete not in serialized
+    for unsupported in ('"oneOf"', '"discriminator"', '"default"'):
+        assert unsupported not in serialized
 
 
-@pytest.mark.parametrize(
-    ("intent", "kind"),
-    (
-        (DecisionIntent.REFLECTION, ActiveContentKind.SYSTEM_REFLECTION),
-        (DecisionIntent.RECOGNITION, ActiveContentKind.RECOGNITION_OPTION),
-        (DecisionIntent.TRANSITION, ActiveContentKind.SYSTEM_TRANSITION),
-    ),
-)
-def test_wire_schema_and_dto_require_typed_primary_content(intent, kind):
-    branch = _selected_action_schema(intent)
-    primary_ref = branch["properties"]["primary_content"]["$ref"]
-    primary_schema = COGNITIVE_TURN_JSON_SCHEMA["$defs"][
-        primary_ref.rsplit("/", 1)[-1]
-    ]
-    assert primary_schema["properties"]["kind"]["const"] == kind.value
-
-    valid = _wire_payload(_typed_result(intent, kind))
-    internal = _adapt_api_payload(valid)
-    result = CognitiveTurnResult.model_validate(internal)
-    assert result.decision_intent is intent
-    assert result.system_action.contents[0].kind is kind
-
-    invalid = deepcopy(valid)
-    invalid["selected_action"]["primary_content"]["kind"] = (
-        ActiveContentKind.SYSTEM_STATEMENT.value
-    )
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(invalid)
-
-
-def test_wire_adapter_preserves_intent_and_semantic_content_without_synthesis():
-    result = _typed_result(
-        DecisionIntent.RECOGNITION, ActiveContentKind.RECOGNITION_OPTION
-    )
-    payload = _wire_payload(result)
-    converted = _adapt_api_payload(payload)
-    assert converted["decision_intent"] == DecisionIntent.RECOGNITION.value
-    assert converted["system_action"]["contents"][0]["semantic_content"] == (
-        "unchanged semantic content"
-    )
-    assert CognitiveTurnResult.model_validate(converted) == result
-
-    del payload["selected_action"]["primary_content"]
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(payload)
-
-
-def test_fsb_a_recognition_mismatch_fails_after_the_single_wire_response():
+def test_production_request_uses_semantic_schema_after_one_call():
     current, model, acs, history = _fixture()
-    valid = _typed_result(
-        DecisionIntent.RECOGNITION, ActiveContentKind.RECOGNITION_OPTION
-    )
-    payload = _wire_payload(valid)
-    payload["selected_action"]["primary_content"]["kind"] = (
-        ActiveContentKind.SYSTEM_STATEMENT.value
-    )
-    client = FakeClient(json.dumps(payload))
+    core, client = _core()
+    result = core.propose(current, model, acs, history)
+    request = client.completions.calls[0]
+    assert len(client.completions.calls) == 1
+    assert request["response_format"]["json_schema"] == {
+        "name": "semantic_turn", "strict": True, "schema": SEMANTIC_TURN_JSON_SCHEMA
+    }
+    assert isinstance(result, CognitiveTurnResult)
+    assert result.decision_intent is DecisionIntent.HUMAN_DISCOVERY
 
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract") as error:
-        CognitiveCore(client).propose(current, model, acs, history)
 
+def _semantic_context(text, *, multiple=False, proposal=False):
+    history_message = DialogueMessage(
+        id=MSG_A, role=DialogueRole.SYSTEM, text="Предыдущий вопрос", sequence=1
+    )
+    current = DialogueMessage(role=DialogueRole.USER, text=text, sequence=2)
+    return current, semantic_model(), semantic_acs(multiple=multiple, proposal=proposal), DialogueHistory(messages=(history_message,))
+
+
+def _run_semantic(payload, *, text=SIMPLE_TEXT, multiple=False, proposal=False):
+    current, model, acs, history = _semantic_context(
+        text, multiple=multiple, proposal=proposal
+    )
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+    core = CognitiveCore(client)
+    return core, client, current, model, acs, history
+
+
+def test_valid_simple_semantic_response_maps_losslessly():
+    payload = semantic_simple()
+    core, client, current, model, acs, history = _run_semantic(payload)
+    result = core.propose(current, model, acs, history)
+    expected = adapt_semantic_turn(
+        payload, current_user_text=current.text, human_model=model, previous_acs=acs
+    )
+    assert result == expected
+    assert result.state_patch.item_operations[0].local_id.startswith("item:")
+    assert result.reconciliation[0].previous_response_target_ids == (RT_A,)
+    assert len(client.completions.calls) == 1
+
+
+def test_valid_complex_semantic_response_maps_losslessly():
+    payload = semantic_complex()
+    core, client, current, model, acs, history = _run_semantic(
+        payload, text=COMPLEX_TEXT, multiple=True, proposal=True
+    )
+    result = core.propose(current, model, acs, history)
+    expected = adapt_semantic_turn(
+        payload, current_user_text=current.text, human_model=model, previous_acs=acs
+    )
+    assert result == expected
+    target = result.system_action.response_targets[0]
+    assert target.active_content_local_id != target.subject.active_content_local_id
+    assert len(result.state_patch.item_operations) == 3
+    assert len(result.reconciliation) == 2
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("defect", ("duplicate", "unknown", "wrong_type", "bad_existing", "bad_quote", "final_contract"))
+def test_semantic_boundary_fail_closed_after_one_call(defect):
+    payload = semantic_simple()
+    if defect == "duplicate":
+        payload["selected_action"]["primary_content"]["handle"] = "evening_hunger"
+    elif defect == "unknown":
+        payload["selected_action"]["response_targets"][0]["owner_content"] = "unknown"
+    elif defect == "wrong_type":
+        payload["selected_action"]["primary_content"]["model_item_refs"] = [{"handle": "new_relation"}]
+        payload["state_patch"]["relation_changes"].append({
+            "operation": "add", "handle": "new_relation",
+            "source_items": [{"existing_id": MI_A}], "target_items": [{"existing_id": MI_B}],
+            "meaning": "Связь", "evidence_origin": "current_user_interpretation",
+            "source_quote": SIMPLE_QUOTE,
+        })
+    elif defect == "bad_existing":
+        payload["selected_action"]["primary_content"]["model_item_refs"] = [{"existing_id": "mi_" + "f" * 32}]
+    elif defect == "bad_quote":
+        payload["state_patch"]["item_changes"][0]["source_quote"] = "несуществующая цитата"
+    else:
+        payload["selected_action"]["response_targets"][0]["interaction"] = "consent"
+    core, client, current, model, acs, history = _run_semantic(payload)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
     assert error.value.category == "validation_failure"
     assert len(client.completions.calls) == 1
 
 
-@pytest.mark.parametrize(
-    "intent", (DecisionIntent.HUMAN_DISCOVERY, DecisionIntent.MECHANISM_DISCOVERY)
-)
-def test_wire_discovery_branches_require_response_target(intent):
-    payload = _wire_payload(_result())
-    payload["selected_action"]["decision_intent"] = intent.value
-    payload["selected_action"]["response_targets"] = []
-    assert _selected_action_schema(intent)["properties"]["response_targets"][
-        "minItems"
-    ] == 1
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(payload)
-
-
-def test_wire_stop_branch_forbids_response_target():
-    payload = _wire_payload(_result())
-    payload["selected_action"]["decision_intent"] = (
-        DecisionIntent.STOP_EXPLORATION.value
-    )
-    assert _selected_action_schema(DecisionIntent.STOP_EXPLORATION)["properties"][
-        "response_targets"
-    ]["maxItems"] == 0
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(payload)
-
-
-@pytest.mark.parametrize(
-    "interaction",
-    (TargetInteractionKind.OPEN_RESPONSE, TargetInteractionKind.CLARIFICATION),
-)
-def test_wire_respect_pause_branch_forbids_discovery_targets(interaction):
-    payload = _wire_payload(_result())
-    selected = payload["selected_action"]
-    selected["decision_intent"] = DecisionIntent.RESPECT_PAUSE_OR_REFUSAL.value
-    selected["response_targets"][0]["interaction"] = interaction.value
-    allowed = _selected_action_schema(DecisionIntent.RESPECT_PAUSE_OR_REFUSAL)[
-        "properties"
-    ]["response_targets"]["items"]["anyOf"]
-    assert len(allowed) == 2
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(payload)
-
-
-def test_wire_consent_shape_requires_active_content_subject():
-    result = _typed_result(
-        DecisionIntent.TRANSITION,
-        ActiveContentKind.SYSTEM_TRANSITION,
-        interaction=TargetInteractionKind.CONSENT,
-    )
-    payload = _wire_payload(result)
-    subject = payload["selected_action"]["response_targets"][0]["subject"]
-    subject.update(
-        kind=TargetSubjectKind.MODEL_ITEM.value,
-        active_content_local_id=None,
-        item_reference={"existing_item_id": next(iter(_fixture()[1].items)), "local_item_id": None},
-    )
-    with pytest.raises(CognitiveCoreError, match="invalid wire contract"):
-        _adapt_api_payload(payload)
-
-    consent_schema = COGNITIVE_TURN_JSON_SCHEMA["$defs"]["_WireConsentTarget"]
-    subject_ref = consent_schema["properties"]["subject"]["$ref"]
-    subject_schema = COGNITIVE_TURN_JSON_SCHEMA["$defs"][
-        subject_ref.rsplit("/", 1)[-1]
-    ]
-    assert consent_schema["properties"]["interaction"]["const"] == "consent"
-    assert subject_schema["properties"]["kind"]["const"] == "active_content"
-    assert subject_schema["properties"]["item_reference"]["type"] == "null"
-    assert subject_schema["properties"]["relation_reference"]["type"] == "null"
-
-
-@pytest.mark.parametrize("defect", ("unknown_content", "transition_open", "consent_reflection"))
-def test_final_contract_retains_cross_reference_responsibility(defect):
-    if defect == "consent_reflection":
-        result = _typed_result(
-            DecisionIntent.REFLECTION,
-            ActiveContentKind.SYSTEM_REFLECTION,
-            interaction=TargetInteractionKind.EVALUATION,
-        )
-        payload = _wire_payload(result)
-        payload["selected_action"]["response_targets"][0]["interaction"] = (
-            TargetInteractionKind.CONSENT.value
-        )
-    else:
-        result = _typed_result(
-            DecisionIntent.TRANSITION,
-            ActiveContentKind.SYSTEM_TRANSITION,
-            interaction=TargetInteractionKind.CONSENT,
-        )
-        payload = _wire_payload(result)
-        target = payload["selected_action"]["response_targets"][0]
-        if defect == "unknown_content":
-            target["active_content_local_id"] = "content:unknown"
-        else:
-            target["interaction"] = TargetInteractionKind.OPEN_RESPONSE.value
-
-    internal = _adapt_api_payload(payload)
-    with pytest.raises(ValidationError):
-        CognitiveTurnResult.model_validate(internal)
-
-
-def test_core_returns_explicit_decision_after_exactly_one_llm_call():
+@pytest.mark.parametrize(("content", "category"), (
+    ("", "structured_output_failure"),
+    ("not json", "parsing_failure"),
+    ('{"state_patch": {}}', "validation_failure"),
+))
+def test_invalid_output_is_not_retried(content, category):
     current, model, acs, history = _fixture()
-    core, client = _core()
-
-    result = core.propose(current, model, acs, history)
-
-    assert result.decision_intent is DecisionIntent.HUMAN_DISCOVERY
-    assert len(client.completions.calls) == 1
-
-
-def test_history_closure_is_deduplicated_and_sequence_ordered():
-    current, model, acs, history = _fixture()
-    core, client = _core()
-
-    core.propose(current, model, acs, history)
-
-    selected = _payload(client)["dialogue_history"]
-    sequences = [message["sequence"] for message in selected]
-    ids = [message["id"] for message in selected]
-    assert sequences == sorted(sequences)
-    assert len(ids) == len(set(ids))
-    assert history.messages[0].id in ids  # old Human Model source
-    assert history.messages[1].id in ids  # previous ACS system source
-    assert {message["sequence"] for message in selected}.issuperset(range(5, 13))
-
-
-def test_system_prompt_requires_exact_unique_current_message_quote():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
-    assert "exact verbatim substring of the CURRENT USER message" in prompt
-    assert "exactly one exact occurrence" in prompt
-    assert "Do not paraphrase, normalize or invent" in prompt
-    assert "Python computes evidence coordinates" in prompt
-    assert "Reconciliation source_quote may be null" in prompt
-    for obsolete in ("source_span", "char_start", "char_end", "count characters"):
-        assert obsolete not in prompt
-
-
-def test_system_prompt_describes_only_the_api_wire_shape_change():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
-    for instruction in (
-        "return the selected Decision and SystemAction inside selected_action",
-        "required main ActionContent in primary_content",
-        "remaining ActionContent in additional_contents",
-        "all new ResponseTarget in response_targets",
-        "do not duplicate primary_content in additional_contents",
-    ):
-        assert instruction in prompt
-
-
-def _quote_payload(branch, quote, model, acs):
-    payload = _wire_payload(_result())
-    if branch == "reconciliation":
-        entry = {
-            "previous_response_target_ids": [next(iter(acs.response_targets))],
-            "outcome": "supported",
-            "source_quote": quote,
-        }
-        payload[branch] = [entry]
-    else:
-        field, object_id = (
-            ("existing_item_id", next(iter(model.items)))
-            if branch == "item_operations"
-            else ("existing_relation_id", next(iter(model.relations)))
-        )
-        entry = {
-            "operation": "reinforce",
-            field: object_id,
-            "evidence_origin": "current_user_material",
-            "source_quote": quote,
-        }
-        payload["state_patch"][branch] = [entry]
-    return payload, entry
-
-
-@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
-@pytest.mark.parametrize("overflow", [0, 1])
-def test_current_message_span_boundary_after_single_response(branch, overflow, monkeypatch):
-    current, model, acs, history = _fixture()
-    payload, _ = _quote_payload(branch, current.text, model, acs)
-    resolve = cognitive_core_module._resolve_source_quotes
-    expected = CognitiveTurnResult.model_validate(
-        resolve(_adapt_api_payload(payload), current.text)
-    )
-    path = f"{'' if branch == 'reconciliation' else 'state_patch.'}{branch}[0].source_span"
-    if overflow:
-        # Simulate an adapter defect: the independent numeric boundary must
-        # still reject a Pydantic-valid, but out-of-message span.
-        def faulty_resolve(raw, text):
-            converted = resolve(raw, text)
-            container = converted if branch == "reconciliation" else converted["state_patch"]
-            container[branch][0]["source_span"]["char_end"] += overflow
-            return converted
-        monkeypatch.setattr(cognitive_core_module, "_resolve_source_quotes", faulty_resolve)
-    client = FakeClient(json.dumps(payload))
+    client = FakeClient(content)
     core = CognitiveCore(client)
-    original_input = current.model_dump()
-    original_content = client.completions.content
-
-    if overflow:
-        with pytest.raises(CognitiveCoreError) as error:
-            core.propose(current, model, acs, history)
-        assert error.value.category == "validation_failure"
-        assert path in str(error.value)
-        assert core.last_diagnostics["success"] is False
-        assert core.last_diagnostics["failure_category"] == "validation_failure"
-    else:
-        result = core.propose(current, model, acs, history)
-        assert result == expected
-        assert core.last_diagnostics["success"] is True
-
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == category
     assert len(client.completions.calls) == 1
-    assert current.model_dump() == original_input
-    assert client.completions.content == original_content
 
 
-@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
-@pytest.mark.parametrize("text,quote", [
+def test_api_failure_is_reported_without_retry():
+    current, model, acs, history = _fixture()
+    client = FakeClient("unused")
+
+    def fail(**kwargs):
+        client.completions.calls.append(kwargs)
+        raise OSError("offline transport failure")
+
+    client.completions.create = fail
+    core = CognitiveCore(client)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == "api_failure"
+    assert len(client.completions.calls) == 1
+
+
+def test_semantic_dto_validation_failure_is_reported():
+    payload = _semantic_baseline()
+    payload["selected_action"]["primary_content"]["kind"] = "not_a_kind"
+    current, model, acs, history = _fixture()
+    client = FakeClient(json.dumps(payload))
+    with pytest.raises(CognitiveCoreError) as error:
+        CognitiveCore(client).propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert len(client.completions.calls) == 1
+
+
+@pytest.mark.parametrize("quote", ("missing", "о", ""))
+def test_production_exact_quote_failure_does_not_mutate_response(quote):
+    payload = semantic_simple()
+    payload["state_patch"]["item_changes"][0]["source_quote"] = quote
+    original = deepcopy(payload)
+    core, client, current, model, acs, history = _run_semantic(payload)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert payload == original
+    assert len(client.completions.calls) == 1
+
+
+def _quote_case(branch, text, quote):
+    current, model, acs, history = _fixture()
+    current = _message(DialogueRole.USER, text, 13)
+    payload = _semantic_baseline()
+    if branch == "item":
+        payload["state_patch"]["item_changes"] = [{
+            "operation": "reinforce", "existing_id": next(iter(model.items)),
+            "evidence_origin": "current_user_material", "source_quote": quote,
+        }]
+    elif branch == "relation":
+        payload["state_patch"]["relation_changes"] = [{
+            "operation": "reinforce", "existing_id": next(iter(model.relations)),
+            "evidence_origin": "current_user_material", "source_quote": quote,
+        }]
+    else:
+        payload["reconciliation"] = [{
+            "previous_target_ids": [next(iter(acs.response_targets))],
+            "outcome": "supported", "source_quote": quote,
+        }]
+    return payload, current, model, acs, history
+
+
+@pytest.mark.parametrize("branch", ("item", "relation", "reconciliation"))
+@pytest.mark.parametrize(("text", "quote"), (
     ("Начало. Хочется есть вечером.", "Хочется есть вечером."),
     ("🙂 е\u0308ж — текст!", "е\u0308ж"),
     (" a  b ", " a  b "),
-])
-def test_quote_resolves_exactly_without_mutation(branch, text, quote):
-    _, model, acs, history = _fixture()
-    current = _message(DialogueRole.USER, text, 13)
-    payload, _ = _quote_payload(branch, quote, model, acs)
+))
+def test_exact_quote_resolution_through_production(branch, text, quote):
+    payload, current, model, acs, history = _quote_case(branch, text, quote)
     original = deepcopy(payload)
-    converted = cognitive_core_module._resolve_source_quotes(
-        _adapt_api_payload(payload), text
-    )
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+    result = CognitiveCore(client).propose(current, model, acs, history)
     assert payload == original
-    client = FakeClient(json.dumps(payload))
-    result = CognitiveCore(client).propose(current, model, acs, history)
-    assert isinstance(result, CognitiveTurnResult)
-    assert result == CognitiveTurnResult.model_validate(converted)
-    rows = result.reconciliation if branch == "reconciliation" else getattr(result.state_patch, branch)
-    assert rows[0].source_span.char_start == text.index(quote)
-    assert rows[0].source_span.char_end == text.index(quote) + len(quote)
-    assert "source_quote" not in result.model_dump_json()
-    assert current.text == text
-    assert len(client.completions.calls) == 1
-
-
-@pytest.mark.parametrize("text,quote,reason", [
-    ("Текст", "нет", "exact matches=0"),
-    ("да, да", "да", "exact matches=2"),
-    ("aaaa", "aa", "exact matches=3"),
-    ("Текст", "", "non-empty string"),
-    ("Текст", None, "non-empty string"),
-    ("Текст", 123, "non-empty string"),
-    ("Текст", "текст", "exact matches=0"),
-    ("a  b", "a b", "exact matches=0"),
-    ("é", "e\u0301", "exact matches=0"),
-    ("Текст.", "Текст!", "exact matches=0"),
-    ("Текст", " Текст ", "exact matches=0"),
-])
-def test_bad_quote_fails_after_one_call(text, quote, reason):
-    _, model, acs, history = _fixture()
-    current = _message(DialogueRole.USER, text, 13)
-    payload, _ = _quote_payload("item_operations", quote, model, acs)
-    client = FakeClient(json.dumps(payload))
-    core = CognitiveCore(client)
-    with pytest.raises(CognitiveCoreError) as error:
-        core.propose(current, model, acs, history)
-    assert error.value.category == "validation_failure"
-    assert "state_patch.item_operations[0].source_quote" in str(error.value)
-    assert reason in str(error.value)
-    assert core.last_diagnostics["failure_category"] == "validation_failure"
-    assert core.last_diagnostics["success"] is False
-    assert len(client.completions.calls) == 1
-
-
-@pytest.mark.parametrize("branch", ["item_operations", "relation_operations"])
-@pytest.mark.parametrize("operation", ["add", "reinforce", "correct"])
-@pytest.mark.parametrize("omit_quote", [False, True])
-def test_operation_quote_requirement(branch, operation, omit_quote):
-    current, model, acs, history = _fixture()
-    payload, entry = _quote_payload(branch, current.text, model, acs)
-    entry["operation"] = operation
-    if operation != "reinforce":
-        if branch == "item_operations":
-            entry.update(local_id="item:new", kind="experience", content=current.text)
-            if operation == "add":
-                entry.pop("existing_item_id")
-        else:
-            first, second = model.items
-            entry.update(
-                local_id="relation:new",
-                source_items=[{"existing_item_id": first}],
-                target_items=[{"existing_item_id": second}],
-                meaning="выраженная пользователем связь",
-            )
-            if operation == "add":
-                entry.pop("existing_relation_id")
-    # All other fields satisfy the ordinary contract, isolating evidence.
-    expected = CognitiveTurnResult.model_validate(
-        cognitive_core_module._resolve_source_quotes(
-            _adapt_api_payload(payload), current.text
-        )
+    entry = (
+        result.state_patch.item_operations[0] if branch == "item" else
+        result.state_patch.relation_operations[0] if branch == "relation" else
+        result.reconciliation[0]
     )
-    if omit_quote:
-        del entry["source_quote"]
-    client = FakeClient(json.dumps(payload))
-    core = CognitiveCore(client)
-    if omit_quote:
-        with pytest.raises(CognitiveCoreError) as error:
-            core.propose(current, model, acs, history)
-        assert error.value.category == "validation_failure"
-        assert f"state_patch.{branch}[0].source_quote: required quote is missing" in str(error.value)
-    else:
-        assert core.propose(current, model, acs, history) == expected
+    assert entry.source_span.char_start == text.index(quote)
+    assert entry.source_span.char_end == text.index(quote) + len(quote)
     assert len(client.completions.calls) == 1
 
 
-@pytest.mark.parametrize("omit", [False, True])
-def test_reconciliation_quote_can_be_null_or_absent(omit):
-    current, model, acs, history = _fixture()
-    payload, entry = _quote_payload("reconciliation", None, model, acs)
-    if omit:
-        del entry["source_quote"]
-    client = FakeClient(json.dumps(payload))
-    result = CognitiveCore(client).propose(current, model, acs, history)
-    assert result.reconciliation[0].source_span is None
-    assert len(client.completions.calls) == 1
-
-
-@pytest.mark.parametrize("branch", ["item_operations", "relation_operations", "reconciliation"])
-def test_api_numeric_spans_cannot_bypass_quote_resolution(branch):
-    current, model, acs, history = _fixture()
-    payload, entry = _quote_payload(branch, current.text, model, acs)
-    entry["source_span"] = {"char_start": 0, "char_end": len(current.text)}
-    client = FakeClient(json.dumps(payload))
+@pytest.mark.parametrize("quote", (
+    "нет", "да", "aa", "", None, 123, "текст", "a b", "e\u0301", "Текст!", " Текст "
+))
+def test_invalid_quotes_fail_closed_through_production(quote):
+    text = (
+        "да, да" if quote == "да" else "aaaa" if quote == "aa" else
+        "a  b" if quote == "a b" else "é" if quote == "e\u0301" else "Текст"
+    )
+    payload, current, model, acs, history = _quote_case("item", text, quote)
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
     with pytest.raises(CognitiveCoreError) as error:
         CognitiveCore(client).propose(current, model, acs, history)
     assert error.value.category == "validation_failure"
-    assert "numeric evidence is not accepted" in str(error.value)
     assert len(client.completions.calls) == 1
 
 
-def test_api_schema_projects_quotes_without_changing_internal_contract():
-    internal = CognitiveTurnResult.model_json_schema()
-    original = deepcopy(internal)
-    schema = cognitive_core_module._api_facing_schema()
-    assert CognitiveTurnResult.model_json_schema() == original
-    assert "SourceSpan" in internal["$defs"]
-    for name in ("ItemOperation", "RelationOperation", "TargetResolution"):
-        definition = schema["$defs"][name]
-        assert "source_quote" in definition["required"]
-        assert "source_span" in internal["$defs"][name]["properties"]
-        quote = definition["properties"]["source_quote"]
-        if name == "TargetResolution":
-            assert {"type": "null"} in quote["anyOf"]
-        else:
-            assert quote == {"type": "string", "minLength": 1}
-    for removed in ("source_span", "SourceSpan", "char_start", "char_end"):
-        assert removed not in json.dumps(schema)
-    for definition in _objects_with_properties(schema):
-        assert definition["additionalProperties"] is False
-        assert definition["required"] == list(definition["properties"])
-
-
-def test_resolved_quotes_in_all_paths_can_be_applied_without_contract_changes():
-    current, model, acs, history = _fixture()
-    payload = _wire_payload(_result())
-    for branch in ("item_operations", "relation_operations", "reconciliation"):
-        _, entry = _quote_payload(branch, "реплика", model, acs)
-        if branch == "reconciliation":
-            payload[branch] = [entry]
-        else:
-            payload["state_patch"][branch] = [entry]
-    client = FakeClient(json.dumps(payload))
-    result = CognitiveCore(client).propose(current, model, acs, history)
-    system = _message(DialogueRole.SYSTEM, "".join(s.text for s in result.reply_segments), 14)
-    applied = apply_cognitive_turn(model, acs, history, current, system, result)
-    expected = SourceReference(
-        message_id=current.id,
-        char_start=current.text.index("реплика"),
-        char_end=len(current.text),
-    )
-    assert expected in applied.updated_human_model.items[next(iter(model.items))].source_refs
-    assert expected in applied.updated_human_model.relations[next(iter(model.relations))].source_refs
-    assert result.reconciliation[0].source_span.char_end == len(current.text)
-    assert len(client.completions.calls) == 1
-
-
-@pytest.mark.parametrize("path", [
-    "$",
-    "state_patch",
-    "state_patch.item_operations",
-    "reconciliation[0]",
-])
-def test_malformed_quote_container_is_validation_failure(path):
-    current, model, acs, history = _fixture()
-    payload = _wire_payload(_result())
-    if path == "$":
-        payload = []
-    elif path == "state_patch":
-        payload["state_patch"] = None
-    elif path == "state_patch.item_operations":
-        payload["state_patch"]["item_operations"] = None
-    else:
-        payload["reconciliation"] = [None]
-    client = FakeClient(json.dumps(payload))
-    core = CognitiveCore(client)
+def test_numeric_source_span_cannot_bypass_semantic_quote_boundary():
+    payload = semantic_simple()
+    payload["state_patch"]["item_changes"][0]["source_span"] = {
+        "char_start": 0, "char_end": len(SIMPLE_TEXT)
+    }
+    core, client, current, model, acs, history = _run_semantic(payload)
     with pytest.raises(CognitiveCoreError) as error:
         core.propose(current, model, acs, history)
     assert error.value.category == "validation_failure"
-    assert str(error.value).startswith(path + ":")
-    assert core.last_diagnostics["success"] is False
     assert len(client.completions.calls) == 1
 
 
-def test_missing_structural_history_reference_fails_explicitly():
+def test_final_internal_contract_rejects_semantic_consent_mismatch():
+    payload = semantic_simple()
+    payload["selected_action"]["response_targets"][0]["interaction"] = "consent"
+    core, client, current, model, acs, history = _run_semantic(payload)
+    with pytest.raises(CognitiveCoreError) as error:
+        core.propose(current, model, acs, history)
+    assert error.value.category == "validation_failure"
+    assert error.value.__cause__.__cause__.__class__.__name__ == "ValidationError"
+    assert len(client.completions.calls) == 1
+
+
+def test_missing_structural_history_reference_fails_before_api_call():
     current, model, acs, history = _fixture()
-    missing_item = next(iter(model.items.values()))
-    invalid = ModelItem(
-        id=missing_item.id,
-        kind=missing_item.kind,
-        content=missing_item.content,
-        provenance=missing_item.provenance,
-        status=missing_item.status,
-        source_refs=(SourceReference(message_id=DialogueMessage(role=DialogueRole.USER, text="нет", sequence=99).id),),
-        created_turn=1,
-        updated_turn=1,
-    )
-    invalid_model = model.with_updates(items={invalid.id: invalid, **{key: value for key, value in model.items.items() if key != invalid.id}})
+    missing = next(iter(model.items.values()))
+    foreign = DialogueMessage(role=DialogueRole.USER, text="нет", sequence=99)
+    invalid = missing.model_copy(update={
+        "source_refs": (SourceReference(message_id=foreign.id),)
+    })
+    invalid_model = model.with_updates(items={**model.items, invalid.id: invalid})
     core, client = _core()
-
-    with pytest.raises(CognitiveCoreError, match="absent") as error:
+    with pytest.raises(CognitiveCoreError) as error:
         core.propose(current, invalid_model, acs, history)
-
     assert error.value.category == "history_reference_failure"
     assert client.completions.calls == []
 
 
-def test_valid_output_uses_existing_contract_and_can_be_applied_manually():
+def test_result_can_be_applied_by_unchanged_state_applier():
     current = _message(DialogueRole.USER, "Мне тяжело", 1)
     history = DialogueHistory()
-    result = _result("Что сейчас особенно трудно?")
-    core, client = _core(result)
-
-    proposed = core.propose(current, HumanModel(), None, history)
-    system = _message(DialogueRole.SYSTEM, "Что сейчас особенно трудно?", 2)
-    applied = apply_cognitive_turn(HumanModel(), None, history, current, system, proposed)
-
-    assert isinstance(proposed, CognitiveTurnResult)
+    core, client = _core()
+    result = core.propose(current, HumanModel(), None, history)
+    system = _message(DialogueRole.SYSTEM, "Что в этом для вас было самым трудным?", 2)
+    applied = apply_cognitive_turn(HumanModel(), None, history, current, system, result)
+    assert isinstance(result, CognitiveTurnResult)
     assert applied.new_acs is not None
-    request = client.completions.calls[0]
-    assert request["response_format"]["json_schema"]["schema"] == COGNITIVE_TURN_JSON_SCHEMA
-    assert "timeout" not in request
+    assert len(client.completions.calls) == 1
 
 
-def test_strict_schema_normalization_requires_every_property_recursively():
-    object_schemas = list(_objects_with_properties(COGNITIVE_TURN_JSON_SCHEMA))
+def test_input_view_history_closure_and_manual_state_application():
+    current, model, acs, history = _fixture()
+    core, client = _core()
+    result = core.propose(current, model, acs, history)
+    selected = _payload(client)["dialogue_history"]
+    sequences = [message["sequence"] for message in selected]
+    assert sequences == sorted(sequences)
+    assert len({message["id"] for message in selected}) == len(selected)
+    assert history.messages[0].id in {message["id"] for message in selected}
+    assert history.messages[1].id in {message["id"] for message in selected}
+    assert isinstance(result, CognitiveTurnResult)
 
-    assert object_schemas
-    for schema in object_schemas:
-        assert schema["required"] == list(schema["properties"])
 
-
-def test_api_schema_restricts_active_content_local_references_to_current_namespace():
-    definitions = COGNITIVE_TURN_JSON_SCHEMA["$defs"]
-    target_reference = definitions["ActionTarget"]["properties"][
-        "active_content_local_id"
-    ]
-    subject_reference = definitions["ActionSubjectReference"]["properties"][
-        "active_content_local_id"
-    ]
-    subject_string = next(
-        branch for branch in subject_reference["anyOf"] if branch.get("type") == "string"
-    )
-
-    expected_pattern = r"^content:[A-Za-z0-9][A-Za-z0-9._-]*$"
-    assert target_reference["pattern"] == expected_pattern
-    assert subject_string["pattern"] == expected_pattern
-    assert "current SystemAction" in target_reference["description"]
-    assert "current SystemAction" in subject_reference["description"]
+def test_prompt_describes_semantic_responsibilities_without_old_wire_bookkeeping():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+    for instruction in (
+        "SEMANTIC WIRE", "SEMANTIC CONTRACT", "semantic handles",
+        "exact persistent IDs", "ADD item/relation", "CORRECT",
+        "REINFORCE", "source_items", "target_items", "reconciliation",
+        "proposal_materializations", "primary_content", "owner_content",
+        "subject", "interaction", "ReplySegment.realizes", "source_quote",
+    ):
+        assert instruction.lower() in prompt.lower()
+    for obsolete in (
+        "LOCAL ID NAMESPACES", "ItemOperation.local_id",
+        "existing_item_id=null", "realizes_action_content_ids",
+        "local_item_id", "local_relation_id", "content:<name>",
+    ):
+        assert obsolete not in prompt
 
 
 def test_schema_normalization_does_not_mutate_pydantic_source_schema():
-    source_schema = CognitiveTurnResult.model_json_schema()
-    original_schema = deepcopy(source_schema)
-
-    normalized = _normalize_strict_schema(source_schema)
-
-    assert source_schema == original_schema
-    action_content = normalized["$defs"]["ActionContent"]
-    assert action_content["required"] == [
-        "local_id",
-        "kind",
-        "semantic_content",
-        "model_item_refs",
-        "relation_refs",
-    ]
-
-
-def test_adapter_has_no_runtime_or_persistence_dependency():
-    source = inspect.getsource(cognitive_core_module)
-
-    assert "ai.dialog_engine" not in source
-    assert "memory.user_memory" not in source
-    assert "apply_cognitive_turn(" not in source
-    assert "selected_action" not in CognitiveTurnResult.model_json_schema()["properties"]
-
-
-@pytest.mark.parametrize(
-    ("content", "category"),
-    (("not-json", "parsing_failure"), (json.dumps({"reply_segments": []}), "validation_failure")),
-)
-def test_invalid_output_fails_explicitly_without_second_call(content, category):
-    current, model, acs, history = _fixture()
-    client = FakeClient(content)
-    core = CognitiveCore(client=client)
-
-    with pytest.raises(CognitiveCoreError) as error:
-        core.propose(current, model, acs, history)
-
-    assert error.value.category == category
-    assert len(client.completions.calls) == 1
-    assert core.last_diagnostics["success"] is False
+    from ai.cognitive_semantic_wire import SemanticTurn
+    raw = SemanticTurn.model_json_schema()
+    original = deepcopy(raw)
+    normalized = _normalize_strict_schema(raw)
+    assert raw == original
+    assert normalized == raw
+    assert normalized == SEMANTIC_TURN_JSON_SCHEMA
