@@ -6,10 +6,8 @@ from ai.engines.human_model_engine import HumanModelEngine
 from ai.engines.reasoning_engine import ReasoningContext
 from ai.engines.semantic_engine import SemanticEngine
 from memory.user_memory import (
-    get_human_model,
     get_user_profile,
     reset_user_profile,
-    update_user_profile,
 )
 
 
@@ -93,7 +91,7 @@ def test_decision_starts_consultation_after_discovery_is_complete():
     assert decision.response_type == "statement"
 
 
-def test_full_discovery_persists_completion_and_stops_questions(fake_openai):
+def test_runtime_does_not_infer_legacy_completion_from_cognitive_turns(fake_openai):
     from ai.dialog_engine import run_dialog_engine
 
     user_id = 104
@@ -108,8 +106,5 @@ def test_full_discovery_persists_completion_and_stops_questions(fake_openai):
         result = asyncio.run(
             run_dialog_engine(message, get_user_profile(user_id), user_id)
         )
-        update_user_profile(user_id, result["update"])
 
-    assert result["update"]["discovery_complete"] is True
-    assert "?" not in result["reply"]
-    assert get_human_model(user_id).consultation_stage == "discovery_complete"
+    assert result["update"]["discovery_complete"] is False

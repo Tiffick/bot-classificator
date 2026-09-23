@@ -17,4 +17,14 @@ def test_current_dialog_pipeline(fake_openai, user_profile):
     )
 
     assert result["reply"] == "Понимаю. Как давно это тебя беспокоит?"
-    assert result["update"]["age"] == 30
+    assert set(result) == {"reply", "update"}
+    assert result["update"] == {
+        "history": [
+            {"role": "user", "content": "Мне 30 лет"},
+            {
+                "role": "assistant",
+                "content": "Понимаю. Как давно это тебя беспокоит?",
+            },
+        ],
+        "discovery_complete": False,
+    }

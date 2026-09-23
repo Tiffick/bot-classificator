@@ -1,9 +1,7 @@
-import asyncio
 import json
 from copy import deepcopy
 from types import SimpleNamespace
 
-from Conversation_Lab.session_runner import run_session
 from ai.engines.llm_semantic_engine import (
     LLMSemanticEngine,
     compare_semantic_contexts,
@@ -192,25 +190,7 @@ def test_compares_two_semantic_contexts_without_mutation():
     assert (deterministic, llm) == before
 
 
-def test_shadow_semantic_result_does_not_change_active_dialog_route():
-    class ShadowEngine:
-        def analyze(self, user_text):
-            return SemanticContext(topics=["health"], intent="pause_or_end")
+def test_legacy_llm_semantic_engine_is_not_connected_to_active_dialog_route():
+    import ai.dialog_engine as dialog_engine
 
-    baseline = asyncio.run(
-        run_session(["я толстый"], user_id=991001, live_response=False)
-    )
-    shadowed = asyncio.run(
-        run_session(
-            ["я толстый"],
-            user_id=991002,
-            live_response=False,
-            shadow_semantic=True,
-            llm_semantic_engine=ShadowEngine(),
-        )
-    )
-
-    assert baseline["turns"][0]["semantic_context"] == shadowed["turns"][0]["semantic_context"]
-    assert baseline["turns"][0]["response"] == shadowed["turns"][0]["response"]
-    assert shadowed["turns"][0]["llm_semantic_context"]["intent"] == "pause_or_end"
-    assert shadowed["turns"][0]["semantic_comparison"]["only_llm"]["intent"] == "pause_or_end"
+    assert not hasattr(dialog_engine, "LLMSemanticEngine")

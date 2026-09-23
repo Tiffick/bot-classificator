@@ -2,6 +2,7 @@ from ai.engines.human_model_engine import HumanModelEngine
 from ai.engines.semantic_engine import SemanticEngine
 from memory.user_memory import (
     get_human_model,
+    get_shadow_discovery_memory,
     get_user_memory,
     get_user_profile,
     reset_user_profile,
@@ -45,7 +46,7 @@ def test_second_cycle_receives_previous_human_model():
     assert second_model.facts["duration"] == "уже 5 лет"
 
 
-def test_dialog_engine_persists_human_model_between_cycles(fake_openai):
+def test_dialog_engine_persists_discovery_memory_between_cycles(fake_openai):
     user_id = 103
     reset_user_profile(user_id)
 
@@ -63,8 +64,10 @@ def test_dialog_engine_persists_human_model_between_cycles(fake_openai):
         )
     )
 
-    model = get_human_model(user_id)
+    memory = get_shadow_discovery_memory(user_id)
 
-    assert model.facts["age"] == 30
-    assert model.facts["duration"] == "уже 5 лет"
+    assert [message.sequence for message in memory.dialogue_history.messages] == [1, 2, 3, 4]
+    assert memory.dialogue_history.messages[0].text == "Мне 30 лет."
+    assert memory.dialogue_history.messages[2].text == "Я уже 5 лет пытаюсь похудеть."
+    assert memory.active_conversation_state is not None
 import asyncio

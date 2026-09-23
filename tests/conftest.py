@@ -1,6 +1,19 @@
-from types import SimpleNamespace
-
 import pytest
+
+from ai.cognitive_turn import (
+    ActionContent,
+    ActionSubjectReference,
+    ActionTarget,
+    CognitiveTurnResult,
+    DecisionIntent,
+    ReplySegment,
+    SystemAction,
+)
+from ai.discovery_data_model import (
+    ActiveContentKind,
+    TargetInteractionKind,
+    TargetSubjectKind,
+)
 
 
 @pytest.fixture
@@ -15,33 +28,49 @@ def user_profile():
 @pytest.fixture
 def fake_openai(monkeypatch):
     import ai.dialog_engine as dialog_engine
-    import ai.engines.response_engine as response_engine
-    from ai.engines.semantic_engine import SemanticEngine
-
-    class FakeCompletions:
-        def create(self, **kwargs):
-            prompt = kwargs["messages"][-1]["content"]
-            content = (
-                '{"is_valid": true, "reason": ""}'
-                if "ПРОВЕРЬ ОТВЕТ" in prompt
-                else "Понимаю. Как давно это тебя беспокоит?"
-            )
-            message = SimpleNamespace(content=content)
-            return SimpleNamespace(
-                choices=[SimpleNamespace(message=message)]
-            )
 
     class FakeOpenAI:
-        def __init__(self):
-            self.chat = SimpleNamespace(completions=FakeCompletions())
+        def __init__(self, **kwargs):
+            self.options = kwargs
 
-    class FakeLLMSemanticEngine:
-        def __init__(self):
-            self.last_diagnostics = {"success": True}
+    class FakeCognitiveCore:
+        calls = []
 
-        def analyze(self, user_text):
-            return SemanticEngine().analyze(user_text)
+        def __init__(self, client):
+            self.client = client
 
-    monkeypatch.setattr(response_engine, "OpenAI", FakeOpenAI)
-    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", FakeLLMSemanticEngine)
+        def propose(self, current, human_model, previous_acs, history):
+            self.calls.append((current, human_model, previous_acs, history))
+            content = ActionContent(
+                local_id="content:question",
+                kind=ActiveContentKind.SYSTEM_QUESTION,
+                semantic_content="уточнить значимый пользовательский материал",
+            )
+            target = ActionTarget(
+                local_id="target:question",
+                active_content_local_id=content.local_id,
+                subject=ActionSubjectReference(
+                    kind=TargetSubjectKind.ACTIVE_CONTENT,
+                    active_content_local_id=content.local_id,
+                ),
+                interaction=TargetInteractionKind.OPEN_RESPONSE,
+            )
+            return CognitiveTurnResult(
+                decision_intent=DecisionIntent.HUMAN_DISCOVERY,
+                system_action=SystemAction(
+                    contents=(content,),
+                    response_targets=(target,),
+                ),
+                reply_segments=(
+                    ReplySegment(
+                        local_id="segment:reply",
+                        text="Понимаю. Как давно это тебя беспокоит?",
+                        realizes_action_content_ids=(content.local_id,),
+                    ),
+                ),
+            )
+
+    FakeCognitiveCore.calls = []
+    monkeypatch.setattr(dialog_engine, "OpenAI", FakeOpenAI)
+    monkeypatch.setattr(dialog_engine, "CognitiveCore", FakeCognitiveCore)
     return dialog_engine

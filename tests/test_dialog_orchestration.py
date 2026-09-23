@@ -1,216 +1,333 @@
 import asyncio
-from copy import deepcopy
 
-from ai.engines.decision_engine import DecisionContext
-from ai.engines.emotional_engine import EmotionalContext
-from ai.engines.human_model import HumanModel
-from ai.engines.impact_engine import ImpactContext
-from ai.engines.impact_engine import ImpactEngine
-from ai.engines.emotional_engine import EmotionalEngine
-from ai.engines.reasoning_engine import ReasoningContext
-from ai.engines.semantic_engine import SemanticContext
+import pytest
+
+from ai.cognitive_core import CognitiveCoreError
+from ai.cognitive_turn import (
+    ActionContent,
+    ActionSubjectReference,
+    ActionTarget,
+    CognitiveTurnResult,
+    DecisionIntent,
+    EvidenceOrigin,
+    ItemOperation,
+    ItemOperationKind,
+    ProposalMaterialization,
+    ReconciliationOutcome,
+    ReplySegment,
+    SourceSpan,
+    StatePatch,
+    SystemAction,
+    TargetResolution,
+)
+from ai.discovery_data_model import (
+    ActiveContentKind,
+    ModelItemKind,
+    TargetInteractionKind,
+    TargetSubjectKind,
+    validate_discovery_memory,
+)
+from ai.discovery_state_applier import DiscoveryStateApplyError
+from memory.user_memory import (
+    get_shadow_discovery_memory,
+    get_user_memory,
+    reset_user_profile,
+    user_profiles,
+)
 
 
-def test_dialog_engine_calls_all_engines_in_architectural_order(monkeypatch):
+def _question_action(
+    *,
+    kind=ActiveContentKind.SYSTEM_QUESTION,
+    interaction=TargetInteractionKind.OPEN_RESPONSE,
+    semantic_content="уточнить пользовательский материал",
+):
+    content = ActionContent(
+        local_id="content:primary",
+        kind=kind,
+        semantic_content=semantic_content,
+    )
+    target = ActionTarget(
+        local_id="target:primary",
+        active_content_local_id=content.local_id,
+        subject=ActionSubjectReference(
+            kind=TargetSubjectKind.ACTIVE_CONTENT,
+            active_content_local_id=content.local_id,
+        ),
+        interaction=interaction,
+    )
+    return SystemAction(contents=(content,), response_targets=(target,))
+
+
+def _result(
+    reply,
+    *,
+    intent=DecisionIntent.HUMAN_DISCOVERY,
+    action=None,
+    patch=None,
+    reconciliation=(),
+):
+    action = action if action is not None else _question_action()
+    return CognitiveTurnResult(
+        decision_intent=intent,
+        state_patch=patch or StatePatch(),
+        reconciliation=tuple(reconciliation),
+        system_action=action,
+        reply_segments=(
+            ReplySegment(
+                local_id="segment:reply",
+                text=reply,
+                realizes_action_content_ids=tuple(
+                    content.local_id for content in action.contents
+                ),
+            ),
+        ),
+    )
+
+
+def _install_core(monkeypatch, results):
     import ai.dialog_engine as dialog_engine
 
-    calls = []
+    class FakeCore:
+        calls = []
 
-    class LLMSemantic:
-        def __init__(self):
-            self.last_diagnostics = {"success": True}
+        def __init__(self, client):
+            self.client = client
 
-        def analyze(self, user_text):
-            calls.append("llm_semantic")
-            return SemanticContext(facts={"age": 30}, confidence=1.0)
+        def propose(self, current, human_model, previous_acs, history):
+            self.calls.append((current, human_model, previous_acs, history))
+            result = results[len(self.calls) - 1]
+            if isinstance(result, Exception):
+                raise result
+            return result
 
-    class DeterministicFallback:
-        def analyze(self, user_text):
-            calls.append("deterministic_fallback")
-            return SemanticContext()
+    monkeypatch.setattr(dialog_engine, "OpenAI", lambda **kwargs: object())
+    monkeypatch.setattr(dialog_engine, "CognitiveCore", FakeCore)
+    return dialog_engine, FakeCore
 
-    class Human:
-        def build(self, semantic_context, previous_human_model, memory):
-            calls.append("human_model")
-            return HumanModel(facts=semantic_context.facts)
 
-        def apply_update(self, profile, update):
-            return update.copy()
+def test_dialog_engine_runs_one_cognitive_call_and_no_legacy_chain(monkeypatch):
+    dialog_engine, core = _install_core(monkeypatch, [_result("Один ответ.")])
 
-        def is_discovery_complete(self, profile):
-            return False
+    result = asyncio.run(dialog_engine.run_dialog_engine("Один вход.", {}))
 
-    class Reasoning:
-        def reason(self, semantic_context, human_model, memory):
-            calls.append("reasoning")
-            return ReasoningContext()
+    assert len(core.calls) == 1
+    assert result["reply"] == "Один ответ."
+    for legacy_name in (
+        "ShadowPerceptionEngine",
+        "ShadowIntegrationEngine",
+        "LLMSemanticEngine",
+        "SemanticEngine",
+        "HumanModelEngine",
+        "ReasoningEngine",
+        "DecisionEngine",
+        "ImpactEngine",
+        "EmotionalEngine",
+        "ResponseEngine",
+    ):
+        assert not hasattr(dialog_engine, legacy_name)
 
-    class Decision:
-        def decide(self, semantic_context, human_model, reasoning_context, memory):
-            calls.append("decision")
-            return DecisionContext()
 
-    class Impact:
-        def evaluate(self, semantic_context, human_model, reasoning_context, decision_context, memory):
-            calls.append("impact")
-            return ImpactContext()
+def test_valid_turn_is_applied_persisted_and_returned_byte_for_byte(monkeypatch):
+    user_id = 501
+    reset_user_profile(user_id)
+    user_text = "Мне трудно удерживать изменения"
+    reply = "Понимаю. Что обычно меняется перед возвратом старого режима?"
+    patch = StatePatch(
+        item_operations=(
+            ItemOperation(
+                operation=ItemOperationKind.ADD,
+                local_id="item:difficulty",
+                kind=ModelItemKind.EXPERIENCE,
+                content=user_text,
+                evidence_origin=EvidenceOrigin.CURRENT_USER_MATERIAL,
+                source_span=SourceSpan(char_start=0, char_end=len(user_text)),
+            ),
+        )
+    )
+    turn_result = _result(reply, patch=patch)
+    dialog_engine, _ = _install_core(
+        monkeypatch,
+        [turn_result],
+    )
 
-    class Emotional:
-        def choose(self, semantic_context, human_model, reasoning_context, decision_context, impact_context, memory):
-            calls.append("emotional")
-            return EmotionalContext()
+    result = asyncio.run(dialog_engine.run_dialog_engine(user_text, {}, user_id))
+    memory = get_shadow_discovery_memory(user_id)
 
-    class Response:
-        def generate(self, semantic_context, human_model, reasoning_context, decision_context, impact_context, emotional_context, memory):
-            calls.append("response")
-            return "Оркестрованный ответ"
+    assert result["reply"] == reply
+    assert memory.dialogue_history.messages[-1].text == reply
+    assert "".join(segment.text for segment in turn_result.reply_segments) == reply
+    assert len(memory.human_model.items) == 1
+    assert memory.active_conversation_state is not None
+    validate_discovery_memory(
+        memory.human_model,
+        memory.active_conversation_state,
+        memory.dialogue_history,
+    )
 
-    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", LLMSemantic)
-    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
-    monkeypatch.setattr(dialog_engine, "HumanModelEngine", Human)
-    monkeypatch.setattr(dialog_engine, "ReasoningEngine", Reasoning)
-    monkeypatch.setattr(dialog_engine, "DecisionEngine", Decision)
-    monkeypatch.setattr(dialog_engine, "ImpactEngine", Impact)
-    monkeypatch.setattr(dialog_engine, "EmotionalEngine", Emotional)
-    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
 
-    result = asyncio.run(dialog_engine.run_dialog_engine("Мне 30 лет", {}))
+def test_second_turn_receives_first_turn_model_acs_and_history(monkeypatch):
+    user_id = 502
+    reset_user_profile(user_id)
+    first_text = "Начать могу, удержать трудно"
+    first_patch = StatePatch(
+        item_operations=(
+            ItemOperation(
+                operation=ItemOperationKind.ADD,
+                local_id="item:pattern",
+                kind=ModelItemKind.EXPERIENCE,
+                content=first_text,
+                evidence_origin=EvidenceOrigin.CURRENT_USER_MATERIAL,
+                source_span=SourceSpan(char_start=0, char_end=len(first_text)),
+            ),
+        )
+    )
+    dialog_engine, core = _install_core(
+        monkeypatch,
+        [
+            _result("Что помогает удерживаться?", patch=first_patch),
+            _result("Что происходит через несколько недель?"),
+        ],
+    )
 
-    assert result["reply"] == "Оркестрованный ответ"
-    assert calls == [
-        "llm_semantic",
-        "human_model",
-        "reasoning",
-        "decision",
-        "impact",
-        "emotional",
-        "response",
+    asyncio.run(dialog_engine.run_dialog_engine(first_text, {}, user_id))
+    first_memory = get_shadow_discovery_memory(user_id)
+    asyncio.run(dialog_engine.run_dialog_engine("Постепенно сдаюсь", {}, user_id))
+
+    _, received_model, received_acs, received_history = core.calls[1]
+    assert received_model == first_memory.human_model
+    assert received_acs == first_memory.active_conversation_state
+    assert received_history == first_memory.dialogue_history
+    assert len(received_history.messages) == 2
+
+
+def test_reconciliation_materializes_previous_response_target(monkeypatch):
+    user_id = 503
+    reset_user_profile(user_id)
+    first_action = _question_action(
+        kind=ActiveContentKind.RECOGNITION_OPTION,
+        interaction=TargetInteractionKind.EVALUATION,
+        semantic_content="удержание, а не старт, является основной трудностью",
+    )
+
+    class ReconcilingCore:
+        calls = []
+
+        def __init__(self, client):
+            pass
+
+        def propose(self, current, human_model, previous_acs, history):
+            self.calls.append((current, human_model, previous_acs, history))
+            if previous_acs is None:
+                return _result(
+                    "Похоже, основная трудность — удержание. Это так?",
+                    intent=DecisionIntent.RECOGNITION,
+                    action=first_action,
+                )
+            target = next(iter(previous_acs.response_targets.values()))
+            content = previous_acs.active_content[target.active_content_id]
+            resolution = TargetResolution(
+                previous_response_target_ids=(target.id,),
+                outcome=ReconciliationOutcome.SUPPORTED,
+                source_span=SourceSpan(char_start=0, char_end=len(current.text)),
+            )
+            patch = StatePatch(
+                proposal_materializations=(
+                    ProposalMaterialization(
+                        resolution_target_id=target.id,
+                        previous_active_content_id=content.id,
+                        subject_kind="item",
+                        kind=ModelItemKind.EXPERIENCE,
+                        content=content.content,
+                    ),
+                )
+            )
+            return _result(
+                "Спасибо, это проясняет картину.",
+                intent=DecisionIntent.STOP_EXPLORATION,
+                action=SystemAction(),
+                patch=patch,
+                reconciliation=(resolution,),
+            )
+
+    import ai.dialog_engine as dialog_engine
+
+    monkeypatch.setattr(dialog_engine, "OpenAI", lambda **kwargs: object())
+    monkeypatch.setattr(dialog_engine, "CognitiveCore", ReconcilingCore)
+    asyncio.run(dialog_engine.run_dialog_engine("Начать могу", {}, user_id))
+    asyncio.run(dialog_engine.run_dialog_engine("Да", {}, user_id))
+    memory = get_shadow_discovery_memory(user_id)
+
+    assert len(memory.human_model.items) == 1
+    assert next(iter(memory.human_model.items.values())).content == (
+        "удержание, а не старт, является основной трудностью"
+    )
+    assert memory.active_conversation_state is None
+    assert [message.text for message in memory.dialogue_history.messages][-2:] == [
+        "Да",
+        "Спасибо, это проясняет картину.",
     ]
 
 
-def test_active_llm_semantic_receives_only_user_text_not_profile(monkeypatch):
-    import ai.dialog_engine as dialog_engine
+def test_cognitive_failure_preserves_persistent_memory(monkeypatch):
+    user_id = 504
+    reset_user_profile(user_id)
+    before = get_user_memory(user_id)["shadow_discovery_memory"]
+    error = CognitiveCoreError("api_failure", "failed")
+    dialog_engine, core = _install_core(monkeypatch, [error])
 
-    received = []
+    with pytest.raises(CognitiveCoreError):
+        asyncio.run(dialog_engine.run_dialog_engine("Новый ход", {}, user_id))
 
-    class LLMSemantic:
-        def __init__(self):
-            self.last_diagnostics = {"success": True}
+    assert len(core.calls) == 1
+    assert get_user_memory(user_id)["shadow_discovery_memory"] is before
 
-        def analyze(self, user_text):
-            received.append(user_text)
-            return SemanticContext()
 
-    class Response:
-        def generate(self, *args):
-            return "Ответ"
+def test_state_applier_failure_does_not_partially_persist(monkeypatch):
+    user_id = 505
+    reset_user_profile(user_id)
+    dialog_engine, core = _install_core(monkeypatch, [_result("Ответ")])
+    before = get_user_memory(user_id)["shadow_discovery_memory"]
 
-    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", LLMSemantic)
-    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
+    def fail_apply(*args):
+        raise DiscoveryStateApplyError("invalid transition")
 
-    asyncio.run(
+    monkeypatch.setattr(dialog_engine, "apply_cognitive_turn", fail_apply)
+    with pytest.raises(DiscoveryStateApplyError, match="invalid transition"):
+        asyncio.run(dialog_engine.run_dialog_engine("Новый ход", {}, user_id))
+
+    assert len(core.calls) == 1
+    assert get_user_memory(user_id)["shadow_discovery_memory"] is before
+
+
+def test_user_id_none_is_stateless_and_preserves_return_shape(monkeypatch):
+    known_users = set(user_profiles)
+    dialog_engine, core = _install_core(monkeypatch, [_result("Ответ без сохранения")])
+
+    result = asyncio.run(
         dialog_engine.run_dialog_engine(
-            "Сообщение пользователя", {"history": [], "hidden_profile": "must not pass"}
+            "Временный ход",
+            {"history": [], "discovery_complete": False},
         )
     )
 
-    assert received == ["Сообщение пользователя"]
+    assert set(result) == {"reply", "update"}
+    assert result["reply"] == "Ответ без сохранения"
+    assert result["update"]["discovery_complete"] is False
+    assert len(result["update"]["history"]) == 2
+    assert len(core.calls) == 1
+    assert set(user_profiles) == known_users
 
 
-def test_dialog_engine_uses_deterministic_semantic_only_after_llm_failure(monkeypatch):
-    import ai.dialog_engine as dialog_engine
+def test_compatibility_update_does_not_semantically_map_discovery_state(monkeypatch):
+    dialog_engine, _ = _install_core(monkeypatch, [_result("Ответ")])
 
-    calls = []
-
-    class FailedLLMSemantic:
-        def __init__(self):
-            self.last_diagnostics = {"success": False, "fallback_reason": "APIError"}
-
-        def analyze(self, user_text):
-            calls.append("llm_semantic")
-            return SemanticContext()
-
-    class DeterministicFallback:
-        def analyze(self, user_text):
-            calls.append("deterministic_fallback")
-            return SemanticContext(facts={"age": 30}, confidence=1.0)
-
-    class Response:
-        def generate(self, *args):
-            calls.append("response")
-            return "Ответ после fallback"
-
-    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", FailedLLMSemantic)
-    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
-    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
-
-    result = asyncio.run(dialog_engine.run_dialog_engine("Мне 30 лет", {}))
-
-    assert result["update"]["age"] == 30
-    assert calls == ["llm_semantic", "deterministic_fallback", "response"]
-
-
-def test_dialog_engine_uses_fallback_after_invalid_llm_structured_output(monkeypatch):
-    import ai.dialog_engine as dialog_engine
-
-    calls = []
-
-    class InvalidLLMSemantic:
-        def __init__(self):
-            self.last_diagnostics = {
-                "success": False,
-                "fallback_reason": "ValueError: Invalid facts schema.",
-            }
-
-        def analyze(self, user_text):
-            calls.append("invalid_llm_semantic")
-            return SemanticContext()
-
-    class DeterministicFallback:
-        def analyze(self, user_text):
-            calls.append("deterministic_fallback")
-            return SemanticContext(topics=["energy"], confidence=0.5)
-
-    class Response:
-        def generate(self, *args):
-            return "Безопасный ответ"
-
-    monkeypatch.setattr(dialog_engine, "LLMSemanticEngine", InvalidLLMSemantic)
-    monkeypatch.setattr(dialog_engine, "SemanticEngine", DeterministicFallback)
-    monkeypatch.setattr(dialog_engine, "ResponseEngine", Response)
-
-    asyncio.run(dialog_engine.run_dialog_engine("Домой прихожу как овощ.", {}))
-
-    assert calls == ["invalid_llm_semantic", "deterministic_fallback"]
-
-
-def test_decision_context_is_not_changed_by_impact_or_emotional_engines():
-    semantic_context = SemanticContext(topics=["weight"], confidence=0.5)
-    human_model = HumanModel()
-    reasoning_context = ReasoningContext(priorities=["goals"])
-    decision_context = DecisionContext(
-        next_goal="clarify_weight_impact",
-        reason="topic:weight; missing_information:weight_impact",
-        needs_additional_information=True,
-        expected_outcome="understanding_of_weight_impact_increases",
-        response_type="question",
-    )
-    original_decision = deepcopy(decision_context)
-
-    impact_context = ImpactEngine().evaluate(
-        semantic_context,
-        human_model,
-        reasoning_context,
-        decision_context,
-        {"facts": {}},
-    )
-    EmotionalEngine().choose(
-        semantic_context,
-        human_model,
-        reasoning_context,
-        decision_context,
-        impact_context,
-        {"facts": {}},
+    result = asyncio.run(
+        dialog_engine.run_dialog_engine(
+            "Мне 30 лет",
+            {"age": None, "history": [], "discovery_complete": False},
+        )
     )
 
-    assert decision_context == original_decision
+    assert set(result["update"]) == {"history", "discovery_complete"}
+    assert "age" not in result["update"]
