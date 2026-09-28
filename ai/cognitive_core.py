@@ -35,6 +35,18 @@ class CognitiveCoreError(RuntimeError):
 _PROMPT_PATH = Path(__file__).with_name("prompts") / "cognitive_core_system_prompt.txt"
 
 
+def _previous_target_handle_map(
+    previous_acs: Optional[ActiveConversationState],
+) -> dict[str, str]:
+    """Map input-scoped target handles to persistent IDs deterministically."""
+    if previous_acs is None:
+        return {}
+    return {
+        f"previous_target_{index}": target_id
+        for index, target_id in enumerate(previous_acs.response_targets, start=1)
+    }
+
+
 def _normalize_strict_schema(source_schema: dict[str, Any]) -> dict[str, Any]:
     """Return a strict Structured Outputs presentation without mutating its source."""
     normalized = deepcopy(source_schema)
@@ -332,6 +344,7 @@ class CognitiveCore:
     def _acs_view(cls, previous_acs: Optional[ActiveConversationState]):
         if previous_acs is None:
             return None
+        target_handles = _previous_target_handle_map(previous_acs)
         return {
             "active_content": [
                 {
@@ -345,7 +358,7 @@ class CognitiveCore:
             ],
             "response_targets": [
                 {
-                    "id": target.id,
+                    "handle": handle,
                     "active_content_id": target.active_content_id,
                     "subject": {
                         "kind": target.subject.kind.value,
@@ -353,7 +366,8 @@ class CognitiveCore:
                     },
                     "interaction": target.interaction.value,
                 }
-                for target in previous_acs.response_targets.values()
+                for handle, target_id in target_handles.items()
+                for target in (previous_acs.response_targets[target_id],)
             ],
         }
 

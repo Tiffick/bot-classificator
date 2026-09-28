@@ -19,6 +19,7 @@ from pydantic import (
 from ai.cognitive_core import (
     CognitiveCoreError,
     _normalize_strict_schema,
+    _previous_target_handle_map,
     _resolve_source_quotes,
 )
 from ai.cognitive_turn import (
@@ -55,8 +56,6 @@ Quote = Annotated[str, StringConstraints(min_length=1)]
 Meaning = Annotated[str, StringConstraints(min_length=1)]
 ItemId = Annotated[str, AfterValidator(lambda value: _validate_persistent_id(value, "mi"))]
 RelationId = Annotated[str, AfterValidator(lambda value: _validate_persistent_id(value, "rel"))]
-TargetId = Annotated[str, AfterValidator(lambda value: _validate_persistent_id(value, "rt"))]
-ContentId = Annotated[str, AfterValidator(lambda value: _validate_persistent_id(value, "aci"))]
 
 
 class _ExistingItem(_Wire):
@@ -143,16 +142,14 @@ RelationChange = Union[_AddRelation, _ReinforceRelation, _CorrectRelation]
 
 class _ItemMaterialization(_Wire):
     subject_kind: Literal["item"]
-    resolution_target_id: TargetId
-    previous_active_content_id: ContentId
+    resolution_target_handle: Handle
     kind: ModelItemKind
     content: Meaning
 
 
 class _RelationMaterialization(_Wire):
     subject_kind: Literal["relation"]
-    resolution_target_id: TargetId
-    previous_active_content_id: ContentId
+    resolution_target_handle: Handle
     source_items: tuple[ItemRef, ...] = Field(min_length=1)
     target_items: tuple[ItemRef, ...] = Field(min_length=1)
     meaning: Meaning
@@ -168,7 +165,7 @@ class _StatePatch(_Wire):
 
 
 class _Resolution(_Wire):
-    previous_target_ids: tuple[TargetId, ...] = Field(min_length=1)
+    previous_target_handles: tuple[Handle, ...] = Field(min_length=1)
     outcome: ReconciliationOutcome
     source_quote: Optional[Quote]
 
@@ -411,21 +408,64 @@ def adapt_semantic_turn(
     ):
         raise SemanticWireError("Previous ACS is required for reconciliation/materialization.")
 
+    previous_targets = _previous_target_handle_map(previous_acs)
+
+    def previous_target_id(handle: str) -> str:
+        target_id = previous_targets.get(handle)
+        if target_id is None:
+            raise SemanticWireError(f"Unknown previous target handle: {handle}")
+        return target_id
+
+    compatible_interactions = {
+        ReconciliationOutcome.ANSWERED: {
+            TargetInteractionKind.OPEN_RESPONSE,
+            TargetInteractionKind.CLARIFICATION,
+        },
+        ReconciliationOutcome.SUPPORTED: {
+            TargetInteractionKind.EVALUATION,
+            TargetInteractionKind.CLARIFICATION,
+        },
+        ReconciliationOutcome.REJECTED: {
+            TargetInteractionKind.EVALUATION,
+            TargetInteractionKind.CLARIFICATION,
+        },
+        ReconciliationOutcome.PARTIALLY_SUPPORTED: {
+            TargetInteractionKind.EVALUATION,
+            TargetInteractionKind.CLARIFICATION,
+        },
+        ReconciliationOutcome.UNCERTAIN: {
+            TargetInteractionKind.EVALUATION,
+            TargetInteractionKind.CLARIFICATION,
+        },
+        ReconciliationOutcome.CONSENTED: {TargetInteractionKind.CONSENT},
+        ReconciliationOutcome.DECLINED: {TargetInteractionKind.CONSENT},
+    }
+
     resolutions: list[dict[str, Any]] = []
     resolved: dict[str, ReconciliationOutcome] = {}
     for resolution in turn.reconciliation:
-        count = len(resolution.previous_target_ids)
+        count = len(resolution.previous_target_handles)
         if (resolution.outcome == ReconciliationOutcome.AMBIGUOUS) != (count > 1):
             raise SemanticWireError("AMBIGUOUS requires multiple targets; other outcomes require one.")
-        for target_id in resolution.previous_target_ids:
+        target_ids = [
+            previous_target_id(handle)
+            for handle in resolution.previous_target_handles
+        ]
+        for target_id in target_ids:
             if target_id in resolved:
                 raise SemanticWireError(f"Previous target resolved twice: {target_id}")
-            if target_id not in previous_acs.response_targets:
-                raise SemanticWireError(f"Unknown previous response target: {target_id}")
+            allowed = compatible_interactions.get(resolution.outcome)
+            if (
+                allowed is not None
+                and previous_acs.response_targets[target_id].interaction not in allowed
+            ):
+                raise SemanticWireError(
+                    "Reconciliation outcome is incompatible with target interaction."
+                )
             resolved[target_id] = resolution.outcome
         resolutions.append(
             {
-                "previous_response_target_ids": list(resolution.previous_target_ids),
+                "previous_response_target_ids": target_ids,
                 "outcome": resolution.outcome.value,
                 "source_quote": resolution.source_quote,
             }
@@ -433,7 +473,7 @@ def adapt_semantic_turn(
 
     materializations: list[dict[str, Any]] = []
     for materialization in turn.state_patch.proposal_materializations:
-        target_id = materialization.resolution_target_id
+        target_id = previous_target_id(materialization.resolution_target_handle)
         if resolved.get(target_id) not in (
             ReconciliationOutcome.SUPPORTED,
             ReconciliationOutcome.REJECTED,
@@ -442,11 +482,11 @@ def adapt_semantic_turn(
         ):
             raise SemanticWireError("Materialization requires a persistable resolution.")
         target = previous_acs.response_targets[target_id]
-        if target.active_content_id != materialization.previous_active_content_id:
-            raise SemanticWireError("Materialization target/content mismatch.")
+        if target.active_content_id not in previous_acs.active_content:
+            raise SemanticWireError("Previous target names unknown active content.")
         row: dict[str, Any] = {
             "resolution_target_id": target_id,
-            "previous_active_content_id": materialization.previous_active_content_id,
+            "previous_active_content_id": target.active_content_id,
             "subject_kind": materialization.subject_kind,
             "kind": None,
             "content": None,

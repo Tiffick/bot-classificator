@@ -52,6 +52,8 @@ MI_B = "mi_" + "b" * 32
 REL_A = "rel_" + "d" * 32
 RT_A = "rt_" + "1" * 32
 RT_B = "rt_" + "2" * 32
+PREVIOUS_TARGET_A = "previous_target_1"
+PREVIOUS_TARGET_B = "previous_target_2"
 ACI_A = "aci_" + "c" * 32
 ACI_B = "aci_" + "e" * 32
 MSG_A = "msg_" + "3" * 32
@@ -162,7 +164,8 @@ def _simple() -> dict:
             "proposal_materializations": [],
         },
         "reconciliation": [{
-            "previous_target_ids": [RT_A], "outcome": "answered", "source_quote": SIMPLE_TEXT,
+            "previous_target_handles": [PREVIOUS_TARGET_A],
+            "outcome": "answered", "source_quote": SIMPLE_TEXT,
         }],
         "selected_action": {
             "decision_intent": "human_discovery",
@@ -217,18 +220,19 @@ def _complex() -> dict:
                 "source_quote": RELATION_QUOTE,
             }],
             "proposal_materializations": [{
-                "subject_kind": "item", "resolution_target_id": RT_A,
-                "previous_active_content_id": ACI_A, "kind": "experience",
+                "subject_kind": "item",
+                "resolution_target_handle": PREVIOUS_TARGET_A,
+                "kind": "experience",
                 "content": "Вечерняя еда после смены скорее привычка, чем голод.",
             }],
         },
         "reconciliation": [
             {
-                "previous_target_ids": [RT_A], "outcome": "rejected",
+                "previous_target_handles": [PREVIOUS_TARGET_A], "outcome": "rejected",
                 "source_quote": "Нет, это не просто привычка",
             },
             {
-                "previous_target_ids": [RT_B], "outcome": "answered",
+                "previous_target_handles": [PREVIOUS_TARGET_B], "outcome": "answered",
                 "source_quote": "к вечеру голод такой сильный",
             },
         ],
@@ -507,7 +511,8 @@ def test_relation_reinforce_and_correct_preserve_existing_and_replacement():
 def test_ambiguous_reconciliation_preserves_both_targets_without_materialization():
     payload = _simple()
     payload["reconciliation"] = [{
-        "previous_target_ids": [RT_A, RT_B], "outcome": "ambiguous", "source_quote": None,
+        "previous_target_handles": [PREVIOUS_TARGET_A, PREVIOUS_TARGET_B],
+        "outcome": "ambiguous", "source_quote": None,
     }]
     result = _adapt(payload, acs=_acs(multiple=True))
     assert result.reconciliation[0].previous_response_target_ids == (RT_A, RT_B)
@@ -519,8 +524,7 @@ def test_ambiguous_reconciliation_preserves_both_targets_without_materialization
 def test_relation_proposal_materialization_preserves_explicit_endpoints():
     payload = _complex()
     payload["state_patch"]["proposal_materializations"] = [{
-        "subject_kind": "relation", "resolution_target_id": RT_A,
-        "previous_active_content_id": ACI_A,
+        "subject_kind": "relation", "resolution_target_handle": PREVIOUS_TARGET_A,
         "source_items": [{"existing_id": MI_B}],
         "target_items": [{"handle": "evening_hunger"}],
         "meaning": "Системная версия связи",
@@ -580,22 +584,86 @@ def test_typed_primary_and_invalid_materialization_fail_closed():
     with pytest.raises(SemanticWireError):
         _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
     payload = _complex()
-    payload["state_patch"]["proposal_materializations"][0]["resolution_target_id"] = RT_B
+    payload["state_patch"]["proposal_materializations"][0][
+        "resolution_target_handle"
+    ] = PREVIOUS_TARGET_B
     with pytest.raises(SemanticWireError):
         _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
 
 
-def test_previous_target_and_content_are_explicit_and_checked():
+def test_previous_target_handle_is_explicit_and_unknown_handle_fails_closed():
     payload = _complex()
-    payload["reconciliation"][0]["previous_target_ids"] = ["rt_" + "f" * 32]
-    with pytest.raises(SemanticWireError, match="Unknown previous response target"):
+    payload["reconciliation"][0]["previous_target_handles"] = ["missing_target"]
+    with pytest.raises(SemanticWireError, match="Unknown previous target handle"):
         _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
 
+
+def test_duplicate_and_incompatible_target_resolutions_fail_closed():
+    duplicate = _simple()
+    duplicate["reconciliation"].append({
+        "previous_target_handles": [PREVIOUS_TARGET_A],
+        "outcome": "answered",
+        "source_quote": SIMPLE_TEXT,
+    })
+    with pytest.raises(SemanticWireError, match="resolved twice"):
+        _adapt(duplicate)
+
+    incompatible = _simple()
+    incompatible["reconciliation"][0]["outcome"] = "supported"
+    with pytest.raises(SemanticWireError, match="incompatible"):
+        _adapt(incompatible)
+
+
+@pytest.mark.parametrize(
+    ("handles", "outcome"),
+    [
+        ([PREVIOUS_TARGET_A], "ambiguous"),
+        ([PREVIOUS_TARGET_A, PREVIOUS_TARGET_B], "answered"),
+    ],
+)
+def test_structurally_ambiguous_target_references_fail_closed(handles, outcome):
+    payload = _simple()
+    payload["reconciliation"] = [{
+        "previous_target_handles": handles,
+        "outcome": outcome,
+        "source_quote": None,
+    }]
+    with pytest.raises(SemanticWireError, match="AMBIGUOUS requires multiple targets"):
+        _adapt(payload, acs=_acs(multiple=True))
+
+
+def test_old_persistent_target_bookkeeping_is_not_part_of_semantic_schema():
+    payload = _simple()
+    resolution = payload["reconciliation"][0]
+    resolution["previous_target_ids"] = [RT_A]
+    del resolution["previous_target_handles"]
+    with pytest.raises(SemanticWireError):
+        _adapt(payload)
+
+    payload = _complex()
+    materialization = payload["state_patch"]["proposal_materializations"][0]
+    materialization["resolution_target_id"] = RT_A
+    materialization["previous_active_content_id"] = ACI_A
+    del materialization["resolution_target_handle"]
+    with pytest.raises(SemanticWireError):
+        _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
+
+
+def test_materialization_derives_previous_active_content_from_target_handle():
+    payload = _complex()
+    materialization = payload["state_patch"]["proposal_materializations"][0]
+    assert "previous_active_content_id" not in materialization
+    result = _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
+    assert result.state_patch.proposal_materializations[0].resolution_target_id == RT_A
+    assert result.state_patch.proposal_materializations[0].previous_active_content_id == ACI_A
+
+
+def test_unknown_materialization_target_handle_fails_closed():
     payload = _complex()
     payload["state_patch"]["proposal_materializations"][0][
-        "previous_active_content_id"
-    ] = ACI_B
-    with pytest.raises(SemanticWireError, match="target/content mismatch"):
+        "resolution_target_handle"
+    ] = "missing_target"
+    with pytest.raises(SemanticWireError, match="Unknown previous target handle"):
         _adapt(payload, text=COMPLEX_TEXT, acs=_acs(multiple=True, proposal=True))
 
 

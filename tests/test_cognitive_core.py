@@ -206,7 +206,10 @@ def test_previous_acs_view_and_system_prompt_are_sent():
 
     payload = _payload(client)
     assert payload["previous_active_conversation_state"]["active_content"][0]["id"] == next(iter(acs.active_content))
-    assert payload["previous_active_conversation_state"]["response_targets"][0]["interaction"] == "evaluation"
+    previous_target = payload["previous_active_conversation_state"]["response_targets"][0]
+    assert previous_target["handle"] == "previous_target_1"
+    assert "id" not in previous_target
+    assert previous_target["interaction"] == "evaluation"
     assert "один полный Cognitive Discovery turn" in client.completions.calls[0]["messages"][0]["content"]
 
 
@@ -225,14 +228,16 @@ def test_system_prompt_includes_critical_conditional_contract_rules():
         assert instruction in prompt
 
 
-def test_system_prompt_requires_shared_handles_and_exact_reference_reuse():
+def test_system_prompt_requires_shared_handles_and_semantic_previous_targets():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     assert "semantic handles" in prompt
     assert "одном общем namespace" in prompt
     assert "каждый объявленный handle уникален" in prompt
     assert "A handle is valid only for its declaration in this response" in prompt
-    assert "exact persistent IDs from previous ACS" in prompt
+    assert "Previous ACS ResponseTargets have input-scoped handles" in prompt
+    assert "do not copy rt_ or aci_ storage IDs" in prompt
+    assert "Python resolves the handle" in prompt
 
 
 def test_system_prompt_defines_item_and_relation_reference_ownership():
@@ -373,11 +378,11 @@ def test_simple_policy_preserves_safety_and_structural_guards():
         "bare yes при нескольких targets не подтверждает их все",
         "отказ, паузу и коррекцию уважай",
         "SYSTEM_TRANSITION должен быть явным и иметь CONSENT target",
-        "не выбирай за человека привычку, практику, изменение среды",
-        "SYSTEM_PROPOSAL не разрешает скрытый solution design",
+        "Не выбирай, не проектируй и не разрабатывай решение человека",
+        "SYSTEM_PROPOSAL не обходит эту границу",
         "после DECLINED не продавливай соседний вариант",
         "Отказ от предложения сам по себе не доказывает BARRIER",
-        "meaningful consent, не добавляя параллельное AI-предложение решения",
+        "Не добавляй к Transition параллельное AI-предложение решения",
     ):
         assert guard in prompt
     assert set(SEMANTIC_TURN_JSON_SCHEMA["properties"]) == {
@@ -395,16 +400,20 @@ def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "Discovery помогает понять проблему и существенные паттерны",
-        "Общее объяснение обоснованного механизма допустимо ради понимания",
-        "не применяй его как персональное решение",
-        "не выбирай за человека привычку, практику, изменение среды",
-        "SYSTEM_PROPOSAL не разрешает скрытый solution design",
-        "ANSWER_USER_QUESTION не отменяет Product Boundary",
-        "сначала дай полезное обоснованное понимание проблемы",
-        "а не персональную рекомендацию",
-        "не делай переход автоматическим по форме вопроса",
-        "meaningful consent, не добавляя параллельное AI-предложение решения",
+        "WHAT YOU SHOULD DO:",
+        "используй сказанное, соединяй факты",
+        "Explanation помогает понять, что происходит и почему это важно",
+        "WHAT YOU MUST NOT DO:",
+        "Не выбирай, не проектируй и не разрабатывай решение человека",
+        "menu of actions",
+        "не предлагай выбрать, адаптировать или разработать их вместе с AI",
+        "Названия «общие принципы», «общие направления» или «примеры»",
+        "Solution design предлагает, что человеку делать",
+        "WHAT YOU SHOULD DO INSTEAD WHEN THE BOUNDARY IS REACHED:",
+        "остановись до действий, практик, тактик, планов и options",
+        "Форма вопроса сама по себе не требует Transition",
+        "Transition, а не generic recommendation menu",
+        "Не добавляй к Transition параллельное AI-предложение решения",
         "Never disguise a concrete experiment, recommendation, plan or practice as Discovery",
     ):
         assert instruction in prompt
@@ -419,19 +428,74 @@ def test_direct_solution_question_keeps_explanation_inside_product_boundary():
     ).casefold()
 
     # The direct question has a useful, grounded answer route, not a forced handoff.
-    assert "answer_user_question не отменяет product boundary" in policy
-    assert "сначала дай полезное обоснованное понимание проблемы" in policy
-    assert "опирайся на уже известный материал" in policy
-    assert "можно объяснить общий принцип" in policy
-    assert "не делай переход автоматическим по форме вопроса" in policy
+    assert "отвечай на прямые вопросы внутри этой роли" in policy
+    assert "grounded synthesis" in policy
+    assert "объясняй общий механизм и его значение" in policy
+    assert "форма вопроса сама по себе не требует transition" in policy
+    assert "если прямой вопрос можно ответить через понимание или объяснение" in policy
 
     # General education cannot become invented user-specific causes or an AI offer
     # to select a personal solution from a menu of techniques.
-    assert "не выдавай типовые причины за установленную причину именно этого человека" in policy
-    assert "не превращай объяснение в меню способов действий" in policy
-    assert "ai выберет, адаптирует или разработает для него персональное решение" in policy
-    assert "если следующий полезный шаг требует такого выбора" in policy
-    assert "transition к живому консультанту с meaningful consent" in policy
+    assert "используй сказанное" in policy
+    assert "solution design предлагает, что человеку делать" in policy
+    assert "не предлагай выбрать, адаптировать или разработать их вместе с ai" in policy
+    assert "когда следующий полезный шаг требует выбрать, адаптировать или спроектировать" in policy
+    assert "предложи transition к живому консультанту" in policy
+    assert "meaningful consent" in policy
+
+
+def test_product_boundary_separates_explanation_from_generic_action_menu():
+    root = Path(__file__).parents[1] / "Research/Human_Experience/Weight"
+    prompt = " ".join(
+        CognitiveCore._system_prompt()
+        .split("PRODUCT BOUNDARY:", 1)[1]
+        .split("DECISION INTENT:", 1)[0]
+        .split()
+    ).casefold()
+    boundaries = " ".join(
+        (root / "11_BOUNDARIES.txt").read_text(encoding="utf-8").split()
+    ).casefold()
+    cycle = " ".join(
+        (root / "12_Cognitive_Cycle.txt").read_text(encoding="utf-8").split()
+    ).casefold()
+    transition = " ".join(
+        (root / "10_TRANSITION_TO_HUMAN_CONSULTANT.txt")
+        .read_text(encoding="utf-8")
+        .split()
+    ).casefold()
+
+    # A/B remain allowed, and each active policy layer states the stopping point
+    # rather than treating understanding as a preface to recommendations.
+    assert "explanation помогает понять, что происходит и почему это важно" in prompt
+    assert "объясняй общий механизм и его значение" in prompt
+    assert "описательный общий принцип" in boundaries
+    assert "после чего закончиться" in boundaries
+    assert "descriptive general explanation" in cycle
+    assert "ответ может закончиться" in cycle
+    assert "bounded answer может на этом закончиться" in transition
+
+    # C is already outside Discovery without choosing/personalizing an option,
+    # and cannot be relabelled as a set of "general principles".
+    assert "menu of actions" in prompt
+    assert "solution design предлагает, что человеку делать" in prompt
+    assert "общий перечень уже относится к проектированию решения" in boundaries
+    assert "система сама не выбирает между ними" in boundaries
+    assert "generic menu уже является solution design" in cycle
+    assert "система не выбирает между ними" in cycle
+    assert "общим меню" in transition and "уже является solution design" in transition
+    assert "«общие принципы»" in prompt
+    for policy in (boundaries, cycle, transition):
+        assert '"общими принципами"' in policy
+
+    # A direct action question has only the bounded answer or a real Transition
+    # once useful work becomes action selection/design; it cannot smuggle a menu
+    # through ANSWER_USER_QUESTION.
+    assert "остановись до действий, практик, тактик, планов и options" in prompt
+    assert "не продолжай discovery ради обхода границы" in prompt
+    assert "выбрать, адаптировать или спроектировать" in prompt
+    assert "transition" in prompt and "meaningful consent" in prompt
+    assert "нельзя оставаться в answer_user_question" in cycle
+    assert "transition с осмысленным согласием" in transition
 
 
 def test_source_of_truth_separates_explanation_from_personal_solution_design():
@@ -671,7 +735,7 @@ def _quote_case(branch, text, quote):
         }]
     else:
         payload["reconciliation"] = [{
-            "previous_target_ids": [next(iter(acs.response_targets))],
+            "previous_target_handles": ["previous_target_1"],
             "outcome": "supported", "source_quote": quote,
         }]
     return payload, current, model, acs, history
@@ -782,10 +846,12 @@ def test_prompt_describes_semantic_responsibilities_without_old_wire_bookkeeping
     prompt = " ".join(CognitiveCore._system_prompt().split())
     for instruction in (
         "SEMANTIC WIRE", "SEMANTIC CONTRACT", "semantic handles",
-        "exact persistent IDs", "ADD item/relation", "CORRECT",
+        "exact existing_id", "ADD item/relation", "CORRECT",
         "REINFORCE", "source_items", "target_items", "reconciliation",
         "proposal_materializations", "primary_content", "owner_content",
         "subject", "interaction", "ReplySegment.realizes", "source_quote",
+        "previous_target_handles", "resolution_target_handle",
+        "do not copy rt_ or aci_ storage IDs",
     ):
         assert instruction.lower() in prompt.lower()
     for obsolete in (
