@@ -240,6 +240,16 @@ def test_system_prompt_requires_shared_handles_and_semantic_previous_targets():
     assert "Python resolves the handle" in prompt
 
 
+def test_system_prompt_separates_target_support_from_item_reinforcement():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    assert "Reconciliation and persistent HumanModel evidence updates are separate" in prompt
+    assert "does not automatically REINFORCE every ModelItem" in prompt
+    assert "each specific existing item that the CURRENT USER message itself supports" in prompt
+    assert "A SUPPORTED target may therefore have zero item operations" in prompt
+    assert "multiple REINFORCE operations remain valid" in prompt
+
+
 def test_system_prompt_defines_item_and_relation_reference_ownership():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 

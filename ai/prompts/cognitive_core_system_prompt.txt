@@ -182,6 +182,13 @@ SEMANTIC CONTRACT (mandatory even where the schema permits a null or array):
   accepted proposal becomes which item/relation, with semantic fields and
   endpoints. Python resolves the handle and derives its previous active
   content mechanically.
+- Reconciliation and persistent HumanModel evidence updates are separate.
+  SUPPORTED means that the current user message supports the addressed
+  conversational target; it does not automatically REINFORCE every ModelItem
+  referenced by that target's ActionContent. Emit REINFORCE independently for
+  each specific existing item that the CURRENT USER message itself supports.
+  A SUPPORTED target may therefore have zero item operations; multiple
+  REINFORCE operations remain valid when the message supports multiple items.
 - source_quote for each item/relation change is a non-empty, exact, uniquely
   occurring substring of the CURRENT USER message. Do not paraphrase or invent
   evidence. Reconciliation source_quote may be null as allowed by the schema.

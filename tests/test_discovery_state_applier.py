@@ -258,6 +258,88 @@ def test_reinforce_existing_item():
     assert len(applied.updated_human_model.items[existing.id].source_refs) == 2
 
 
+def test_supported_reflection_without_item_operations_does_not_reinforce_items():
+    old_user = _message(DialogueRole.USER, "Начать могу, удерживать трудно", 1)
+    first = _item(content="начать изменения удаётся", message=old_user)
+    second = _item(content="удерживать изменения трудно", message=old_user)
+    human_model = HumanModel(items={first.id: first, second.id: second})
+    previous_system = _message(
+        DialogueRole.SYSTEM,
+        "Похоже, начать удаётся, а трудность возникает с удержанием. Это так?",
+        2,
+    )
+    history = DialogueHistory(messages=(old_user, previous_system))
+    content = ActiveContentItem(
+        kind=ActiveContentKind.SYSTEM_REFLECTION,
+        content="начать удаётся, удерживать трудно",
+        model_item_ids=(first.id, second.id),
+        source_message_id=previous_system.id,
+    )
+    target = ResponseTarget(
+        active_content_id=content.id,
+        subject=TargetReference(kind=TargetSubjectKind.ACTIVE_CONTENT, id=content.id),
+        interaction=TargetInteractionKind.EVALUATION,
+    )
+    acs = ActiveConversationState(
+        created_turn=1,
+        source_system_message_id=previous_system.id,
+        active_content={content.id: content},
+        response_targets={target.id: target},
+    )
+    text, reply = "Да, именно.", "Понял."
+    user = _message(DialogueRole.USER, text, 3)
+    system = _message(DialogueRole.SYSTEM, reply, 4)
+    result = _result(
+        user_text=text,
+        reply=reply,
+        action=SystemAction(),
+        reconciliation=(
+            TargetResolution(
+                previous_response_target_ids=(target.id,),
+                outcome=ReconciliationOutcome.SUPPORTED,
+                source_span=_span(text),
+            ),
+        ),
+    )
+    applied = apply_cognitive_turn(human_model, acs, history, user, system, result)
+
+    assert applied.updated_human_model.items == human_model.items
+    assert applied.updated_human_model.relations == human_model.relations
+    assert applied.new_acs is None
+
+
+def test_multiple_explicit_reinforcements_remain_valid():
+    old_user = _message(DialogueRole.USER, "Начать могу, удерживать трудно", 1)
+    first = _item(content="начать изменения удаётся", message=old_user)
+    second = _item(content="удерживать изменения трудно", message=old_user)
+    human_model = HumanModel(items={first.id: first, second.id: second})
+    history = DialogueHistory(messages=(old_user, _message(DialogueRole.SYSTEM, "Верно?", 2)))
+    text = "Да, начать могу, но удерживать трудно"
+    user = _message(DialogueRole.USER, text, 3)
+    reply = "Понял."
+    system = _message(DialogueRole.SYSTEM, reply, 4)
+    operations = tuple(
+        ItemOperation(
+            operation=ItemOperationKind.REINFORCE,
+            existing_item_id=item.id,
+            evidence_origin=EvidenceOrigin.CURRENT_USER_MATERIAL,
+            source_span=_span(text),
+        )
+        for item in (first, second)
+    )
+    result = _result(
+        user_text=text,
+        reply=reply,
+        action=SystemAction(),
+        patch=StatePatch(item_operations=operations),
+    )
+
+    applied = apply_cognitive_turn(human_model, None, history, user, system, result)
+
+    assert len(applied.updated_human_model.items[first.id].source_refs) == 2
+    assert len(applied.updated_human_model.items[second.id].source_refs) == 2
+
+
 def test_correct_existing_item_creates_superseding_replacement():
     old_user = _message(DialogueRole.USER, "Одежда не важна", 1)
     existing = _item(content="одежда не важна", message=old_user)
