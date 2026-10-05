@@ -152,6 +152,12 @@ def _acs(*, multiple: bool = False, proposal: bool = False) -> ActiveConversatio
     )
 
 
+def _acs_with_interaction(interaction: TargetInteractionKind) -> ActiveConversationState:
+    acs = _acs(proposal=interaction == TargetInteractionKind.EVALUATION)
+    target = acs.response_targets[RT_A].model_copy(update={"interaction": interaction})
+    return acs.model_copy(update={"response_targets": {RT_A: target}})
+
+
 def _simple() -> dict:
     return {
         "state_patch": {
@@ -164,8 +170,9 @@ def _simple() -> dict:
             "proposal_materializations": [],
         },
         "reconciliation": [{
-            "previous_target_handles": [PREVIOUS_TARGET_A],
-            "outcome": "answered", "source_quote": SIMPLE_TEXT,
+            "resolution_kind": "ordinary_addressed",
+            "previous_target_handle": PREVIOUS_TARGET_A,
+            "source_quote": SIMPLE_TEXT,
         }],
         "selected_action": {
             "decision_intent": "human_discovery",
@@ -232,7 +239,8 @@ def _complex() -> dict:
                 "source_quote": "Нет, это не просто привычка",
             },
             {
-                "previous_target_handles": [PREVIOUS_TARGET_B], "outcome": "answered",
+                "resolution_kind": "ordinary_addressed",
+                "previous_target_handle": PREVIOUS_TARGET_B,
                 "source_quote": "к вечеру голод такой сильный",
             },
         ],
@@ -316,6 +324,91 @@ def test_simple_turn_is_lossless_against_existing_internal_contract():
         ),),
     )
     assert result == expected
+
+
+def test_ordinary_open_response_maps_to_canonical_internal_answered():
+    user_text = "Примерно одинаково."
+    payload = _simple()
+    payload["state_patch"]["item_changes"] = []
+    payload["selected_action"]["primary_content"]["model_item_refs"] = [
+        {"existing_id": MI_A}
+    ]
+    payload["reconciliation"][0]["source_quote"] = user_text
+
+    result = _adapt(payload, text=user_text)
+
+    assert isinstance(result, CognitiveTurnResult)
+    assert result.reconciliation == (TargetResolution(
+        previous_response_target_ids=(RT_A,),
+        outcome=ReconciliationOutcome.ANSWERED,
+        source_span=_span(user_text, user_text),
+    ),)
+    assert result.system_action.contents[0].kind == ActiveContentKind.SYSTEM_QUESTION
+    assert result.system_action.response_targets[0].interaction == TargetInteractionKind.OPEN_RESPONSE
+
+
+@pytest.mark.parametrize(
+    "interaction",
+    [
+        TargetInteractionKind.EVALUATION,
+        TargetInteractionKind.CONSENT,
+        TargetInteractionKind.CLARIFICATION,
+    ],
+)
+def test_ordinary_addressed_is_rejected_for_non_open_targets(interaction):
+    with pytest.raises(SemanticWireError, match="ordinary_addressed requires an OPEN_RESPONSE"):
+        _adapt(_simple(), acs=_acs_with_interaction(interaction))
+
+
+def test_open_response_refusal_remains_an_explicit_semantic_outcome():
+    payload = _simple()
+    payload["reconciliation"] = [{
+        "previous_target_handles": [PREVIOUS_TARGET_A],
+        "outcome": "refused",
+        "source_quote": SIMPLE_TEXT,
+    }]
+
+    result = _adapt(payload)
+
+    assert result.reconciliation[0].outcome == ReconciliationOutcome.REFUSED
+
+
+def test_omitted_open_response_target_is_not_inferred_as_answered():
+    payload = _simple()
+    payload["reconciliation"] = []
+
+    result = _adapt(payload)
+
+    assert result.reconciliation == ()
+
+
+@pytest.mark.parametrize(
+    ("interaction", "outcome"),
+    [
+        (TargetInteractionKind.EVALUATION, "supported"),
+        (TargetInteractionKind.EVALUATION, "rejected"),
+        (TargetInteractionKind.EVALUATION, "partially_supported"),
+        (TargetInteractionKind.EVALUATION, "uncertain"),
+        (TargetInteractionKind.CONSENT, "consented"),
+        (TargetInteractionKind.CONSENT, "declined"),
+        (TargetInteractionKind.CLARIFICATION, "answered"),
+        (TargetInteractionKind.CLARIFICATION, "supported"),
+        (TargetInteractionKind.CLARIFICATION, "rejected"),
+        (TargetInteractionKind.CLARIFICATION, "partially_supported"),
+        (TargetInteractionKind.CLARIFICATION, "uncertain"),
+    ],
+)
+def test_non_open_interactions_keep_explicit_semantic_outcomes(interaction, outcome):
+    payload = _simple()
+    payload["reconciliation"] = [{
+        "previous_target_handles": [PREVIOUS_TARGET_A],
+        "outcome": outcome,
+        "source_quote": SIMPLE_TEXT,
+    }]
+
+    result = _adapt(payload, acs=_acs_with_interaction(interaction))
+
+    assert result.reconciliation[0].outcome == ReconciliationOutcome(outcome)
 
 
 def test_complex_turn_is_lossless_against_existing_internal_contract():
@@ -602,14 +695,18 @@ def test_duplicate_and_incompatible_target_resolutions_fail_closed():
     duplicate = _simple()
     duplicate["reconciliation"].append({
         "previous_target_handles": [PREVIOUS_TARGET_A],
-        "outcome": "answered",
+        "outcome": "supported",
         "source_quote": SIMPLE_TEXT,
     })
     with pytest.raises(SemanticWireError, match="resolved twice"):
         _adapt(duplicate)
 
     incompatible = _simple()
-    incompatible["reconciliation"][0]["outcome"] = "supported"
+    incompatible["reconciliation"] = [{
+        "previous_target_handles": [PREVIOUS_TARGET_A],
+        "outcome": "supported",
+        "source_quote": SIMPLE_TEXT,
+    }]
     with pytest.raises(SemanticWireError, match="incompatible"):
         _adapt(incompatible)
 
@@ -635,8 +732,8 @@ def test_structurally_ambiguous_target_references_fail_closed(handles, outcome):
 def test_old_persistent_target_bookkeeping_is_not_part_of_semantic_schema():
     payload = _simple()
     resolution = payload["reconciliation"][0]
-    resolution["previous_target_ids"] = [RT_A]
-    del resolution["previous_target_handles"]
+    resolution["previous_target_id"] = RT_A
+    del resolution["previous_target_handle"]
     with pytest.raises(SemanticWireError):
         _adapt(payload)
 

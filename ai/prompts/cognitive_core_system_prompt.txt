@@ -149,7 +149,10 @@ INTERACTION AND RECONCILIATION SEMANTICS:
   semantic examples, not keyword triggers.
 - A CONSENT target subject must be current SYSTEM_PROPOSAL or SYSTEM_TRANSITION
   ActionContent. SYSTEM_REFLECTION is evaluated, not accepted or declined.
-- ANSWERED resolves OPEN_RESPONSE or an appropriate CLARIFICATION target.
+- For an ordinary answer to exactly one OPEN_RESPONSE target, declare
+  resolution_kind=ordinary_addressed and previous_target_handle. Do not choose
+  an internal outcome: Python verifies OPEN_RESPONSE and records ANSWERED.
+- ANSWERED remains explicit only for an appropriate CLARIFICATION target.
   SUPPORTED, REJECTED, PARTIALLY_SUPPORTED and UNCERTAIN resolve EVALUATION or
   an appropriate CLARIFICATION target. CONSENTED and DECLINED resolve only a
   CONSENT target.
@@ -174,9 +177,10 @@ SEMANTIC CONTRACT (mandatory even where the schema permits a null or array):
   current content, an existing item/relation, or a current declaration. Owner
   and subject may differ. ReplySegment.realizes names the current content
   conveyed by its text. Every targeted content must be realized by a segment.
-- Previous ACS ResponseTargets have input-scoped handles. Reconciliation uses
-  previous_target_handles, and proposal materialization uses
-  resolution_target_handle. Use only those handles: do not copy rt_ or aci_
+- Previous ACS ResponseTargets have input-scoped handles. ordinary_addressed
+  uses one previous_target_handle; outcome-based reconciliation uses
+  previous_target_handles; proposal materialization uses resolution_target_handle.
+  Use only those handles: do not copy rt_ or aci_
   storage IDs. Reconciliation records which previous target this user reply
   actually addressed; proposal_materializations explicitly state which
   accepted proposal becomes which item/relation, with semantic fields and

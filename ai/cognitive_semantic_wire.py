@@ -164,10 +164,19 @@ class _StatePatch(_Wire):
     proposal_materializations: tuple[ProposalMaterialization, ...]
 
 
-class _Resolution(_Wire):
+class _OrdinaryAddressedResolution(_Wire):
+    resolution_kind: Literal["ordinary_addressed"]
+    previous_target_handle: Handle
+    source_quote: Optional[Quote]
+
+
+class _OutcomeResolution(_Wire):
     previous_target_handles: tuple[Handle, ...] = Field(min_length=1)
     outcome: ReconciliationOutcome
     source_quote: Optional[Quote]
+
+
+Resolution = Union[_OrdinaryAddressedResolution, _OutcomeResolution]
 
 
 class _Content(_Wire):
@@ -274,7 +283,7 @@ class _ReplySegment(_Wire):
 
 class SemanticTurn(_Wire):
     state_patch: _StatePatch
-    reconciliation: tuple[_Resolution, ...]
+    reconciliation: tuple[Resolution, ...]
     selected_action: SelectedAction
     reply_segments: tuple[_ReplySegment, ...] = Field(min_length=1)
 
@@ -417,10 +426,7 @@ def adapt_semantic_turn(
         return target_id
 
     compatible_interactions = {
-        ReconciliationOutcome.ANSWERED: {
-            TargetInteractionKind.OPEN_RESPONSE,
-            TargetInteractionKind.CLARIFICATION,
-        },
+        ReconciliationOutcome.ANSWERED: {TargetInteractionKind.CLARIFICATION},
         ReconciliationOutcome.SUPPORTED: {
             TargetInteractionKind.EVALUATION,
             TargetInteractionKind.CLARIFICATION,
@@ -444,29 +450,43 @@ def adapt_semantic_turn(
     resolutions: list[dict[str, Any]] = []
     resolved: dict[str, ReconciliationOutcome] = {}
     for resolution in turn.reconciliation:
-        count = len(resolution.previous_target_handles)
-        if (resolution.outcome == ReconciliationOutcome.AMBIGUOUS) != (count > 1):
-            raise SemanticWireError("AMBIGUOUS requires multiple targets; other outcomes require one.")
-        target_ids = [
-            previous_target_id(handle)
-            for handle in resolution.previous_target_handles
-        ]
+        if isinstance(resolution, _OrdinaryAddressedResolution):
+            target_ids = [previous_target_id(resolution.previous_target_handle)]
+            outcome = ReconciliationOutcome.ANSWERED
+            allowed_interactions = {TargetInteractionKind.OPEN_RESPONSE}
+        else:
+            count = len(resolution.previous_target_handles)
+            outcome = resolution.outcome
+            allowed_interactions = compatible_interactions.get(outcome)
+            if (outcome == ReconciliationOutcome.AMBIGUOUS) != (count > 1):
+                raise SemanticWireError(
+                    "AMBIGUOUS requires multiple targets; other outcomes require one."
+                )
+            target_ids = [
+                previous_target_id(handle)
+                for handle in resolution.previous_target_handles
+            ]
+
         for target_id in target_ids:
             if target_id in resolved:
                 raise SemanticWireError(f"Previous target resolved twice: {target_id}")
-            allowed = compatible_interactions.get(resolution.outcome)
             if (
-                allowed is not None
-                and previous_acs.response_targets[target_id].interaction not in allowed
+                allowed_interactions is not None
+                and previous_acs.response_targets[target_id].interaction
+                not in allowed_interactions
             ):
+                if isinstance(resolution, _OrdinaryAddressedResolution):
+                    raise SemanticWireError(
+                        "ordinary_addressed requires an OPEN_RESPONSE target."
+                    )
                 raise SemanticWireError(
                     "Reconciliation outcome is incompatible with target interaction."
                 )
-            resolved[target_id] = resolution.outcome
+            resolved[target_id] = outcome
         resolutions.append(
             {
                 "previous_response_target_ids": target_ids,
-                "outcome": resolution.outcome.value,
+                "outcome": outcome.value,
                 "source_quote": resolution.source_quote,
             }
         )

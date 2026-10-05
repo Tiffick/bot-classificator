@@ -238,6 +238,10 @@ def test_system_prompt_requires_shared_handles_and_semantic_previous_targets():
     assert "Previous ACS ResponseTargets have input-scoped handles" in prompt
     assert "do not copy rt_ or aci_ storage IDs" in prompt
     assert "Python resolves the handle" in prompt
+    assert "resolution_kind=ordinary_addressed" in prompt
+    assert "previous_target_handle" in prompt
+    assert "Do not choose an internal outcome" in prompt
+    assert "ANSWERED remains explicit only for an appropriate CLARIFICATION target" in prompt
 
 
 def test_system_prompt_separates_target_support_from_item_reinforcement():
@@ -860,6 +864,7 @@ def test_prompt_describes_semantic_responsibilities_without_old_wire_bookkeeping
         "REINFORCE", "source_items", "target_items", "reconciliation",
         "proposal_materializations", "primary_content", "owner_content",
         "subject", "interaction", "ReplySegment.realizes", "source_quote",
+        "resolution_kind=ordinary_addressed", "previous_target_handle",
         "previous_target_handles", "resolution_target_handle",
         "do not copy rt_ or aci_ storage IDs",
     ):
