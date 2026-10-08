@@ -453,7 +453,10 @@ def adapt_semantic_turn(
         if isinstance(resolution, _OrdinaryAddressedResolution):
             target_ids = [previous_target_id(resolution.previous_target_handle)]
             outcome = ReconciliationOutcome.ANSWERED
-            allowed_interactions = {TargetInteractionKind.OPEN_RESPONSE}
+            allowed_interactions = {
+                TargetInteractionKind.OPEN_RESPONSE,
+                TargetInteractionKind.CLARIFICATION,
+            }
         else:
             count = len(resolution.previous_target_handles)
             outcome = resolution.outcome
@@ -477,7 +480,8 @@ def adapt_semantic_turn(
             ):
                 if isinstance(resolution, _OrdinaryAddressedResolution):
                     raise SemanticWireError(
-                        "ordinary_addressed requires an OPEN_RESPONSE target."
+                        "ordinary_addressed requires an OPEN_RESPONSE or "
+                        "CLARIFICATION target."
                     )
                 raise SemanticWireError(
                     "Reconciliation outcome is incompatible with target interaction."

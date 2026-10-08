@@ -1,0 +1,1861 @@
+{
+  "head": "0b8366a",
+  "cases": [
+    {
+      "case_id": "FSB-H",
+      "coverage_intent": "human_discovery",
+      "purpose": "Mechanism is already useful; a new Before→Now change makes Personal Meaning decision-relevant.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_ae37ab9d678950bdbea4cef9e1eb47d9",
+            "role": "user",
+            "text": "После перехода на сменную работу я набрал вес.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_e328014449a356c29a7ec04829e91913",
+            "role": "system",
+            "text": "Что обычно происходит с едой после поздней смены?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "life_change",
+                  "content": "переход на сменную работу",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 46
+                  }
+                },
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_2",
+                  "existing_item_id": null,
+                  "kind": "now",
+                  "content": "после смены работы набрал вес",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 46
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "system_question",
+                  "semantic_content": "Уточнить повторяющийся пищевой контекст после поздней смены.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Что обычно происходит с едой после поздней смены?",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_17b34ea9bf135d0f9b3952c38073b4ac",
+            "role": "user",
+            "text": "После поздней смены прихожу очень голодный и почти сразу съедаю большой ужин.",
+            "sequence": 3,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_c072e57f90105e5da05545780ad013bf",
+            "role": "system",
+            "text": "Это основной повторяющийся момент, который мешает есть меньше?",
+            "sequence": 4,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_1",
+                  "existing_item_id": null,
+                  "kind": "barrier",
+                  "content": "сильный голод после поздней смены приводит к большому ужину",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 77
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_3c1e96c148a559c0b1d7c5d891002832"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 77
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t2_1",
+                  "kind": "system_question",
+                  "semantic_content": "Проверить значимость установленного механизма для предыдущих попыток.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t2_1",
+                  "active_content_local_id": "content:t2_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "text": "Это основной повторяющийся момент, который мешает есть меньше?",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_f2268082d55c528b9f5cc374a1d12902",
+            "role": "user",
+            "text": "Да, именно поздний голод после смены чаще всего срывает мои попытки есть меньше.",
+            "sequence": 5,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_e0f15f933d1f57e69c5b2aabc80d3429",
+            "role": "system",
+            "text": "А что изменилось для вас в жизни по сравнению с тем, как было раньше?",
+            "sequence": 6,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "human_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t3_1",
+                  "existing_item_id": null,
+                  "kind": "previous_attempt",
+                  "content": "попытки есть меньше срываются из-за позднего голода",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 80
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_6109787ab81c5a8f9e8ecb2ad65b35d2"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 80
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t3_1",
+                  "kind": "system_question",
+                  "semantic_content": "Открыть значимое сравнение Before→Now после понятого механизма.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t3_1",
+                  "active_content_local_id": "content:t3_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t3_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t3",
+                "text": "А что изменилось для вас в жизни по сравнению с тем, как было раньше?",
+                "realizes_action_content_ids": [
+                  "content:t3_1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_01c8e4f37a30522aafb5a721a12778eb": {
+              "id": "mi_01c8e4f37a30522aafb5a721a12778eb",
+              "kind": "life_change",
+              "content": "переход на сменную работу",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_ae37ab9d678950bdbea4cef9e1eb47d9",
+                  "char_start": 0,
+                  "char_end": 46
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_2a928f1105a55a7597a303d28388f5a8": {
+              "id": "mi_2a928f1105a55a7597a303d28388f5a8",
+              "kind": "now",
+              "content": "после смены работы набрал вес",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_ae37ab9d678950bdbea4cef9e1eb47d9",
+                  "char_start": 0,
+                  "char_end": 46
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_f647991be8cc599ab8f248c07cf06be6": {
+              "id": "mi_f647991be8cc599ab8f248c07cf06be6",
+              "kind": "barrier",
+              "content": "сильный голод после поздней смены приводит к большому ужину",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_17b34ea9bf135d0f9b3952c38073b4ac",
+                  "char_start": 0,
+                  "char_end": 77
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            },
+            "mi_3ea3872bd6775aaa85c70043121af0ad": {
+              "id": "mi_3ea3872bd6775aaa85c70043121af0ad",
+              "kind": "previous_attempt",
+              "content": "попытки есть меньше срываются из-за позднего голода",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_f2268082d55c528b9f5cc374a1d12902",
+                  "char_start": 0,
+                  "char_end": 80
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 3,
+              "updated_turn": 3
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_17489e8f5f545d5b8cd494315c641681",
+          "created_turn": 3,
+          "source_system_message_id": "msg_e0f15f933d1f57e69c5b2aabc80d3429",
+          "active_content": {
+            "aci_a0c8d194a6d95fba89d4ac52ecda6f25": {
+              "id": "aci_a0c8d194a6d95fba89d4ac52ecda6f25",
+              "kind": "system_question",
+              "content": "Открыть значимое сравнение Before→Now после понятого механизма.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_e0f15f933d1f57e69c5b2aabc80d3429"
+            }
+          },
+          "response_targets": {
+            "rt_d544c7ea370b55ef9b656c43f0174027": {
+              "id": "rt_d544c7ea370b55ef9b656c43f0174027",
+              "active_content_id": "aci_a0c8d194a6d95fba89d4ac52ecda6f25",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_a0c8d194a6d95fba89d4ac52ecda6f25"
+              },
+              "interaction": "open_response"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_ae37ab9d678950bdbea4cef9e1eb47d9",
+              "role": "user",
+              "text": "После перехода на сменную работу я набрал вес.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_e328014449a356c29a7ec04829e91913",
+              "role": "system",
+              "text": "Что обычно происходит с едой после поздней смены?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_17b34ea9bf135d0f9b3952c38073b4ac",
+              "role": "user",
+              "text": "После поздней смены прихожу очень голодный и почти сразу съедаю большой ужин.",
+              "sequence": 3,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_c072e57f90105e5da05545780ad013bf",
+              "role": "system",
+              "text": "Это основной повторяющийся момент, который мешает есть меньше?",
+              "sequence": 4,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_f2268082d55c528b9f5cc374a1d12902",
+              "role": "user",
+              "text": "Да, именно поздний голод после смены чаще всего срывает мои попытки есть меньше.",
+              "sequence": 5,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_e0f15f933d1f57e69c5b2aabc80d3429",
+              "role": "system",
+              "text": "А что изменилось для вас в жизни по сравнению с тем, как было раньше?",
+              "sequence": 6,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_8d93a82444cc5df9968e17bcb5f148a2",
+          "role": "user",
+          "text": "Раньше я после работы спокойно встречался с друзьями, а теперь избегаю встреч: мне неловко из-за того, как сидит одежда.",
+          "sequence": 7,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "B66AE6732920603550C7D04398D772D7735DF7C9E69231680EFD713638003A1D"
+    },
+    {
+      "case_id": "FSB-M",
+      "coverage_intent": "mechanism_discovery",
+      "purpose": "Personal Meaning is established; two barrier explanations remain discriminable from available experience.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_224537f39ec857c9b78cdd04ed41bd13",
+            "role": "user",
+            "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_dbdcf0ca964152819f2d69829b0f85d4",
+            "role": "system",
+            "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "personal_meaning",
+                  "content": "важно вернуть ощущение управления своим вечером",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 73
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "system_question",
+                  "semantic_content": "Уточнить значимые предыдущие попытки.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252",
+            "role": "user",
+            "text": "Пробовал заранее готовить ужин, но в последние два раза всё равно переел.",
+            "sequence": 3,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_1c82762346cb5d95902bd5b355313fc5",
+            "role": "system",
+            "text": "Что различалось в обстоятельствах этих двух случаев?",
+            "sequence": 4,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_1",
+                  "existing_item_id": null,
+                  "kind": "previous_attempt",
+                  "content": "заранее готовил ужин, но дважды всё равно переел",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 73
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_59019e47b1355417bdc7c964a8880b36"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 73
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t2_1",
+                  "kind": "system_question",
+                  "semantic_content": "Найти наблюдаемое различие между возможными механизмами.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t2_1",
+                  "active_content_local_id": "content:t2_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "text": "Что различалось в обстоятельствах этих двух случаев?",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_deff0fe0f0df51ee895699c27cf13763": {
+              "id": "mi_deff0fe0f0df51ee895699c27cf13763",
+              "kind": "personal_meaning",
+              "content": "важно вернуть ощущение управления своим вечером",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_224537f39ec857c9b78cdd04ed41bd13",
+                  "char_start": 0,
+                  "char_end": 73
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_c6b610b39ee0581386211d659d835b83": {
+              "id": "mi_c6b610b39ee0581386211d659d835b83",
+              "kind": "previous_attempt",
+              "content": "заранее готовил ужин, но дважды всё равно переел",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252",
+                  "char_start": 0,
+                  "char_end": 73
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_41bafebe9dd2519986a7c6160ffcd170",
+          "created_turn": 2,
+          "source_system_message_id": "msg_1c82762346cb5d95902bd5b355313fc5",
+          "active_content": {
+            "aci_1e17557d00965ca19839b7d2762df13a": {
+              "id": "aci_1e17557d00965ca19839b7d2762df13a",
+              "kind": "system_question",
+              "content": "Найти наблюдаемое различие между возможными механизмами.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_1c82762346cb5d95902bd5b355313fc5"
+            }
+          },
+          "response_targets": {
+            "rt_a5a706ebfc76599aa2543ffe7eaa9920": {
+              "id": "rt_a5a706ebfc76599aa2543ffe7eaa9920",
+              "active_content_id": "aci_1e17557d00965ca19839b7d2762df13a",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_1e17557d00965ca19839b7d2762df13a"
+              },
+              "interaction": "open_response"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_224537f39ec857c9b78cdd04ed41bd13",
+              "role": "user",
+              "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_dbdcf0ca964152819f2d69829b0f85d4",
+              "role": "system",
+              "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252",
+              "role": "user",
+              "text": "Пробовал заранее готовить ужин, но в последние два раза всё равно переел.",
+              "sequence": 3,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_1c82762346cb5d95902bd5b355313fc5",
+              "role": "system",
+              "text": "Что различалось в обстоятельствах этих двух случаев?",
+              "sequence": 4,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_b35a9973431553e180aa264a87c614c6",
+          "role": "user",
+          "text": "В одном случае я пропустил обед, а в другом нормально поел днём, но перед ужином был тяжёлый разговор.",
+          "sequence": 5,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337"
+    },
+    {
+      "case_id": "FSB-R",
+      "coverage_intent": "reflection",
+      "purpose": "Meaning, change, attempt and barrier form a connected picture; another local question has low marginal value.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+            "role": "user",
+            "text": "После смены работы привычный режим развалился, и я стал набирать вес.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_737f68c80cd05202a5f63728339dbf8a",
+            "role": "system",
+            "text": "Что в этом изменении задевает вас сильнее всего?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "human_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "life_change",
+                  "content": "после смены работы привычный режим развалился",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 69
+                  }
+                },
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_2",
+                  "existing_item_id": null,
+                  "kind": "now",
+                  "content": "после изменения режима стал набирать вес",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 69
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "system_question",
+                  "semantic_content": "Понять личное значение изменения режима и веса.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Что в этом изменении задевает вас сильнее всего?",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_3966d54dff1e56d083662cca8f0b0922",
+            "role": "user",
+            "text": "Мне неловко встречаться с людьми: одежда сидит иначе, и я всё чаще отказываюсь от встреч.",
+            "sequence": 3,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_5551b9ac25e4508a8b32e80ec75c9814",
+            "role": "system",
+            "text": "Что вы уже пробовали изменить самостоятельно?",
+            "sequence": 4,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_1",
+                  "existing_item_id": null,
+                  "kind": "personal_meaning",
+                  "content": "неловкость из-за одежды приводит к отказу от встреч",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 89
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_d8ac673a5ce65931b9aca757da8f2fab"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 89
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t2_1",
+                  "kind": "system_question",
+                  "semantic_content": "Уточнить предыдущую попытку и существенный барьер.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t2_1",
+                  "active_content_local_id": "content:t2_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "text": "Что вы уже пробовали изменить самостоятельно?",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_fa2a643486f2599383b4fb7ae7a677c9": {
+              "id": "mi_fa2a643486f2599383b4fb7ae7a677c9",
+              "kind": "life_change",
+              "content": "после смены работы привычный режим развалился",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+                  "char_start": 0,
+                  "char_end": 69
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_092d3bfcac60593692b4c5fe14466d7d": {
+              "id": "mi_092d3bfcac60593692b4c5fe14466d7d",
+              "kind": "now",
+              "content": "после изменения режима стал набирать вес",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+                  "char_start": 0,
+                  "char_end": 69
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_972987ad57ac5e108c1915c94b0902e5": {
+              "id": "mi_972987ad57ac5e108c1915c94b0902e5",
+              "kind": "personal_meaning",
+              "content": "неловкость из-за одежды приводит к отказу от встреч",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_3966d54dff1e56d083662cca8f0b0922",
+                  "char_start": 0,
+                  "char_end": 89
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_69d5fba645dd5a9fa62bcc4e77361908",
+          "created_turn": 2,
+          "source_system_message_id": "msg_5551b9ac25e4508a8b32e80ec75c9814",
+          "active_content": {
+            "aci_8343336ecbfb56f8abf404b39ee96e21": {
+              "id": "aci_8343336ecbfb56f8abf404b39ee96e21",
+              "kind": "system_question",
+              "content": "Уточнить предыдущую попытку и существенный барьер.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_5551b9ac25e4508a8b32e80ec75c9814"
+            }
+          },
+          "response_targets": {
+            "rt_0f64dde7f3e157e38639c674f8a313bb": {
+              "id": "rt_0f64dde7f3e157e38639c674f8a313bb",
+              "active_content_id": "aci_8343336ecbfb56f8abf404b39ee96e21",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_8343336ecbfb56f8abf404b39ee96e21"
+              },
+              "interaction": "open_response"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+              "role": "user",
+              "text": "После смены работы привычный режим развалился, и я стал набирать вес.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_737f68c80cd05202a5f63728339dbf8a",
+              "role": "system",
+              "text": "Что в этом изменении задевает вас сильнее всего?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_3966d54dff1e56d083662cca8f0b0922",
+              "role": "user",
+              "text": "Мне неловко встречаться с людьми: одежда сидит иначе, и я всё чаще отказываюсь от встреч.",
+              "sequence": 3,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_5551b9ac25e4508a8b32e80ec75c9814",
+              "role": "system",
+              "text": "Что вы уже пробовали изменить самостоятельно?",
+              "sequence": 4,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_7612c2c70885592faf9f640f4e180a3a",
+          "role": "user",
+          "text": "Пробовал просто есть меньше, но после поздней смены сильный голод быстро возвращает меня к прежнему режиму.",
+          "sequence": 5,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F"
+    },
+    {
+      "case_id": "FSB-S",
+      "coverage_intent": "stop_exploration",
+      "purpose": "The user twice establishes that further observation is unavailable; the semantic axis is exhausted.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5",
+            "role": "user",
+            "text": "По вечерам иногда ем больше, чем собирался.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_62c7a2ab6dbd536b9ddde21a5324220a",
+            "role": "system",
+            "text": "Что обычно запускает этот момент вечером?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "experience",
+                  "content": "по вечерам иногда ест больше, чем собирался",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 43
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "system_question",
+                  "semantic_content": "Уточнить доступное наблюдение о начале вечернего эпизода.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Что обычно запускает этот момент вечером?",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_dfb440a08cae5a19adb412167adaa33f",
+            "role": "user",
+            "text": "Не знаю, я не замечал, с чего это начинается.",
+            "sequence": 3,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_c1b77bb953665ceba54200af5a1780b1",
+            "role": "system",
+            "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?",
+            "sequence": 4,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_1",
+                  "existing_item_id": null,
+                  "kind": "other_relevant_user_material",
+                  "content": "не наблюдал начало вечернего эпизода",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 45
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_5ab4f68533d3538f9291b3156e6e3776"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 45
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t2_1",
+                  "kind": "system_question",
+                  "semantic_content": "Проверить наличие другого доступного наблюдения на той же оси.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t2_1",
+                  "active_content_local_id": "content:t2_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_325809be034856d1bdde60dc79f20c20": {
+              "id": "mi_325809be034856d1bdde60dc79f20c20",
+              "kind": "experience",
+              "content": "по вечерам иногда ест больше, чем собирался",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5",
+                  "char_start": 0,
+                  "char_end": 43
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_caafa1e1c3d95f48abe41e3a04fe5989": {
+              "id": "mi_caafa1e1c3d95f48abe41e3a04fe5989",
+              "kind": "other_relevant_user_material",
+              "content": "не наблюдал начало вечернего эпизода",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_dfb440a08cae5a19adb412167adaa33f",
+                  "char_start": 0,
+                  "char_end": 45
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_075c107bfa0653f2974d33f358031343",
+          "created_turn": 2,
+          "source_system_message_id": "msg_c1b77bb953665ceba54200af5a1780b1",
+          "active_content": {
+            "aci_fc7adf99b8335a8582afeda987348c10": {
+              "id": "aci_fc7adf99b8335a8582afeda987348c10",
+              "kind": "system_question",
+              "content": "Проверить наличие другого доступного наблюдения на той же оси.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_c1b77bb953665ceba54200af5a1780b1"
+            }
+          },
+          "response_targets": {
+            "rt_3022a1aebd5e519f98b4abe4d030e054": {
+              "id": "rt_3022a1aebd5e519f98b4abe4d030e054",
+              "active_content_id": "aci_fc7adf99b8335a8582afeda987348c10",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_fc7adf99b8335a8582afeda987348c10"
+              },
+              "interaction": "open_response"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5",
+              "role": "user",
+              "text": "По вечерам иногда ем больше, чем собирался.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_62c7a2ab6dbd536b9ddde21a5324220a",
+              "role": "system",
+              "text": "Что обычно запускает этот момент вечером?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_dfb440a08cae5a19adb412167adaa33f",
+              "role": "user",
+              "text": "Не знаю, я не замечал, с чего это начинается.",
+              "sequence": 3,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_c1b77bb953665ceba54200af5a1780b1",
+              "role": "system",
+              "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?",
+              "sequence": 4,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_479988bc7dcc537a9a74165232417c89",
+          "role": "user",
+          "text": "Тоже не знаю. Я этого не отслеживал, и больше деталей у меня нет.",
+          "sequence": 5,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66"
+    },
+    {
+      "case_id": "FSB-T",
+      "coverage_intent": "transition",
+      "purpose": "A coherent sufficient picture has been reflected; the user confirms it and asks how to move forward.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_b24e307c71a050c38f68beca07cbaf81",
+            "role": "user",
+            "text": "Я хочу снова спокойно носить привычную одежду и не избегать фотографий.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_f2f36bd080b854a182a87711b5b68ece",
+            "role": "system",
+            "text": "Что вы уже пробовали и что обычно мешало продолжать?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "desired_change",
+                  "content": "снова спокойно носить привычную одежду",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 71
+                  }
+                },
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_2",
+                  "existing_item_id": null,
+                  "kind": "personal_meaning",
+                  "content": "не хочет избегать фотографий",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 71
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "system_question",
+                  "semantic_content": "Понять значимую попытку и барьер перед завершением Discovery.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "open_response"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Что вы уже пробовали и что обычно мешало продолжать?",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "user_message": {
+            "id": "msg_6186f03d1f8559c293c06f8ab3726202",
+            "role": "user",
+            "text": "Пытался есть меньше, но после поздних смен сильный голод возвращает меня к большим ужинам.",
+            "sequence": 3,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_c50c34f7e89a5f049cac28bf22dab755",
+            "role": "system",
+            "text": "Правильно ли я понимаю общую картину: вы хотите вернуть свободу в одежде и фотографиях, а попытки есть меньше срывает сильный голод после поздних смен?",
+            "sequence": 4,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "reflection",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_1",
+                  "existing_item_id": null,
+                  "kind": "previous_attempt",
+                  "content": "пытался есть меньше",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 90
+                  }
+                },
+                {
+                  "operation": "add",
+                  "local_id": "item:t2_2",
+                  "existing_item_id": null,
+                  "kind": "barrier",
+                  "content": "сильный голод после поздних смен возвращает к большим ужинам",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 90
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [
+              {
+                "previous_response_target_ids": [
+                  "rt_54064db1ffbe5b9d9402e67be9eb7bdd"
+                ],
+                "outcome": "answered",
+                "source_span": {
+                  "char_start": 0,
+                  "char_end": 90
+                }
+              }
+            ],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t2_1",
+                  "kind": "system_reflection",
+                  "semantic_content": "Связать Desired Change, Personal Meaning, Previous Attempt и Barrier в рабочую картину.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t2_1",
+                  "active_content_local_id": "content:t2_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "evaluation"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "text": "Правильно ли я понимаю общую картину: вы хотите вернуть свободу в одежде и фотографиях, а попытки есть меньше срывает сильный голод после поздних смен?",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_9d93dd3e6f9b5e4a87562f51a3c0db30": {
+              "id": "mi_9d93dd3e6f9b5e4a87562f51a3c0db30",
+              "kind": "desired_change",
+              "content": "снова спокойно носить привычную одежду",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_b24e307c71a050c38f68beca07cbaf81",
+                  "char_start": 0,
+                  "char_end": 71
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_2df026ae90f15f969d0bf1e7cc8c3e5a": {
+              "id": "mi_2df026ae90f15f969d0bf1e7cc8c3e5a",
+              "kind": "personal_meaning",
+              "content": "не хочет избегать фотографий",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_b24e307c71a050c38f68beca07cbaf81",
+                  "char_start": 0,
+                  "char_end": 71
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            },
+            "mi_9c4a216ae56555a7995ec71c84df6b1f": {
+              "id": "mi_9c4a216ae56555a7995ec71c84df6b1f",
+              "kind": "previous_attempt",
+              "content": "пытался есть меньше",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_6186f03d1f8559c293c06f8ab3726202",
+                  "char_start": 0,
+                  "char_end": 90
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            },
+            "mi_e539ec8df9eb5d8599a2dfc6f50eab0b": {
+              "id": "mi_e539ec8df9eb5d8599a2dfc6f50eab0b",
+              "kind": "barrier",
+              "content": "сильный голод после поздних смен возвращает к большим ужинам",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_6186f03d1f8559c293c06f8ab3726202",
+                  "char_start": 0,
+                  "char_end": 90
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 2,
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_80a89ce9e0105e04b7451c496695057d",
+          "created_turn": 2,
+          "source_system_message_id": "msg_c50c34f7e89a5f049cac28bf22dab755",
+          "active_content": {
+            "aci_fcf3e87c799c5dd298332ca8c8128f92": {
+              "id": "aci_fcf3e87c799c5dd298332ca8c8128f92",
+              "kind": "system_reflection",
+              "content": "Связать Desired Change, Personal Meaning, Previous Attempt и Barrier в рабочую картину.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_c50c34f7e89a5f049cac28bf22dab755"
+            }
+          },
+          "response_targets": {
+            "rt_5cc51f0170225be88ddc6e7fd25e601f": {
+              "id": "rt_5cc51f0170225be88ddc6e7fd25e601f",
+              "active_content_id": "aci_fcf3e87c799c5dd298332ca8c8128f92",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_fcf3e87c799c5dd298332ca8c8128f92"
+              },
+              "interaction": "evaluation"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_b24e307c71a050c38f68beca07cbaf81",
+              "role": "user",
+              "text": "Я хочу снова спокойно носить привычную одежду и не избегать фотографий.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_f2f36bd080b854a182a87711b5b68ece",
+              "role": "system",
+              "text": "Что вы уже пробовали и что обычно мешало продолжать?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_6186f03d1f8559c293c06f8ab3726202",
+              "role": "user",
+              "text": "Пытался есть меньше, но после поздних смен сильный голод возвращает меня к большим ужинам.",
+              "sequence": 3,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_c50c34f7e89a5f049cac28bf22dab755",
+              "role": "system",
+              "text": "Правильно ли я понимаю общую картину: вы хотите вернуть свободу в одежде и фотографиях, а попытки есть меньше срывает сильный голод после поздних смен?",
+              "sequence": 4,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_4bfdedf9c83d54b68651ce902b302d50",
+          "role": "user",
+          "text": "Да, всё именно так. Этого понимания мне достаточно, и я хочу понять, как двигаться дальше.",
+          "sequence": 5,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "95B041D24525D78913A18444C61C68D0FBCC32D6AE489B35ABAE0D9C59FF2E13"
+    },
+    {
+      "case_id": "FSB-A",
+      "coverage_intent": "recognition",
+      "purpose": "Two distinct prior evaluation targets make a bare affirmative genuinely ambiguous under the ACS contract.",
+      "initial_state": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {},
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null,
+        "dialogue_history": {
+          "messages": []
+        }
+      },
+      "replay_sequence": [
+        {
+          "user_message": {
+            "id": "msg_c27847accf9154219e50dedef7e50a76",
+            "role": "user",
+            "text": "Вечером я ем больше и не понимаю, это голод или способ снять напряжение.",
+            "sequence": 1,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "system_message": {
+            "id": "msg_efc92eab6ffd540fadd98f0991079a32",
+            "role": "system",
+            "text": "Здесь две разные версии: первая — вечером преобладает физический голод. Вторая — еда прежде всего помогает снять напряжение. Какая из них вам ближе?",
+            "sequence": 2,
+            "created_at": "2026-09-14T12:00:00Z"
+          },
+          "cognitive_turn_result": {
+            "decision_intent": "recognition",
+            "state_patch": {
+              "item_operations": [
+                {
+                  "operation": "add",
+                  "local_id": "item:t1_1",
+                  "existing_item_id": null,
+                  "kind": "user_interpretation",
+                  "content": "не уверен, связан ли вечерний эпизод с голодом или снятием напряжения",
+                  "evidence_origin": "current_user_material",
+                  "source_span": {
+                    "char_start": 0,
+                    "char_end": 72
+                  }
+                }
+              ],
+              "relation_operations": [],
+              "proposal_materializations": []
+            },
+            "reconciliation": [],
+            "system_action": {
+              "contents": [
+                {
+                  "local_id": "content:t1_1",
+                  "kind": "recognition_option",
+                  "semantic_content": "Версия 1: в вечернем эпизоде преобладает физический голод.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                },
+                {
+                  "local_id": "content:t1_2",
+                  "kind": "recognition_option",
+                  "semantic_content": "Версия 2: еда в вечернем эпизоде прежде всего снимает напряжение.",
+                  "model_item_refs": [],
+                  "relation_refs": []
+                }
+              ],
+              "response_targets": [
+                {
+                  "local_id": "target:t1_1",
+                  "active_content_local_id": "content:t1_1",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "evaluation"
+                },
+                {
+                  "local_id": "target:t1_2",
+                  "active_content_local_id": "content:t1_2",
+                  "subject": {
+                    "kind": "active_content",
+                    "active_content_local_id": "content:t1_2",
+                    "item_reference": null,
+                    "relation_reference": null
+                  },
+                  "interaction": "evaluation"
+                }
+              ]
+            },
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "text": "Здесь две разные версии: первая — вечером преобладает физический голод. Вторая — еда прежде всего помогает снять напряжение. Какая из них вам ближе?",
+                "realizes_action_content_ids": [
+                  "content:t1_1",
+                  "content:t1_2"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "frozen_input": {
+        "human_model": {
+          "schema_version": 1,
+          "items": {
+            "mi_b208781f45b35bb4bb95841e73309ee9": {
+              "id": "mi_b208781f45b35bb4bb95841e73309ee9",
+              "kind": "user_interpretation",
+              "content": "не уверен, связан ли вечерний эпизод с голодом или снятием напряжения",
+              "provenance": "user_provided",
+              "status": "recorded",
+              "source_refs": [
+                {
+                  "message_id": "msg_c27847accf9154219e50dedef7e50a76",
+                  "char_start": 0,
+                  "char_end": 72
+                }
+              ],
+              "supersedes_item_ids": [],
+              "created_turn": 1,
+              "updated_turn": 1
+            }
+          },
+          "relations": {},
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "id": "acs_536fbf25f239527cab099481e2c38966",
+          "created_turn": 1,
+          "source_system_message_id": "msg_efc92eab6ffd540fadd98f0991079a32",
+          "active_content": {
+            "aci_ddee5e401f085432b0986bea421bffc1": {
+              "id": "aci_ddee5e401f085432b0986bea421bffc1",
+              "kind": "recognition_option",
+              "content": "Версия 2: еда в вечернем эпизоде прежде всего снимает напряжение.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_efc92eab6ffd540fadd98f0991079a32"
+            },
+            "aci_9fa9e74d49c75b1daa94cd135ff36aa1": {
+              "id": "aci_9fa9e74d49c75b1daa94cd135ff36aa1",
+              "kind": "recognition_option",
+              "content": "Версия 1: в вечернем эпизоде преобладает физический голод.",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_efc92eab6ffd540fadd98f0991079a32"
+            }
+          },
+          "response_targets": {
+            "rt_c2f8e40148a353b1bbd83c4b8a45795c": {
+              "id": "rt_c2f8e40148a353b1bbd83c4b8a45795c",
+              "active_content_id": "aci_9fa9e74d49c75b1daa94cd135ff36aa1",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_9fa9e74d49c75b1daa94cd135ff36aa1"
+              },
+              "interaction": "evaluation"
+            },
+            "rt_58714684fa0158359496dfef47f941e9": {
+              "id": "rt_58714684fa0158359496dfef47f941e9",
+              "active_content_id": "aci_ddee5e401f085432b0986bea421bffc1",
+              "subject": {
+                "kind": "active_content",
+                "id": "aci_ddee5e401f085432b0986bea421bffc1"
+              },
+              "interaction": "evaluation"
+            }
+          }
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "id": "msg_c27847accf9154219e50dedef7e50a76",
+              "role": "user",
+              "text": "Вечером я ем больше и не понимаю, это голод или способ снять напряжение.",
+              "sequence": 1,
+              "created_at": "2026-09-14T12:00:00Z"
+            },
+            {
+              "id": "msg_efc92eab6ffd540fadd98f0991079a32",
+              "role": "system",
+              "text": "Здесь две разные версии: первая — вечером преобладает физический голод. Вторая — еда прежде всего помогает снять напряжение. Какая из них вам ближе?",
+              "sequence": 2,
+              "created_at": "2026-09-14T12:00:00Z"
+            }
+          ]
+        },
+        "current_user_message": {
+          "id": "msg_fb641178c5895b55a5067056657a0b8b",
+          "role": "user",
+          "text": "Да.",
+          "sequence": 3,
+          "created_at": "2026-09-14T12:00:00Z"
+        },
+        "human_experience": {
+          "enabled": false
+        }
+      },
+      "state_sha256": "348FE8AF420B259E9EF4781ECAC7CEB318CA1A7049E2428F7A03863052AEAEBB"
+    }
+  ]
+}

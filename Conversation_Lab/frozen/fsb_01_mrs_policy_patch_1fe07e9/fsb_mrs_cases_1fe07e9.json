@@ -1,0 +1,887 @@
+{
+  "cases": [
+    {
+      "case_id": "FSB-M",
+      "coverage_intent": "mechanism_discovery",
+      "frozen_input": {
+        "current_user_message": {
+          "created_at": "2026-09-14T12:00:00Z",
+          "id": "msg_b35a9973431553e180aa264a87c614c6",
+          "role": "user",
+          "sequence": 5,
+          "text": "В одном случае я пропустил обед, а в другом нормально поел днём, но перед ужином был тяжёлый разговор."
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_224537f39ec857c9b78cdd04ed41bd13",
+              "role": "user",
+              "sequence": 1,
+              "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_dbdcf0ca964152819f2d69829b0f85d4",
+              "role": "system",
+              "sequence": 2,
+              "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?"
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252",
+              "role": "user",
+              "sequence": 3,
+              "text": "Пробовал заранее готовить ужин, но в последние два раза всё равно переел."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_1c82762346cb5d95902bd5b355313fc5",
+              "role": "system",
+              "sequence": 4,
+              "text": "Что различалось в обстоятельствах этих двух случаев?"
+            }
+          ]
+        },
+        "human_experience": {
+          "enabled": false
+        },
+        "human_model": {
+          "items": {
+            "mi_c6b610b39ee0581386211d659d835b83": {
+              "content": "заранее готовил ужин, но дважды всё равно переел",
+              "created_turn": 2,
+              "id": "mi_c6b610b39ee0581386211d659d835b83",
+              "kind": "previous_attempt",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 73,
+                  "char_start": 0,
+                  "message_id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            },
+            "mi_deff0fe0f0df51ee895699c27cf13763": {
+              "content": "важно вернуть ощущение управления своим вечером",
+              "created_turn": 1,
+              "id": "mi_deff0fe0f0df51ee895699c27cf13763",
+              "kind": "personal_meaning",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 73,
+                  "char_start": 0,
+                  "message_id": "msg_224537f39ec857c9b78cdd04ed41bd13"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "active_content": {
+            "aci_1e17557d00965ca19839b7d2762df13a": {
+              "content": "Найти наблюдаемое различие между возможными механизмами.",
+              "id": "aci_1e17557d00965ca19839b7d2762df13a",
+              "kind": "system_question",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_1c82762346cb5d95902bd5b355313fc5"
+            }
+          },
+          "created_turn": 2,
+          "id": "acs_41bafebe9dd2519986a7c6160ffcd170",
+          "response_targets": {
+            "rt_a5a706ebfc76599aa2543ffe7eaa9920": {
+              "active_content_id": "aci_1e17557d00965ca19839b7d2762df13a",
+              "id": "rt_a5a706ebfc76599aa2543ffe7eaa9920",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_1e17557d00965ca19839b7d2762df13a",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_1c82762346cb5d95902bd5b355313fc5"
+        }
+      },
+      "initial_state": {
+        "dialogue_history": {
+          "messages": []
+        },
+        "human_model": {
+          "items": {},
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null
+      },
+      "purpose": "Personal Meaning is established; two barrier explanations remain discriminable from available experience.",
+      "replay_sequence": [
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "reconciliation": [],
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ],
+                "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "важно вернуть ощущение управления своим вечером",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "personal_meaning",
+                  "local_id": "item:t1_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 73,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t1_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Уточнить значимые предыдущие попытки."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t1_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t1_1",
+                  "subject": {
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_dbdcf0ca964152819f2d69829b0f85d4",
+            "role": "system",
+            "sequence": 2,
+            "text": "Что вы уже пробовали, чтобы вернуть это ощущение управления?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_224537f39ec857c9b78cdd04ed41bd13",
+            "role": "user",
+            "sequence": 1,
+            "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной."
+          }
+        },
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "reconciliation": [
+              {
+                "outcome": "answered",
+                "previous_response_target_ids": [
+                  "rt_59019e47b1355417bdc7c964a8880b36"
+                ],
+                "source_span": {
+                  "char_end": 73,
+                  "char_start": 0
+                }
+              }
+            ],
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ],
+                "text": "Что различалось в обстоятельствах этих двух случаев?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "заранее готовил ужин, но дважды всё равно переел",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "previous_attempt",
+                  "local_id": "item:t2_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 73,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t2_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Найти наблюдаемое различие между возможными механизмами."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t2_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t2_1",
+                  "subject": {
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_1c82762346cb5d95902bd5b355313fc5",
+            "role": "system",
+            "sequence": 4,
+            "text": "Что различалось в обстоятельствах этих двух случаев?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_1f1e4cc9ab825dd7bb3cad48f0f39252",
+            "role": "user",
+            "sequence": 3,
+            "text": "Пробовал заранее готовить ужин, но в последние два раза всё равно переел."
+          }
+        }
+      ],
+      "state_sha256": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337"
+    },
+    {
+      "case_id": "FSB-R",
+      "coverage_intent": "reflection",
+      "frozen_input": {
+        "current_user_message": {
+          "created_at": "2026-09-14T12:00:00Z",
+          "id": "msg_7612c2c70885592faf9f640f4e180a3a",
+          "role": "user",
+          "sequence": 5,
+          "text": "Пробовал просто есть меньше, но после поздней смены сильный голод быстро возвращает меня к прежнему режиму."
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+              "role": "user",
+              "sequence": 1,
+              "text": "После смены работы привычный режим развалился, и я стал набирать вес."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_737f68c80cd05202a5f63728339dbf8a",
+              "role": "system",
+              "sequence": 2,
+              "text": "Что в этом изменении задевает вас сильнее всего?"
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_3966d54dff1e56d083662cca8f0b0922",
+              "role": "user",
+              "sequence": 3,
+              "text": "Мне неловко встречаться с людьми: одежда сидит иначе, и я всё чаще отказываюсь от встреч."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_5551b9ac25e4508a8b32e80ec75c9814",
+              "role": "system",
+              "sequence": 4,
+              "text": "Что вы уже пробовали изменить самостоятельно?"
+            }
+          ]
+        },
+        "human_experience": {
+          "enabled": false
+        },
+        "human_model": {
+          "items": {
+            "mi_092d3bfcac60593692b4c5fe14466d7d": {
+              "content": "после изменения режима стал набирать вес",
+              "created_turn": 1,
+              "id": "mi_092d3bfcac60593692b4c5fe14466d7d",
+              "kind": "now",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 69,
+                  "char_start": 0,
+                  "message_id": "msg_e3a93b01320c554ca13c0af6ff34c1c8"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_972987ad57ac5e108c1915c94b0902e5": {
+              "content": "неловкость из-за одежды приводит к отказу от встреч",
+              "created_turn": 2,
+              "id": "mi_972987ad57ac5e108c1915c94b0902e5",
+              "kind": "personal_meaning",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 89,
+                  "char_start": 0,
+                  "message_id": "msg_3966d54dff1e56d083662cca8f0b0922"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            },
+            "mi_fa2a643486f2599383b4fb7ae7a677c9": {
+              "content": "после смены работы привычный режим развалился",
+              "created_turn": 1,
+              "id": "mi_fa2a643486f2599383b4fb7ae7a677c9",
+              "kind": "life_change",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 69,
+                  "char_start": 0,
+                  "message_id": "msg_e3a93b01320c554ca13c0af6ff34c1c8"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "active_content": {
+            "aci_8343336ecbfb56f8abf404b39ee96e21": {
+              "content": "Уточнить предыдущую попытку и существенный барьер.",
+              "id": "aci_8343336ecbfb56f8abf404b39ee96e21",
+              "kind": "system_question",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_5551b9ac25e4508a8b32e80ec75c9814"
+            }
+          },
+          "created_turn": 2,
+          "id": "acs_69d5fba645dd5a9fa62bcc4e77361908",
+          "response_targets": {
+            "rt_0f64dde7f3e157e38639c674f8a313bb": {
+              "active_content_id": "aci_8343336ecbfb56f8abf404b39ee96e21",
+              "id": "rt_0f64dde7f3e157e38639c674f8a313bb",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_8343336ecbfb56f8abf404b39ee96e21",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_5551b9ac25e4508a8b32e80ec75c9814"
+        }
+      },
+      "initial_state": {
+        "dialogue_history": {
+          "messages": []
+        },
+        "human_model": {
+          "items": {},
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null
+      },
+      "purpose": "Meaning, change, attempt and barrier form a connected picture; another local question has low marginal value.",
+      "replay_sequence": [
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "human_discovery",
+            "reconciliation": [],
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ],
+                "text": "Что в этом изменении задевает вас сильнее всего?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "после смены работы привычный режим развалился",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "life_change",
+                  "local_id": "item:t1_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 69,
+                    "char_start": 0
+                  }
+                },
+                {
+                  "content": "после изменения режима стал набирать вес",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "now",
+                  "local_id": "item:t1_2",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 69,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t1_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Понять личное значение изменения режима и веса."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t1_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t1_1",
+                  "subject": {
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_737f68c80cd05202a5f63728339dbf8a",
+            "role": "system",
+            "sequence": 2,
+            "text": "Что в этом изменении задевает вас сильнее всего?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_e3a93b01320c554ca13c0af6ff34c1c8",
+            "role": "user",
+            "sequence": 1,
+            "text": "После смены работы привычный режим развалился, и я стал набирать вес."
+          }
+        },
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "reconciliation": [
+              {
+                "outcome": "answered",
+                "previous_response_target_ids": [
+                  "rt_d8ac673a5ce65931b9aca757da8f2fab"
+                ],
+                "source_span": {
+                  "char_end": 89,
+                  "char_start": 0
+                }
+              }
+            ],
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ],
+                "text": "Что вы уже пробовали изменить самостоятельно?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "неловкость из-за одежды приводит к отказу от встреч",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "personal_meaning",
+                  "local_id": "item:t2_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 89,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t2_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Уточнить предыдущую попытку и существенный барьер."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t2_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t2_1",
+                  "subject": {
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_5551b9ac25e4508a8b32e80ec75c9814",
+            "role": "system",
+            "sequence": 4,
+            "text": "Что вы уже пробовали изменить самостоятельно?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_3966d54dff1e56d083662cca8f0b0922",
+            "role": "user",
+            "sequence": 3,
+            "text": "Мне неловко встречаться с людьми: одежда сидит иначе, и я всё чаще отказываюсь от встреч."
+          }
+        }
+      ],
+      "state_sha256": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F"
+    },
+    {
+      "case_id": "FSB-S",
+      "coverage_intent": "stop_exploration",
+      "frozen_input": {
+        "current_user_message": {
+          "created_at": "2026-09-14T12:00:00Z",
+          "id": "msg_479988bc7dcc537a9a74165232417c89",
+          "role": "user",
+          "sequence": 5,
+          "text": "Тоже не знаю. Я этого не отслеживал, и больше деталей у меня нет."
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5",
+              "role": "user",
+              "sequence": 1,
+              "text": "По вечерам иногда ем больше, чем собирался."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_62c7a2ab6dbd536b9ddde21a5324220a",
+              "role": "system",
+              "sequence": 2,
+              "text": "Что обычно запускает этот момент вечером?"
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_dfb440a08cae5a19adb412167adaa33f",
+              "role": "user",
+              "sequence": 3,
+              "text": "Не знаю, я не замечал, с чего это начинается."
+            },
+            {
+              "created_at": "2026-09-14T12:00:00Z",
+              "id": "msg_c1b77bb953665ceba54200af5a1780b1",
+              "role": "system",
+              "sequence": 4,
+              "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?"
+            }
+          ]
+        },
+        "human_experience": {
+          "enabled": false
+        },
+        "human_model": {
+          "items": {
+            "mi_325809be034856d1bdde60dc79f20c20": {
+              "content": "по вечерам иногда ест больше, чем собирался",
+              "created_turn": 1,
+              "id": "mi_325809be034856d1bdde60dc79f20c20",
+              "kind": "experience",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 43,
+                  "char_start": 0,
+                  "message_id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_caafa1e1c3d95f48abe41e3a04fe5989": {
+              "content": "не наблюдал начало вечернего эпизода",
+              "created_turn": 2,
+              "id": "mi_caafa1e1c3d95f48abe41e3a04fe5989",
+              "kind": "other_relevant_user_material",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 45,
+                  "char_start": 0,
+                  "message_id": "msg_dfb440a08cae5a19adb412167adaa33f"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": {
+          "active_content": {
+            "aci_fc7adf99b8335a8582afeda987348c10": {
+              "content": "Проверить наличие другого доступного наблюдения на той же оси.",
+              "id": "aci_fc7adf99b8335a8582afeda987348c10",
+              "kind": "system_question",
+              "model_item_ids": [],
+              "relation_ids": [],
+              "source_message_id": "msg_c1b77bb953665ceba54200af5a1780b1"
+            }
+          },
+          "created_turn": 2,
+          "id": "acs_075c107bfa0653f2974d33f358031343",
+          "response_targets": {
+            "rt_3022a1aebd5e519f98b4abe4d030e054": {
+              "active_content_id": "aci_fc7adf99b8335a8582afeda987348c10",
+              "id": "rt_3022a1aebd5e519f98b4abe4d030e054",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_fc7adf99b8335a8582afeda987348c10",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_c1b77bb953665ceba54200af5a1780b1"
+        }
+      },
+      "initial_state": {
+        "dialogue_history": {
+          "messages": []
+        },
+        "human_model": {
+          "items": {},
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-09-14T12:00:00Z"
+        },
+        "previous_acs": null
+      },
+      "purpose": "The user twice establishes that further observation is unavailable; the semantic axis is exhausted.",
+      "replay_sequence": [
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "reconciliation": [],
+            "reply_segments": [
+              {
+                "local_id": "segment:t1",
+                "realizes_action_content_ids": [
+                  "content:t1_1"
+                ],
+                "text": "Что обычно запускает этот момент вечером?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "по вечерам иногда ест больше, чем собирался",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "experience",
+                  "local_id": "item:t1_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 43,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t1_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Уточнить доступное наблюдение о начале вечернего эпизода."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t1_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t1_1",
+                  "subject": {
+                    "active_content_local_id": "content:t1_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_62c7a2ab6dbd536b9ddde21a5324220a",
+            "role": "system",
+            "sequence": 2,
+            "text": "Что обычно запускает этот момент вечером?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_b4c3f021ebd25ee0af90e1ae9a1819e5",
+            "role": "user",
+            "sequence": 1,
+            "text": "По вечерам иногда ем больше, чем собирался."
+          }
+        },
+        {
+          "cognitive_turn_result": {
+            "decision_intent": "mechanism_discovery",
+            "reconciliation": [
+              {
+                "outcome": "answered",
+                "previous_response_target_ids": [
+                  "rt_5ab4f68533d3538f9291b3156e6e3776"
+                ],
+                "source_span": {
+                  "char_end": 45,
+                  "char_start": 0
+                }
+              }
+            ],
+            "reply_segments": [
+              {
+                "local_id": "segment:t2",
+                "realizes_action_content_ids": [
+                  "content:t2_1"
+                ],
+                "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?"
+              }
+            ],
+            "state_patch": {
+              "item_operations": [
+                {
+                  "content": "не наблюдал начало вечернего эпизода",
+                  "evidence_origin": "current_user_material",
+                  "existing_item_id": null,
+                  "kind": "other_relevant_user_material",
+                  "local_id": "item:t2_1",
+                  "operation": "add",
+                  "source_span": {
+                    "char_end": 45,
+                    "char_start": 0
+                  }
+                }
+              ],
+              "proposal_materializations": [],
+              "relation_operations": []
+            },
+            "system_action": {
+              "contents": [
+                {
+                  "kind": "system_question",
+                  "local_id": "content:t2_1",
+                  "model_item_refs": [],
+                  "relation_refs": [],
+                  "semantic_content": "Проверить наличие другого доступного наблюдения на той же оси."
+                }
+              ],
+              "response_targets": [
+                {
+                  "active_content_local_id": "content:t2_1",
+                  "interaction": "open_response",
+                  "local_id": "target:t2_1",
+                  "subject": {
+                    "active_content_local_id": "content:t2_1",
+                    "item_reference": null,
+                    "kind": "active_content",
+                    "relation_reference": null
+                  }
+                }
+              ]
+            }
+          },
+          "system_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_c1b77bb953665ceba54200af5a1780b1",
+            "role": "system",
+            "sequence": 4,
+            "text": "Может быть, вы замечали, что происходит непосредственно перед желанием поесть?"
+          },
+          "user_message": {
+            "created_at": "2026-09-14T12:00:00Z",
+            "id": "msg_dfb440a08cae5a19adb412167adaa33f",
+            "role": "user",
+            "sequence": 3,
+            "text": "Не знаю, я не замечал, с чего это начинается."
+          }
+        }
+      ],
+      "state_sha256": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66"
+    }
+  ],
+  "head": "1fe07e9",
+  "source_freeze_head": "672455a"
+}

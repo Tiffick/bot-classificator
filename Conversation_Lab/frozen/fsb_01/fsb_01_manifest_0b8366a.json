@@ -1,0 +1,137 @@
+{
+  "experiment": "FSB-01 FULL SELECTED-ONLY BEHAVIORAL REGRESSION",
+  "head": "0b8366a",
+  "production_boundary": "SELECTED_ONLY",
+  "production_model": "gpt-5-mini",
+  "evaluator_model": "gpt-6-astra",
+  "challenger_freeze": "offline_before_all_future_production_winners",
+  "case_order": [
+    "FSB-H",
+    "FSB-M",
+    "FSB-R",
+    "FSB-S",
+    "FSB-T",
+    "FSB-A"
+  ],
+  "baseline_production_order": [
+    "FSB-H",
+    "FSB-M",
+    "FSB-R",
+    "FSB-S",
+    "FSB-T",
+    "FSB-A"
+  ],
+  "baseline_evaluator_order": [
+    "FSB-H",
+    "FSB-M",
+    "FSB-R",
+    "FSB-S",
+    "FSB-T",
+    "FSB-A"
+  ],
+  "conditional_confirmation_order": [
+    "FSB-H",
+    "FSB-M",
+    "FSB-R",
+    "FSB-S",
+    "FSB-T",
+    "FSB-A"
+  ],
+  "evaluator_orientations_selected_on_left": {
+    "FSB-H": {
+      "baseline": [
+        true,
+        false,
+        true
+      ],
+      "confirmation": [
+        false,
+        true,
+        false
+      ]
+    },
+    "FSB-M": {
+      "baseline": [
+        false,
+        true,
+        false
+      ],
+      "confirmation": [
+        true,
+        false,
+        true
+      ]
+    },
+    "FSB-R": {
+      "baseline": [
+        true,
+        false,
+        true
+      ],
+      "confirmation": [
+        false,
+        true,
+        false
+      ]
+    },
+    "FSB-S": {
+      "baseline": [
+        false,
+        true,
+        false
+      ],
+      "confirmation": [
+        true,
+        false,
+        true
+      ]
+    },
+    "FSB-T": {
+      "baseline": [
+        true,
+        false,
+        true
+      ],
+      "confirmation": [
+        false,
+        true,
+        false
+      ]
+    },
+    "FSB-A": {
+      "baseline": [
+        false,
+        true,
+        false
+      ],
+      "confirmation": [
+        true,
+        false,
+        true
+      ]
+    }
+  },
+  "conditional_confirmation_rule": "exactly_one_additional_production_sample_and_three_blind_judgments_for_each_baseline_CHALLENGER_HIGHER_case",
+  "api_budget": {
+    "baseline_production": 6,
+    "baseline_evaluator": 18,
+    "conditional_confirmation_per_flagged_case": 4,
+    "maximum_production": 12,
+    "maximum_evaluator": 36,
+    "maximum_total": 48,
+    "retry": 0
+  },
+  "decision_rules": {
+    "PASS": "CURRENT_POLICY_ACCEPTABLE",
+    "FAIL": "POLICY_CHANGE_JUSTIFIED",
+    "other": "INCONCLUSIVE"
+  },
+  "artifact_sha256": {
+    "fsb_01_cases_0b8366a.json": "0480F88294C633A787C2D7A3A9329374F3E110BAE16D3D469CAB0CC5D69642F1",
+    "fsb_01_challengers_0b8366a.json": "35B3F78ECB471617AC0D7D1BD43ACA842339972997382FCBB7B38E40CA7CFEDF",
+    "fsb_01_measurement_plan_0b8366a.md": "2A83EAB01B8F5D2E4E2BC08B82063453FD9CF00F452273206913CD24CDD425E0",
+    "fsb_01_evaluator_prompt_0b8366a.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+    "fsb_01_evaluator_schema_0b8366a.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B",
+    "fsb_01_offline_validator_0b8366a.py": "7C17C9DC4EF6386CB3502DA509B7490DF46F3C615FF81FE31597B9AC8770050E"
+  }
+}

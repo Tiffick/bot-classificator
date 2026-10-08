@@ -1,0 +1,74 @@
+{
+  "experiment": "FSB-D D-ONLY MATCHED MODEL-SWAP",
+  "head": "1e08316",
+  "experiment_question": "With the frozen FSB-D request held byte/semantically fixed except for the production model identifier, does gpt-6-astra select direct experiential discrimination where gpt-5-mini selected local Reflection in three independent observations?",
+  "production_boundary": "SELECTED_ONLY",
+  "baseline_model": "gpt-5-mini",
+  "production_model": "gpt-6-astra",
+  "production_prompt": {
+    "git_path": "1e08316:ai/prompts/cognitive_core_system_prompt.txt",
+    "sha256": "1FDB65F45FABCB6CC313659FAF288C309E599D869D7E8D46D72407B2F1E64CE7"
+  },
+  "reused_frozen_artifacts": {
+    "case_path": "Conversation_Lab/frozen/fsb_01_revised_policy_1e08316/fsb_d_case_1e08316.json",
+    "case_file_sha256": "27B60F09C230C6326EF5641C45B851A1346E6D9878E191DB7CE6A4BCAEC8117F",
+    "case_sha256": "3D058A3005A90F0A386AD6F9D4E1B19FEE6F68ECF83C8EE5CB611770BC74531A",
+    "state_sha256": "214BA473778BF16F00B717DD9F445115BF5168C21A68FCB64F88B62CACD9B890",
+    "pair_path": "Conversation_Lab/frozen/fsb_01_revised_policy_1e08316/fsb_d_policy_pair_1e08316.json",
+    "pair_file_sha256": "58819C30A951CE6A2BF68EC24611B270BA8D3548BB9344EAF78F679FC73DA973",
+    "direct_action_sha256": "7E966A735CC47C63B7A4C37CFE3D506B662B6AF4C3D172BDB09301BA478561EA"
+  },
+  "contract_boundary": {
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39"
+  },
+  "request_identity": {
+    "historical_mini_request_sha256": "C477473587CB6E1228C41A34ADBBD56A27F8B17C4881C3107D14E9743B0AED18",
+    "expected_astra_request_sha256": "1FA8B201359FC0194C4BE21232CB2947504EA3698F0018C1023C56B4F3229934",
+    "model_excluded_request_sha256": "69255152863A307218646267AB5B9BD74B572AAB97327F41C124C906039772AF",
+    "allowed_changed_request_keys": ["model"]
+  },
+  "sample_order": ["FSB-D-A1", "FSB-D-A2", "FSB-D-A3"],
+  "observable_classes": [
+    "DIRECT_DISCRIMINATION",
+    "LOCAL_REFLECTION",
+    "OTHER"
+  ],
+  "classification_contract": {
+    "version": "fsb-d-observable-v1",
+    "direct_discrimination": "The selected action is MECHANISM_DISCOVERY with SYSTEM_QUESTION and an OPEN_RESPONSE or CLARIFICATION target, and its observable semantic content/reply directly asks whether strong desire to eat existed before the difficult conversation or appeared/materially intensified after it, or the frozen lexical equivalent encoded by the classifier.",
+    "local_reflection": "The selected action is REFLECTION with SYSTEM_REFLECTION, primarily recaps at least two already-given D facts or the stated timing uncertainty, and does not satisfy DIRECT_DISCRIMINATION or introduce a testable working-version hypothesis.",
+    "other": "Every other observable selected action, including a Working Version, a different mechanism question, Transition, or an action with semantic/intent mismatch."
+  },
+  "verdict_rules": {
+    "direct_3_of_3": "STRONG_MODEL_SENSITIVITY_SUPPORT",
+    "direct_2_of_3": "MODEL_SENSITIVITY_SUPPORT",
+    "local_reflection_3_of_3": "MINI_SPECIFICITY_FALSIFIED",
+    "otherwise": "MIXED_MODEL_EXECUTION"
+  },
+  "production_parameters": {
+    "retry": 0,
+    "smoke_calls": 0,
+    "evaluator_calls": 0,
+    "confirmations": 0,
+    "adaptive_sampling": false,
+    "candidate_materialization": false,
+    "selected_only": true,
+    "client_timeout_seconds": 120.0
+  },
+  "api_budget": {
+    "production": 3,
+    "evaluator": 0,
+    "maximum_total": 3
+  },
+  "stop_rules": [
+    "failed_head_hash_dependency_request_identity_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_prompt_state_schema_contract_case_direct_action_parameter_or_classifier_mutation",
+    "no_evaluator_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

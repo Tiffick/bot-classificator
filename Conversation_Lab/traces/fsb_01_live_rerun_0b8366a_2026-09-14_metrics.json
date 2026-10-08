@@ -1,0 +1,26 @@
+{
+  "status": "STOPPED",
+  "frozen_verdict": "INCONCLUSIVE",
+  "counts": {
+    "production": 6,
+    "evaluator": 0,
+    "total": 6
+  },
+  "usage_by_model": {
+    "gpt-5-mini": {
+      "input_tokens": 34924,
+      "cached_input_tokens": 24320,
+      "output_tokens": 15535,
+      "reasoning_output_tokens": 11200
+    }
+  },
+  "baseline_aggregates": {
+    "FSB-H": null,
+    "FSB-M": null,
+    "FSB-R": null,
+    "FSB-S": null,
+    "FSB-T": null
+  },
+  "confirmation_aggregates": {},
+  "reproducible_misses": []
+}

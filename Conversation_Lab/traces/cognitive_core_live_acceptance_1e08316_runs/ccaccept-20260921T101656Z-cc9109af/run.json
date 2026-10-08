@@ -1,0 +1,19 @@
+{
+  "evaluator_calls": 0,
+  "head": "1e08316",
+  "manifest_sha256": "4C8403E826B1E3370ED4898B4B004DDF8FB2F0C795C2F7D08B1C3EF497D1DEED",
+  "maximum_api_calls": 5,
+  "model": "gpt-5-mini",
+  "order": [
+    "FSB-M",
+    "FSB-R",
+    "FSB-S",
+    "FSB-T",
+    "FSB-D"
+  ],
+  "production_calls": 5,
+  "prompt_sha256": "2D55F3ECD3D0EB9B57B54CA9D41F5BF67B2784E8405CBE2F94E8FCFFE55FCDDF",
+  "retry": 0,
+  "run_id": "ccaccept-20260921T101656Z-cc9109af",
+  "wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF"
+}

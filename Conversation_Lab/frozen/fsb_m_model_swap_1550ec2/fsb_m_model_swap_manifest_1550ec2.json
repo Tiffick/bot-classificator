@@ -1,0 +1,103 @@
+{
+  "experiment": "FSB-M MODEL EXECUTION FALSIFICATION",
+  "head": "1550ec2",
+  "base_case_id": "FSB-M",
+  "hypothesis": "The stable Astra Reflection may be model-specific execution at the Formulation-to-Decision boundary.",
+  "astra_reference": {
+    "run_id": "fsbmab-20260915T020555Z-7c327de8",
+    "checkpoint_path": "Conversation_Lab/traces/fsb_m_prompt_ab_1550ec2_runs/fsbmab-20260915T020555Z-7c327de8/checkpoint.jsonl",
+    "checkpoint_sha256": "FA9E983343EF3467A92E6772892F4D8DD3F0C7EFEEEA75A255A089B5A051585A",
+    "run_json_path": "Conversation_Lab/traces/fsb_m_prompt_ab_1550ec2_runs/fsbmab-20260915T020555Z-7c327de8/run.json",
+    "run_json_sha256": "BC9164C9FD45988718F3A2BA8B66A8065D4BF4B37B938A348313E793DA8B9A5C",
+    "model": "gpt-6-astra",
+    "samples": [
+      {
+        "sample_id": "FSB-M-B1",
+        "request_sha256": "01D58E5EDF8436687841E2EE192B5A3F57B4EA0229CA4BA5482B7E23957771E8",
+        "selected_action_sha256": "AD6CD8279DE59FD504CBAB11BC72E88AB93F4B84B23AD50DA40104EC99BE98F1",
+        "action_class": "REFLECTION_EVALUATION"
+      },
+      {
+        "sample_id": "FSB-M-B2",
+        "request_sha256": "01D58E5EDF8436687841E2EE192B5A3F57B4EA0229CA4BA5482B7E23957771E8",
+        "selected_action_sha256": "F75AE1A86CCE916EB28FB0767993535687695585960C74E80E3368D79812864F",
+        "action_class": "REFLECTION_EVALUATION"
+      },
+      {
+        "sample_id": "FSB-M-B3",
+        "request_sha256": "01D58E5EDF8436687841E2EE192B5A3F57B4EA0229CA4BA5482B7E23957771E8",
+        "selected_action_sha256": "C176898BF1E98B447D56E582DE3A697B28DEDB2925154B6B9BD3325F7C8AFE96",
+        "action_class": "REFLECTION_EVALUATION"
+      }
+    ],
+    "distribution": {
+      "DIRECT_EXPERIENTIAL_DISCRIMINATION": 0,
+      "REFLECTION_EVALUATION": 3,
+      "OTHER": 0
+    }
+  },
+  "mini_arm": {
+    "model": "gpt-5-mini",
+    "sample_order": [
+      "FSB-M-mini-1",
+      "FSB-M-mini-2",
+      "FSB-M-mini-3"
+    ],
+    "samples": 3
+  },
+  "prompt": {
+    "git_path": "1550ec2:ai/prompts/cognitive_core_system_prompt.txt",
+    "sha256": "4FEB93BE179B7F7976F099EF828A8B578EBAB6CA0C06FC0C09CD147EF2C0AA14"
+  },
+  "identity": {
+    "source_freeze": "Conversation_Lab/frozen/fsb_01_mrs_policy_patch_1fe07e9",
+    "source_case_file_sha256": "0607913232C57D389F48996E4305ADA1E0B0172A2D6E07A7E23E5C5F1CD5F0CD",
+    "case_sha256": "7130056269615EF73D1811BE8A0A68186F2B3C4E0B3D0611F43B2D2DF62E331E",
+    "state_sha256": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337",
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39",
+    "model_excluded_request_sha256": "70C81271AE60AEF44A6A39BE2313C9E8AA7EF654CCF5FDF357DFAEA6530832DA",
+    "astra_request_sha256": "01D58E5EDF8436687841E2EE192B5A3F57B4EA0229CA4BA5482B7E23957771E8",
+    "mini_request_sha256": "58D9606666F39463559DFA837CF402F38E54CD3900FE1D0D5C230DC52417C95E"
+  },
+  "action_classes": {
+    "DIRECT_EXPERIENTIAL_DISCRIMINATION": {
+      "decision_intent": "mechanism_discovery",
+      "primary_content_kind": "system_question",
+      "target_interaction": "open_response",
+      "semantic_requirement": "The question must actually distinguish the working explanations through experiential observation."
+    },
+    "REFLECTION_EVALUATION": {
+      "decision_intent": "reflection",
+      "primary_content_kind": "system_reflection",
+      "target_interaction": "evaluation"
+    },
+    "OTHER": "Every other valid selected production action."
+  },
+  "production_parameters": {
+    "retry": 0,
+    "smoke_calls": 0,
+    "confirmations": 0,
+    "adaptive_sampling": false,
+    "evaluator_calls": 0,
+    "selected_only": true,
+    "api_family": "chat.completions.create",
+    "strict_structured_output": true,
+    "client_timeout_seconds": 120.0
+  },
+  "api_budget": {
+    "production": 3,
+    "evaluator": 0,
+    "maximum_total": 3
+  },
+  "stop_rules": [
+    "failed_head_hash_prompt_reference_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_prompt_state_schema_contract_projection_or_selected_boundary_mutation",
+    "no_evaluator_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

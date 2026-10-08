@@ -1,0 +1,85 @@
+{
+  "head": "0b8366a",
+  "freeze_timing": "All challengers frozen offline before every future production winner.",
+  "challengers": [
+    {
+      "case_id": "FSB-H",
+      "challenger": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Уточнить, что потеря спокойных встреч и неловкость из-за одежды значат для пользователя лично и какую часть прежней жизни он хочет вернуть.",
+        "basis_evidence_refs": [
+          "msg_8d93a82444cc5df9968e17bcb5f148a2",
+          "mi_01c8e4f37a30522aafb5a721a12778eb",
+          "mi_f647991be8cc599ab8f248c07cf06be6"
+        ]
+      },
+      "challenger_sha256": "DB9B49E3776B542B3EA9B5F062E5140729F56441BC39CBC85C952FF721187FE4"
+    },
+    {
+      "case_id": "FSB-M",
+      "challenger": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Сравнить два запомнившихся эпизода по моменту появления сильного желания поесть, чтобы различить длительный голод после пропущенного обеда и напряжение после тяжёлого разговора.",
+        "basis_evidence_refs": [
+          "msg_b35a9973431553e180aa264a87c614c6",
+          "mi_deff0fe0f0df51ee895699c27cf13763",
+          "mi_c6b610b39ee0581386211d659d835b83"
+        ]
+      },
+      "challenger_sha256": "756E36B86FAFBA4123332C8DF62EA1ABBC21E94965D4697FB1371E670F7A9EAB"
+    },
+    {
+      "case_id": "FSB-R",
+      "challenger": {
+        "decision_intent": "reflection",
+        "semantic_focus": "Отразить единую рабочую картину: смена работы нарушила режим, изменение веса ограничило встречи и одежду, а попытка просто есть меньше сталкивается с сильным голодом после поздней смены; предложить подтвердить или поправить эту связь.",
+        "basis_evidence_refs": [
+          "msg_7612c2c70885592faf9f640f4e180a3a",
+          "mi_fa2a643486f2599383b4fb7ae7a677c9",
+          "mi_972987ad57ac5e108c1915c94b0902e5"
+        ]
+      },
+      "challenger_sha256": "05654BD7167CE2E974BACCBA376EB7E71E8CD1E2E018388D2330D913AE5E692C"
+    },
+    {
+      "case_id": "FSB-S",
+      "challenger": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "Завершить дальнейшее исследование этой оси: доступный вечерний паттерн зафиксирован, а начало эпизода пользователь не наблюдал и дополнительных деталей у него нет.",
+        "basis_evidence_refs": [
+          "msg_479988bc7dcc537a9a74165232417c89",
+          "mi_325809be034856d1bdde60dc79f20c20",
+          "mi_caafa1e1c3d95f48abe41e3a04fe5989"
+        ]
+      },
+      "challenger_sha256": "ED6FA4E2E9B41073417D924B9392BCE165C557F1D5DC3C5E12D76AD1E382FCC1"
+    },
+    {
+      "case_id": "FSB-T",
+      "challenger": {
+        "decision_intent": "transition",
+        "semantic_focus": "Предложить с явным согласием перейти к разговору с живым консультантом, опираясь на подтверждённую картину желаемого изменения, предыдущей попытки и барьера, не подбирая решение внутри Cognitive Core.",
+        "basis_evidence_refs": [
+          "msg_4bfdedf9c83d54b68651ce902b302d50",
+          "mi_9d93dd3e6f9b5e4a87562f51a3c0db30",
+          "mi_9c4a216ae56555a7995ec71c84df6b1f",
+          "mi_e539ec8df9eb5d8599a2dfc6f50eab0b"
+        ]
+      },
+      "challenger_sha256": "11D377BD946A504076DEBF64D76EA59BB318C7AEE6C0495CBD2BC495B36205E4"
+    },
+    {
+      "case_id": "FSB-A",
+      "challenger": {
+        "decision_intent": "recognition",
+        "semantic_focus": "Сохранить неоднозначность короткого «Да» и уточнить, относится ли оно к версии о физическом голоде, к версии о снятии напряжения или к обеим, не подтверждая ни одну автоматически.",
+        "basis_evidence_refs": [
+          "msg_fb641178c5895b55a5067056657a0b8b",
+          "rt_c2f8e40148a353b1bbd83c4b8a45795c",
+          "rt_58714684fa0158359496dfef47f941e9"
+        ]
+      },
+      "challenger_sha256": "E305267B6ACE4813176379E06D4D917ADE9272512ED0BF4E2A245667F2D7AC95"
+    }
+  ]
+}

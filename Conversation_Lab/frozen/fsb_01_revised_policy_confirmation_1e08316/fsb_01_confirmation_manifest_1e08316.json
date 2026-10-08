@@ -1,0 +1,94 @@
+{
+  "experiment": "FSB-01 REVISED-POLICY NON-ADAPTIVE CONFIRMATION",
+  "head": "1e08316",
+  "source_freeze": {
+    "path": "Conversation_Lab/frozen/fsb_01_revised_policy_1e08316",
+    "sha256": {
+      "fsb_01_revised_freeze_report_1e08316.md": "F771813911F921845FBC0D9734684C23299586C965BE8095A9F0B44336EA4E89",
+      "fsb_01_revised_manifest_1e08316.json": "11215F5032A466E8B4000303348BA80E867ABAF7EE81D5C5F7220961DACD3514",
+      "fsb_01_revised_measurement_plan_1e08316.md": "7E0738A822BF9203F29290F1DBCCA8029C26A12A3E6597940BBFE5F36C9AFD49",
+      "fsb_01_revised_offline_validator_1e08316.py": "62E47EE70CFDF4FE43A20235BECF70487C029081A901D0A8562B0D95393779EE",
+      "fsb_d_case_1e08316.json": "27B60F09C230C6326EF5641C45B851A1346E6D9878E191DB7CE6A4BCAEC8117F",
+      "fsb_d_policy_pair_1e08316.json": "58819C30A951CE6A2BF68EC24611B270BA8D3548BB9344EAF78F679FC73DA973"
+    },
+    "runner_path": "Conversation_Lab/fsb_01_revised_policy_runner_1e08316.py",
+    "runner_sha256": "9AAFDDF1F58972071B79B0A5258EF06D92CC66267AAEABF129907FF529FA1546"
+  },
+  "source_run": {
+    "run_id": "fsbrev-20260921T043353Z-975a17f7",
+    "path": "Conversation_Lab/traces/fsb_01_revised_policy_1e08316_runs/fsbrev-20260921T043353Z-975a17f7",
+    "run_json_sha256": "4EF7536F77DA6A93DD0709F5B9F5DF409E2FB284C44D2F163AFB9604D4AE2BD7",
+    "checkpoint_sha256": "458F17D0ECD4A41893F127C9AFAEC914791C88CD766A9AD0618BDDF63A289772",
+    "required_baseline_aggregates": {
+      "FSB-M": "CHALLENGER_HIGHER",
+      "FSB-R": "CHALLENGER_HIGHER",
+      "FSB-S": "CHALLENGER_HIGHER",
+      "FSB-T": "CHALLENGER_HIGHER",
+      "FSB-D": "CHALLENGER_HIGHER"
+    }
+  },
+  "new_artifact_sha256": {
+    "fsb_01_confirmation_measurement_plan_1e08316.md": "C26897BDA2525F91FECB94E53D0E0D9239CFFA0B1BAADE8ACFF7E98B3FD87425",
+    "fsb_01_confirmation_freeze_report_1e08316.md": "72C8FE142A653FF940B4E3BCDDD6B6D04CC74ED51B3B7F48B7F63978B03CE83F"
+  },
+  "production_model": "gpt-5-mini",
+  "evaluator_model": "gpt-6-astra",
+  "cases": ["FSB-M", "FSB-R", "FSB-S", "FSB-T", "FSB-D"],
+  "new_production_repetitions_per_case": 2,
+  "production_order": [
+    "FSB-M-C1", "FSB-R-C1", "FSB-S-C1", "FSB-T-C1", "FSB-D-C1",
+    "FSB-M-C2", "FSB-R-C2", "FSB-S-C2", "FSB-T-C2", "FSB-D-C2"
+  ],
+  "sample_base_case": {
+    "FSB-M-C1": "FSB-M", "FSB-R-C1": "FSB-R", "FSB-S-C1": "FSB-S", "FSB-T-C1": "FSB-T", "FSB-D-C1": "FSB-D",
+    "FSB-M-C2": "FSB-M", "FSB-R-C2": "FSB-R", "FSB-S-C2": "FSB-S", "FSB-T-C2": "FSB-T", "FSB-D-C2": "FSB-D"
+  },
+  "evaluator_order": [
+    "FSB-M-C1", "FSB-R-C1", "FSB-S-C1", "FSB-T-C1", "FSB-D-C1",
+    "FSB-M-C2", "FSB-R-C2", "FSB-S-C2", "FSB-T-C2", "FSB-D-C2"
+  ],
+  "evaluator_orientations_selected_on_left": {
+    "FSB-M": [false, true, false],
+    "FSB-R": [true, false, true],
+    "FSB-S": [false, true, false],
+    "FSB-T": [true, false, true],
+    "FSB-D": [true, false, true]
+  },
+  "historical_evaluator_cases": ["FSB-R", "FSB-S", "FSB-T"],
+  "product_evaluator_cases": ["FSB-M", "FSB-D"],
+  "classification": {
+    "reproduced": "both new sample aggregates are CHALLENGER_HIGHER",
+    "not_reproduced": "neither new sample aggregate is CHALLENGER_HIGHER and both are decisive",
+    "mixed": "exactly one new sample aggregate is CHALLENGER_HIGHER and the other is decisive",
+    "inconclusive": "critical ABSTAIN or technical structural mapping hash or protocol failure"
+  },
+  "overall_verdicts": [
+    "FAILURE_PATTERN_REPRODUCED",
+    "FAILURE_PATTERN_PARTIALLY_REPRODUCED",
+    "FAILURE_PATTERN_NOT_REPRODUCED",
+    "INCONCLUSIVE"
+  ],
+  "protocol": {
+    "selected_only": true,
+    "retry": 0,
+    "smoke_calls": 0,
+    "adaptive_sampling": false,
+    "result_conditioned_calls": false,
+    "extra_confirmation_calls": false,
+    "all_production_precedes_evaluation": true,
+    "explicit_live_authorization_required": true
+  },
+  "api_budget": {
+    "production": 10,
+    "evaluator": 30,
+    "maximum_total": 40
+  },
+  "stop_rules": [
+    "failed_head_hash_source_run_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_mapping_or_protocol_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_case_state_benchmark_prompt_schema_projection_orientation_or_policy_mutation",
+    "no_adaptive_confirmation_smoke_retry_or_extra_call"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "experiment": "FSB-H/T/A ASTRA COVERAGE REGRESSION",
+  "head": "1550ec2",
+  "production_boundary": "SELECTED_ONLY",
+  "production_model": "gpt-6-astra",
+  "evaluator_model": "gpt-6-astra",
+  "prompt": {
+    "git_path": "1550ec2:ai/prompts/cognitive_core_system_prompt.txt",
+    "sha256": "4FEB93BE179B7F7976F099EF828A8B578EBAB6CA0C06FC0C09CD147EF2C0AA14"
+  },
+  "source_freeze": "Conversation_Lab/frozen/fsb_01_672455a",
+  "source_artifact_sha256": {
+    "fsb_01_cases_672455a.json": "E9CB63B9D54F19EBCEF06A592C83DF70C3E75561C934C0D453BD9D40E914CEA1",
+    "fsb_01_challengers_672455a.json": "23F38F097ED4B2A30902D22EEE128CB88EAE9B446EDA5E8C9912F1752960AF51",
+    "fsb_01_evaluator_prompt_672455a.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+    "fsb_01_evaluator_schema_672455a.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B"
+  },
+  "contract_boundary": {
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "cognitive_core_wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39",
+    "selected_action_evaluator_file_sha256": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0",
+    "projection_owner": "Conversation_Lab.selected_action_evaluator.selected_action_from_cognitive_turn"
+  },
+  "case_order": ["FSB-H", "FSB-T", "FSB-A"],
+  "production_order": ["FSB-H", "FSB-T", "FSB-A"],
+  "evaluator_order": ["FSB-H", "FSB-T", "FSB-A"],
+  "case_sha256": {
+    "FSB-H": "63BB2FBC082BE65A9E00C63F7225C8182FFB3C95CFE270F30D536ABEB2DCE623",
+    "FSB-T": "AEFB6FAA24563052B25B76BAC37C5584C17F1539378D9880B884EFE61F01373B",
+    "FSB-A": "6886F00AD99642A7AF8D6FACF3BDEB25E63759CDE8CB76455063C5D0F51A999B"
+  },
+  "state_sha256": {
+    "FSB-H": "B66AE6732920603550C7D04398D772D7735DF7C9E69231680EFD713638003A1D",
+    "FSB-T": "95B041D24525D78913A18444C61C68D0FBCC32D6AE489B35ABAE0D9C59FF2E13",
+    "FSB-A": "348FE8AF420B259E9EF4781ECAC7CEB318CA1A7049E2428F7A03863052AEAEBB"
+  },
+  "challenger_sha256": {
+    "FSB-H": "DB9B49E3776B542B3EA9B5F062E5140729F56441BC39CBC85C952FF721187FE4",
+    "FSB-T": "11D377BD946A504076DEBF64D76EA59BB318C7AEE6C0495CBD2BC495B36205E4",
+    "FSB-A": "E305267B6ACE4813176379E06D4D917ADE9272512ED0BF4E2A245667F2D7AC95"
+  },
+  "evaluator_orientations_selected_on_left": {
+    "FSB-H": [true, false, true],
+    "FSB-T": [true, false, true],
+    "FSB-A": [false, true, false]
+  },
+  "retry": 0,
+  "smoke_calls": 0,
+  "adaptive_confirmation": false,
+  "confirmations": 0,
+  "adaptive_sampling": false,
+  "challenger_generation": false,
+  "candidate_materialization": false,
+  "all_production_before_evaluator": true,
+  "api_budget": {"production": 3, "evaluator": 9, "maximum_total": 12},
+  "stop_rules": [
+    "failed_head_hash_prompt_source_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_prompt_state_fixture_challenger_schema_contract_projection_evaluator_or_selected_boundary_mutation",
+    "no_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

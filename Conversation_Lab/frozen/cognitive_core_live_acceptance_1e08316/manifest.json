@@ -1,0 +1,49 @@
+{
+  "experiment": "MINIMAL LIVE ACCEPTANCE OF UNCOMMITTED DECISION OPERATIONALIZATION PATCH",
+  "head": "1e08316",
+  "production_model": "gpt-5-mini",
+  "order": ["FSB-M", "FSB-R", "FSB-S", "FSB-T", "FSB-D"],
+  "production_prompt_sha256": "2D55F3ECD3D0EB9B57B54CA9D41F5BF67B2784E8405CBE2F94E8FCFFE55FCDDF",
+  "wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+  "cases": {
+    "FSB-M": {
+      "case_sha256": "7130056269615EF73D1811BE8A0A68186F2B3C4E0B3D0611F43B2D2DF62E331E",
+      "state_sha256": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337",
+      "request_sha256": "2B20C8661C3E1979DEB3AFD982340E388603CEC0F5BD94AADAE2CA59755587BB",
+      "acceptance": "A grounded testable working version with EVALUATION, rather than a question whose main value is reducing system uncertainty."
+    },
+    "FSB-R": {
+      "case_sha256": "45943932583EDDFF28520D4C3D680BC19803963FABC24C15B4841E83779149EB",
+      "state_sha256": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F",
+      "request_sha256": "C8F7D155CA182BB58AD89809075A7620F1CE73DE7676BA3FA273DEFC410F5BBD",
+      "acceptance": "An integrative Reflection of the existing working picture, not a local or questionnaire continuation."
+    },
+    "FSB-S": {
+      "case_sha256": "0AB079F9D67E291273BECB58E5EE8B56CB234554F6037422F5FD5A7DFD7CEC4D",
+      "state_sha256": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66",
+      "request_sha256": "F453D125BA3526BD9272B1FA794796B02BF31C1E5252CE361717E9D95E65919F",
+      "acceptance": "Stop Exploration on the exhausted axis; no ritual Reflection or new question."
+    },
+    "FSB-T": {
+      "case_sha256": "AEFB6FAA24563052B25B76BAC37C5584C17F1539378D9880B884EFE61F01373B",
+      "state_sha256": "95B041D24525D78913A18444C61C68D0FBCC32D6AE489B35ABAE0D9C59FF2E13",
+      "request_sha256": "ACDAD82CF29244FEFBB362929A1E09E65F70EA1A23C890C82461AF6EECB9626A",
+      "acceptance": "A clean justified Transition with meaningful CONSENT and no parallel AI solution-design offer."
+    },
+    "FSB-D": {
+      "case_sha256": "3D058A3005A90F0A386AD6F9D4E1B19FEE6F68ECF83C8EE5CB611770BC74531A",
+      "state_sha256": "214BA473778BF16F00B717DD9F445115BF5168C21A68FCB64F88B62CACD9B890",
+      "request_sha256": "54ED20D6568D0FC917BAC78845B21C76289A3F2C3CAF7A2D6347E4A2EF963D42",
+      "acceptance": "Directly distinguish whether the strong urge existed before the difficult conversation or appeared/increased after it, while allowing an unavailable-memory answer; no local Reflection, Previous Attempts escape, or avoidance Working Version."
+    }
+  },
+  "budget": {
+    "production_calls": 5,
+    "evaluator_calls": 0,
+    "retries": 0,
+    "confirmations": 0,
+    "smoke_calls": 0,
+    "adaptive_calls": 0,
+    "maximum_total": 5
+  }
+}

@@ -1,0 +1,1248 @@
+{
+  "head": "1e3070820c02a590340929102168b6df6c90d2ad",
+  "model": "gpt-6-astra",
+  "retry_count": 0,
+  "production_decision_calls": 0,
+  "planned_comparator_calls": 18,
+  "api_calls": 18,
+  "source": {
+    "fixture_path": "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\tests\\fixtures\\selected_action_evaluator_frozen_7674220.json",
+    "fixture_sha256": "E9E2C490332A71ECE37DA7BFF6B302253D2928F6B053CBA053343A8AA991A0F2",
+    "pairwise_path": "C:\\Users\\USER~1.TAB\\AppData\\Local\\Temp\\three_condition_matched_live_7674220_pairwise.json",
+    "pairwise_sha256": "AFDBAEAC1663E3569C99476FC396AE25C588C966BFE97DEA59C23D4EDC8EE0C0",
+    "trace_path": "C:\\Users\\USER~1.TAB\\AppData\\Local\\Temp\\three_condition_matched_live_7674220_trace.json",
+    "trace_sha256": "0FD82AED287AB6746432F98706D92967596A9E0EE3649321D2C2507F0DC6A1C5",
+    "comparator_prompt_sha256": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+    "comparator_schema_sha256": "EA8186BDFC9E2415D4F5773F515EECCBC825D62B761770FD7B271F094F133AAB",
+    "frozen_state_sha256": {
+      "T6": "E9F54D5806D61AF3952388A53DE4807E21BA970182B4285E4515000CC12C6CD6",
+      "T12": "C93D283943D135AD3CF740181BD684A42640D2B757A375663CF206E79AAC4225",
+      "T14": "90E2ECE68C97E793A27449CA9F4195EE0BB1CF8682EBF8C996F0B3C7196B021D"
+    }
+  },
+  "blindness": {
+    "condition_not_in_payload": true,
+    "expected_classification_not_in_payload": true,
+    "prior_verdicts_not_in_payload": true,
+    "family_labels_not_in_payload": true,
+    "challenger_identity_hidden_as_left_right": true
+  },
+  "protected_hashes_before": {
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\selected_action_evaluator.py": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0",
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\tests\\fixtures\\selected_action_evaluator_frozen_7674220.json": "E9E2C490332A71ECE37DA7BFF6B302253D2928F6B053CBA053343A8AA991A0F2",
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\tests\\test_selected_action_evaluator.py": "51A0BDE2B62D7EB6B06CF83D1B64E1BAA9A7864740243A53F392BD64574DF642"
+  },
+  "records": [
+    {
+      "case_id": "T6-S2-B",
+      "snapshot": "T6",
+      "expected": "CHALLENGER_HIGHER",
+      "selected_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Clarify what reducing abdominal size would change for the user in everyday life, beyond the already established preference over overall weight loss, to understand what would make the change meaningful.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "msg_57c16b8df72e430da2bc8f17b0743c9f"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Explore what normally happens after the urge and the sequence of the episode.",
+        "basis_evidence_refs": [
+          "mi_c2234f4bcedd468885c2a80dc6525814",
+          "msg_4f7eeaf9aa734f20be9c07ca44c85608"
+        ]
+      },
+      "selected_on_left": [
+        true,
+        false,
+        true
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAJrZnjeAui8Pu6n6aoG97PWyLv",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358463,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 53,
+              "prompt_tokens": 4700,
+              "total_tokens": 4753,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 29,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 4697
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 4700,
+          "output_tokens": 53,
+          "elapsed_seconds": 9.437999999999874
+        },
+        {
+          "repeat": 2,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsANdEqwkdchq451WljP13qAB21H",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358467,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 75,
+              "prompt_tokens": 4700,
+              "total_tokens": 4775,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 51,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 4697
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 4700,
+          "output_tokens": 75,
+          "elapsed_seconds": 3.4220000000000255
+        },
+        {
+          "repeat": 3,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsARt46hLw5GbQLLANk1NBtSv5Di",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358471,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 72,
+              "prompt_tokens": 4700,
+              "total_tokens": 4772,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 48,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 4697,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 4700,
+          "output_tokens": 72,
+          "elapsed_seconds": 4.3599999999999
+        }
+      ],
+      "normalized_verdicts": [
+        "CHALLENGER_HIGHER",
+        "CHALLENGER_HIGHER",
+        "CHALLENGER_HIGHER"
+      ],
+      "aggregate_verdict": "CHALLENGER_HIGHER",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 0,
+        "CHALLENGER_HIGHER": 3,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 0,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": true
+    },
+    {
+      "case_id": "T6-S1-A",
+      "snapshot": "T6",
+      "expected": "SELECTED_HIGHER",
+      "selected_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Clarify whether the strong evening desire to eat occurs mainly during attempts to eat less or also when eating as usual, to distinguish a restriction-linked difficulty from a broader evening pattern.",
+        "basis_evidence_refs": [
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_9a5081dd65e34bac8afc179b4723f7ec",
+          "mi_cdcc1dec03ce43b8bc9abe245498f304",
+          "msg_4f7eeaf9aa734f20be9c07ca44c85608"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "mechanism_discovery",
+        "semantic_focus": "Explore the unobserved immediate context of a typical evening urge.",
+        "basis_evidence_refs": [
+          "mi_c2234f4bcedd468885c2a80dc6525814",
+          "msg_c055ceaabced43178e601ba279485740"
+        ]
+      },
+      "selected_on_left": [
+        true,
+        false,
+        true
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAVvMPqkSebX24rHNlLjpKOh3mD",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358475,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 41,
+              "prompt_tokens": 4709,
+              "total_tokens": 4750,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 17,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 4706
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 4709,
+          "output_tokens": 41,
+          "elapsed_seconds": 1.765999999999849
+        },
+        {
+          "repeat": 2,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAWyCvbFnhviomW9SKErZ3Ht2ba",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358476,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 18,
+              "prompt_tokens": 4709,
+              "total_tokens": 4727,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 4706
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 4709,
+          "output_tokens": 18,
+          "elapsed_seconds": 3.2349999999999
+        },
+        {
+          "repeat": 3,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAaOiPY6nAdk8xCSSkyIcZOfkqw",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358480,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 39,
+              "prompt_tokens": 4709,
+              "total_tokens": 4748,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 15,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 4706,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 4709,
+          "output_tokens": 39,
+          "elapsed_seconds": 2.0779999999999745
+        }
+      ],
+      "normalized_verdicts": [
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER"
+      ],
+      "aggregate_verdict": "SELECTED_HIGHER",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 3,
+        "CHALLENGER_HIGHER": 0,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 0,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": false
+    },
+    {
+      "case_id": "T12-S2-B",
+      "snapshot": "T12",
+      "expected": "SELECTED_HIGHER",
+      "selected_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to conclude Discovery on the confirmed working picture: reducing abdominal size is the priority, and strong evening urges to eat undermine attempts to eat less. Leave the underlying cause unresolved rather than requiring further detail or selecting an intervention.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "aci_09fc1f72b78d4f22b1b94ba6592accb1",
+          "msg_919df321bc7e429aa6de408566de961a"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Explore still-thin personal meaning and everyday impact.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3"
+        ]
+      },
+      "selected_on_left": [
+        false,
+        true,
+        false
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAcHpRic90xxacteRjy8J4GEiGc",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358482,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 18,
+              "prompt_tokens": 7134,
+              "total_tokens": 7152,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7131
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 7134,
+          "output_tokens": 18,
+          "elapsed_seconds": 2.8900000000001
+        },
+        {
+          "repeat": 2,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAf4qFVPFuyac8ytphFPtG02N2O",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358485,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 36,
+              "prompt_tokens": 7134,
+              "total_tokens": 7170,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 12,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7131
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 7134,
+          "output_tokens": 36,
+          "elapsed_seconds": 2.530999999999949
+        },
+        {
+          "repeat": 3,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAhI15K04DCnrgjxnoaGggvPMTu",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358487,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 18,
+              "prompt_tokens": 7134,
+              "total_tokens": 7152,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 7131,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 7134,
+          "output_tokens": 18,
+          "elapsed_seconds": 2.0620000000001255
+        }
+      ],
+      "normalized_verdicts": [
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER"
+      ],
+      "aggregate_verdict": "SELECTED_HIGHER",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 3,
+        "CHALLENGER_HIGHER": 0,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 0,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": false
+    },
+    {
+      "case_id": "T14-S2-A",
+      "snapshot": "T14",
+      "expected": "SELECTED_HIGHER",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "Conclude discovery with the confirmed goal and evening-eating pattern; end further probing of untracked details without claiming that the cause of the evening urge or abdominal weight gain is established.",
+        "basis_evidence_refs": [
+          "msg_049274912c7d4a9db2af2abdd7410f89",
+          "aci_17e451a8bc0b48d681b07b94aefed6e7",
+          "msg_f31a1f32e374435aa8d5376bae626c5d"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "human_discovery",
+        "semantic_focus": "Explore still-thin personal meaning and everyday impact.",
+        "basis_evidence_refs": [
+          "mi_c92d0a938b9041cfb02bd8ed4e025abf",
+          "mi_7d86ea44680b4ede964e1d7477d14de3"
+        ]
+      },
+      "selected_on_left": [
+        true,
+        false,
+        true
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAk4dhyDOpevHWaAAVQ5RreYw3j",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358490,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 41,
+              "prompt_tokens": 7756,
+              "total_tokens": 7797,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 17,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7753
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 7756,
+          "output_tokens": 41,
+          "elapsed_seconds": 3.1870000000001255
+        },
+        {
+          "repeat": 2,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAnkBfGeNAXyBlbb2kvvfBGw0AL",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358493,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 18,
+              "prompt_tokens": 7756,
+              "total_tokens": 7774,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 0,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7753
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"RIGHT_HIGHER\"}",
+          "blind_verdict": "RIGHT_HIGHER",
+          "input_tokens": 7756,
+          "output_tokens": 18,
+          "elapsed_seconds": 3.9220000000000255
+        },
+        {
+          "repeat": 3,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAq9alNrBeY7AlDGhBVErXMcTcX",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"LEFT_HIGHER\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358496,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 47,
+              "prompt_tokens": 7756,
+              "total_tokens": 7803,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 23,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 7753,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"LEFT_HIGHER\"}",
+          "blind_verdict": "LEFT_HIGHER",
+          "input_tokens": 7756,
+          "output_tokens": 47,
+          "elapsed_seconds": 4.453999999999951
+        }
+      ],
+      "normalized_verdicts": [
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER",
+        "SELECTED_HIGHER"
+      ],
+      "aggregate_verdict": "SELECTED_HIGHER",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 3,
+        "CHALLENGER_HIGHER": 0,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 0,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": false
+    },
+    {
+      "case_id": "T12-S1-A",
+      "snapshot": "T12",
+      "expected": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "Завершить исследование подтверждённого паттерна: сильное вечернее желание поесть дома мешает удерживать ограничения. Оставить природу этого желания неустановленной, не запрашивать повторно неотслеженные детали и не переходить к подбору решений.",
+        "basis_evidence_refs": [
+          "msg_919df321bc7e429aa6de408566de961a",
+          "aci_09fc1f72b78d4f22b1b94ba6592accb1",
+          "mi_e5d9573d4a4148c98287a37eb595a31d",
+          "mi_0aaca9eef9c0482d9246d21db5bfe314",
+          "msg_4c13e495e39e4d2eb08c6e4fda9675c5"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to move beyond Discovery using the confirmed sufficient picture.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_919df321bc7e429aa6de408566de961a"
+        ]
+      },
+      "selected_on_left": [
+        true,
+        false,
+        true
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAvSwcVo1mLb8frRsBovDxDWEod",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358501,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 97,
+              "prompt_tokens": 7199,
+              "total_tokens": 7296,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 67,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7196
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7199,
+          "output_tokens": 97,
+          "elapsed_seconds": 3.9370000000001255
+        },
+        {
+          "repeat": 2,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsAz1VslHRELqqKHMdlNURbs5FtO",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358505,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 85,
+              "prompt_tokens": 7199,
+              "total_tokens": 7284,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 55,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7196
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7199,
+          "output_tokens": 85,
+          "elapsed_seconds": 3.3279999999999745
+        },
+        {
+          "repeat": 3,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsB2tLlvNGitELRIfc1uzlX93YO4",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358508,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 123,
+              "prompt_tokens": 7199,
+              "total_tokens": 7322,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 93,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 7196,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7199,
+          "output_tokens": 123,
+          "elapsed_seconds": 4.4220000000000255
+        }
+      ],
+      "normalized_verdicts": [
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE"
+      ],
+      "aggregate_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 0,
+        "CHALLENGER_HIGHER": 0,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 3,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": false
+    },
+    {
+      "case_id": "T14-S1-B",
+      "snapshot": "T14",
+      "expected": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+      "selected_action": {
+        "decision_intent": "stop_exploration",
+        "semantic_focus": "End further probing of evening eating: the user has confirmed the useful working picture, and the remaining observational details are unavailable. Leave the cause of the evening urge unresolved rather than request more detail or confirmation.",
+        "basis_evidence_refs": [
+          "msg_049274912c7d4a9db2af2abdd7410f89",
+          "aci_17e451a8bc0b48d681b07b94aefed6e7",
+          "msg_f31a1f32e374435aa8d5376bae626c5d",
+          "mi_e5d9573d4a4148c98287a37eb595a31d"
+        ]
+      },
+      "challenger_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Seek consent to move beyond Discovery using the repeatedly confirmed sufficient picture.",
+        "basis_evidence_refs": [
+          "mi_7d86ea44680b4ede964e1d7477d14de3",
+          "mi_16d966adca53419ebd61eeaeb2727f80",
+          "msg_049274912c7d4a9db2af2abdd7410f89"
+        ]
+      },
+      "selected_on_left": [
+        false,
+        true,
+        false
+      ],
+      "calls": [
+        {
+          "repeat": 1,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsB7h4tQZpuJ6TJ4wXQhtoKJPP0b",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358513,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 53,
+              "prompt_tokens": 7805,
+              "total_tokens": 7858,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 23,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7802
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7805,
+          "output_tokens": 53,
+          "elapsed_seconds": 4.530999999999949
+        },
+        {
+          "repeat": 2,
+          "selected_side": "LEFT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsBBmDIHDWFqD8lkq4Ynl4rg8Req",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358517,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 66,
+              "prompt_tokens": 7805,
+              "total_tokens": 7871,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 36,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 0,
+                "cache_write_tokens": 7802
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7805,
+          "output_tokens": 66,
+          "elapsed_seconds": 3.1099999999999
+        },
+        {
+          "repeat": 3,
+          "selected_side": "RIGHT",
+          "retry_count": 0,
+          "status": "VALID",
+          "raw_api_response": {
+            "id": "chatcmpl-ENsBEdMC42UMKn5sIfN8IFOICwCYA",
+            "choices": [
+              {
+                "finish_reason": "stop",
+                "index": 0,
+                "logprobs": null,
+                "message": {
+                  "content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+                  "refusal": null,
+                  "role": "assistant",
+                  "annotations": [],
+                  "audio": null,
+                  "function_call": null,
+                  "tool_calls": null
+                }
+              }
+            ],
+            "created": 1789358520,
+            "model": "gpt-6-astra",
+            "object": "chat.completion",
+            "service_tier": "default",
+            "system_fingerprint": null,
+            "usage": {
+              "completion_tokens": 49,
+              "prompt_tokens": 7805,
+              "total_tokens": 7854,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": 0,
+                "audio_tokens": 0,
+                "reasoning_tokens": 19,
+                "rejected_prediction_tokens": 0
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 7802,
+                "cache_write_tokens": 0
+              }
+            }
+          },
+          "raw_api_content": "{\"verdict\":\"EQUIVALENT_OR_BOTH_ACCEPTABLE\"}",
+          "blind_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+          "input_tokens": 7805,
+          "output_tokens": 49,
+          "elapsed_seconds": 2.578999999999951
+        }
+      ],
+      "normalized_verdicts": [
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE"
+      ],
+      "aggregate_verdict": "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+      "agreement": "UNANIMOUS",
+      "vote_counts": {
+        "SELECTED_HIGHER": 0,
+        "CHALLENGER_HIGHER": 0,
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE": 3,
+        "ABSTAIN": 0
+      },
+      "matches_frozen_expected": true,
+      "missed_high_value_alternative": false
+    }
+  ],
+  "usage": {
+    "input_tokens": 117909,
+    "output_tokens": 949
+  },
+  "status": "PASS",
+  "protected_hashes_after": {
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\selected_action_evaluator.py": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0",
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\tests\\fixtures\\selected_action_evaluator_frozen_7674220.json": "E9E2C490332A71ECE37DA7BFF6B302253D2928F6B053CBA053343A8AA991A0F2",
+    "C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\tests\\test_selected_action_evaluator.py": "51A0BDE2B62D7EB6B06CF83D1B64E1BAA9A7864740243A53F392BD64574DF642"
+  },
+  "checks": {
+    "exactly_18_comparator_calls": true,
+    "production_decision_calls_zero": true,
+    "all_api_outputs_valid": true,
+    "known_t6_s2_miss_detected": true,
+    "no_false_challenger_higher_in_controls": true,
+    "equivalent_cases_not_forced_directional": true,
+    "protected_inputs_unchanged": true,
+    "source_trace_unchanged": true,
+    "source_pairwise_unchanged": true
+  },
+  "completed": true
+}

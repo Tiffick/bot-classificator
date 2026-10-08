@@ -352,12 +352,27 @@ def test_ordinary_open_response_maps_to_canonical_internal_answered():
     [
         TargetInteractionKind.EVALUATION,
         TargetInteractionKind.CONSENT,
-        TargetInteractionKind.CLARIFICATION,
     ],
 )
-def test_ordinary_addressed_is_rejected_for_non_open_targets(interaction):
-    with pytest.raises(SemanticWireError, match="ordinary_addressed requires an OPEN_RESPONSE"):
+def test_ordinary_addressed_is_rejected_for_non_response_targets(interaction):
+    with pytest.raises(
+        SemanticWireError,
+        match="ordinary_addressed requires an OPEN_RESPONSE or CLARIFICATION",
+    ):
         _adapt(_simple(), acs=_acs_with_interaction(interaction))
+
+
+def test_ordinary_addressed_maps_clarification_answer_to_internal_answered():
+    result = _adapt(
+        _simple(),
+        acs=_acs_with_interaction(TargetInteractionKind.CLARIFICATION),
+    )
+
+    assert result.reconciliation == (TargetResolution(
+        previous_response_target_ids=(RT_A,),
+        outcome=ReconciliationOutcome.ANSWERED,
+        source_span=_span(SIMPLE_TEXT, SIMPLE_TEXT),
+    ),)
 
 
 def test_open_response_refusal_remains_an_explicit_semantic_outcome():

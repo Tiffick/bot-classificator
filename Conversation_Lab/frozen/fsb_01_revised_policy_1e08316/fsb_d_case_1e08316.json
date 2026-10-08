@@ -1,0 +1,56 @@
+{
+  "case_id": "FSB-D",
+  "coverage_intent": "mechanism_discovery",
+  "purpose": "Both hunger and tension are grounded and evaluable; a remembered within-episode timing observation can distinguish them and materially change Formulation or the next Decision.",
+  "initial_state": {
+    "human_model": {"schema_version": 1, "items": {}, "relations": {}, "updated_at": "2026-09-14T12:00:00Z"},
+    "previous_acs": null,
+    "dialogue_history": {"messages": []}
+  },
+  "replay_sequence": [
+    {
+      "user_message": {"id": "msg_958c47bffb2b518c839ca03d27978e9f", "role": "user", "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной.", "sequence": 1, "created_at": "2026-09-14T12:00:00Z"},
+      "system_message": {"id": "msg_974dffdbcf6450dea11f82bc1be956d0", "role": "system", "text": "Расскажите о последнем таком вечере: что происходило до еды?", "sequence": 2, "created_at": "2026-09-14T12:00:00Z"},
+      "cognitive_turn_result": {
+        "decision_intent": "mechanism_discovery",
+        "state_patch": {
+          "item_operations": [{"operation": "add", "local_id": "item:t1_1", "existing_item_id": null, "kind": "personal_meaning", "content": "важно вернуть ощущение управления своим вечером", "evidence_origin": "current_user_material", "source_span": {"char_start": 0, "char_end": 73}}],
+          "relation_operations": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [],
+        "system_action": {
+          "contents": [{"local_id": "content:t1_1", "kind": "system_question", "semantic_content": "Получить контекст последнего вечернего эпизода без предположения причины.", "model_item_refs": [], "relation_refs": []}],
+          "response_targets": [{"local_id": "target:t1_1", "active_content_local_id": "content:t1_1", "subject": {"kind": "active_content", "active_content_local_id": "content:t1_1", "item_reference": null, "relation_reference": null}, "interaction": "open_response"}]
+        },
+        "reply_segments": [{"local_id": "segment:t1", "text": "Расскажите о последнем таком вечере: что происходило до еды?", "realizes_action_content_ids": ["content:t1_1"]}]
+      }
+    }
+  ],
+  "frozen_input": {
+    "human_model": {
+      "schema_version": 1,
+      "items": {
+        "mi_2ff5d2268cc2505ea772d9360ba03204": {
+          "id": "mi_2ff5d2268cc2505ea772d9360ba03204", "kind": "personal_meaning", "content": "важно вернуть ощущение управления своим вечером", "provenance": "user_provided", "status": "recorded",
+          "source_refs": [{"message_id": "msg_958c47bffb2b518c839ca03d27978e9f", "char_start": 0, "char_end": 73}],
+          "supersedes_item_ids": [], "created_turn": 1, "updated_turn": 1
+        }
+      },
+      "relations": {},
+      "updated_at": "2026-09-14T12:00:00Z"
+    },
+    "previous_acs": {
+      "id": "acs_a3c11dac05e1557ea9746ef81ea9c0f6", "created_turn": 1, "source_system_message_id": "msg_974dffdbcf6450dea11f82bc1be956d0",
+      "active_content": {"aci_b8d0c6f5cd1b514d86e667507a4b653b": {"id": "aci_b8d0c6f5cd1b514d86e667507a4b653b", "kind": "system_question", "content": "Получить контекст последнего вечернего эпизода без предположения причины.", "model_item_ids": [], "relation_ids": [], "source_message_id": "msg_974dffdbcf6450dea11f82bc1be956d0"}},
+      "response_targets": {"rt_24b30dfe10c75eff8a859fdc68b4552f": {"id": "rt_24b30dfe10c75eff8a859fdc68b4552f", "active_content_id": "aci_b8d0c6f5cd1b514d86e667507a4b653b", "subject": {"kind": "active_content", "id": "aci_b8d0c6f5cd1b514d86e667507a4b653b"}, "interaction": "open_response"}}
+    },
+    "dialogue_history": {"messages": [
+      {"id": "msg_958c47bffb2b518c839ca03d27978e9f", "role": "user", "text": "Мне важно снова чувствовать, что я управляю своим вечером, а не еда мной.", "sequence": 1, "created_at": "2026-09-14T12:00:00Z"},
+      {"id": "msg_974dffdbcf6450dea11f82bc1be956d0", "role": "system", "text": "Расскажите о последнем таком вечере: что происходило до еды?", "sequence": 2, "created_at": "2026-09-14T12:00:00Z"}
+    ]},
+    "current_user_message": {"id": "msg_35b03a078ee65eb7b8ebe3e1cbf67776", "role": "user", "text": "В тот вечер я пропустил обед, потом был тяжёлый разговор, а вечером переел. Я хорошо помню этот вечер, но не сопоставлял, появилось ли сильное желание поесть ещё до разговора или уже после него.", "sequence": 3, "created_at": "2026-09-14T12:00:00Z"},
+    "human_experience": {"enabled": false}
+  },
+  "state_sha256": "214BA473778BF16F00B717DD9F445115BF5168C21A68FCB64F88B62CACD9B890"
+}

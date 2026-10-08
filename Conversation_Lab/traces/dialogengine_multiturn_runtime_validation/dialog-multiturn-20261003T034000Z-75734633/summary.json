@@ -1,0 +1,838 @@
+{
+  "api_calls": 3,
+  "checkpoint_records": 18,
+  "checkpoint_tip_hash": "235CD70862307F811F7A0E4BAAEA660F245337084C97AC66444524566A1FB028",
+  "cognitive_core_propose_calls": 3,
+  "completed_turns": 2,
+  "failure": {
+    "after_state_sha256": "6F6A2840A090EB87B90B2F2CA0B0B71E875830F8BB60A1DCA94BE0C49074CB00",
+    "before_state_sha256": "6F6A2840A090EB87B90B2F2CA0B0B71E875830F8BB60A1DCA94BE0C49074CB00",
+    "call_counts": {
+      "adapter": 1,
+      "api": 1,
+      "persistence": 0,
+      "propose": 1,
+      "state_applier": 0
+    },
+    "cumulative_api_calls": 3,
+    "cumulative_propose_calls": 3,
+    "error_chain": [
+      {
+        "message": "Cognitive Core response violates semantic wire contract.",
+        "type": "CognitiveCoreError"
+      },
+      {
+        "message": "Reconciliation outcome is incompatible with target interaction.",
+        "type": "SemanticWireError"
+      }
+    ],
+    "failure_boundary": "semantic_adapter",
+    "partial_persistence_detected": false,
+    "traceback": "Traceback (most recent call last):\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\cognitive_core.py\", line 194, in propose\n    result = adapt_semantic_turn(\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\dialogengine_multiturn_runtime_validation.py\", line 338, in tracked_adapt\n    result = original_adapt(*args, **kwargs)\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\cognitive_semantic_wire.py\", line 462, in adapt_semantic_turn\n    raise SemanticWireError(\nai.cognitive_semantic_wire.SemanticWireError: Reconciliation outcome is incompatible with target interaction.\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\dialogengine_multiturn_runtime_validation.py\", line 602, in _execute_turn\n    result = await dialog_engine.run_dialog_engine(user_text, profile, state.user_id)\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\dialog_engine.py\", line 74, in run_dialog_engine\n    turn_result = CognitiveCore(client=OpenAI(max_retries=0)).propose(\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\dialogengine_multiturn_runtime_validation.py\", line 325, in tracked_propose\n    result = original_propose(core, *args, **kwargs)\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\cognitive_core.py\", line 211, in propose\n    raise CognitiveCoreError(\nai.cognitive_core.CognitiveCoreError: Cognitive Core response violates semantic wire contract.\n",
+    "turn": 3,
+    "user_text": "Примерно одинаково."
+  },
+  "git_commit": "c88a55eed8724ec493b6750778c119dc89cd74e8",
+  "max_turns": 12,
+  "model": "gpt-5-mini",
+  "run_id": "dialog-multiturn-20261003T034000Z-75734633",
+  "status": "HARD_STOP",
+  "turns": [
+    {
+      "acs_content_count": 1,
+      "acs_is_none": false,
+      "acs_target_count": 1,
+      "after_state": {
+        "active_conversation_state": {
+          "active_content": {
+            "aci_f77401a6391d4765b8701abbb51c1d90": {
+              "content": "Поняла — за последние три года +15 кг, особенно беспокоит живот: одежда сидит плохо, и вы не любите себя на фото. Что для вас важнее изменить в первую очередь — внешний вид живота/чтобы одежда сидела лучше, общий вес, или чтобы вам нравилось, как вы выглядите на фото? Или есть другое приоритетное беспокойство?",
+              "id": "aci_f77401a6391d4765b8701abbb51c1d90",
+              "kind": "system_question",
+              "model_item_ids": [
+                "mi_8f98aa5c44994bb7962bfd781684a9cd",
+                "mi_f03dba558c1748f49ec541eda322bee8",
+                "mi_1155487797214b73806269faf1fe8395",
+                "mi_b470b34506484146bb07fddb19b99135"
+              ],
+              "relation_ids": [],
+              "source_message_id": "msg_1d5e2dd76d7742e3b5221e27458a42c5"
+            }
+          },
+          "created_turn": 1,
+          "id": "acs_0ca05e40eb134695b13fe6815892273b",
+          "response_targets": {
+            "rt_a95473311a8241b4ad796bc5857df7fa": {
+              "active_content_id": "aci_f77401a6391d4765b8701abbb51c1d90",
+              "id": "rt_a95473311a8241b4ad796bc5857df7fa",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_f77401a6391d4765b8701abbb51c1d90",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_1d5e2dd76d7742e3b5221e27458a42c5"
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-10-03T03:40:20.082261Z",
+              "id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d",
+              "role": "user",
+              "sequence": 1,
+              "text": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю."
+            },
+            {
+              "created_at": "2026-10-03T03:40:43.396623Z",
+              "id": "msg_1d5e2dd76d7742e3b5221e27458a42c5",
+              "role": "system",
+              "sequence": 2,
+              "text": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?"
+            }
+          ]
+        },
+        "human_model": {
+          "items": {
+            "mi_1155487797214b73806269faf1fe8395": {
+              "content": "Одежда сидит плохо из‑за изменений в фигуре.",
+              "created_turn": 1,
+              "id": "mi_1155487797214b73806269faf1fe8395",
+              "kind": "now",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 98,
+                  "char_start": 80,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_8f98aa5c44994bb7962bfd781684a9cd": {
+              "content": "Набрал примерно 15 кг за последние три года.",
+              "created_turn": 1,
+              "id": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+              "kind": "life_change",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 52,
+                  "char_start": 0,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_b470b34506484146bb07fddb19b99135": {
+              "content": "Не нравится, как выгляжу на фотографиях.",
+              "created_turn": 1,
+              "id": "mi_b470b34506484146bb07fddb19b99135",
+              "kind": "emotion",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 123,
+                  "char_start": 102,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_f03dba558c1748f49ec541eda322bee8": {
+              "content": "Особенно напрягает живот — это заметный источник неудовлетворения внешностью.",
+              "created_turn": 1,
+              "id": "mi_f03dba558c1748f49ec541eda322bee8",
+              "kind": "stated_problem",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 77,
+                  "char_start": 53,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-10-03T03:40:43.396623Z"
+        }
+      },
+      "after_state_sha256": "97ACC50680F7F4EC7A9CC2D96B4D2ECC1960F93D12471E08925082F7F7761A27",
+      "applied_turn_mappings": {
+        "active_content": {
+          "content:1": "aci_f77401a6391d4765b8701abbb51c1d90"
+        },
+        "items": {
+          "item:1": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+          "item:2": "mi_f03dba558c1748f49ec541eda322bee8",
+          "item:3": "mi_1155487797214b73806269faf1fe8395",
+          "item:4": "mi_b470b34506484146bb07fddb19b99135"
+        },
+        "relations": {},
+        "response_targets": {
+          "target:1": "rt_a95473311a8241b4ad796bc5857df7fa"
+        }
+      },
+      "before_state": null,
+      "before_state_sha256": "74234E98AFE7498FB5DAF1F36AC2D78ACC339464F950703B8C019892F982B90B",
+      "call_counts": {
+        "adapter": 1,
+        "api": 1,
+        "persistence": 1,
+        "propose": 1,
+        "state_applier": 1
+      },
+      "cognitive_turn_result": {
+        "decision_intent": "human_discovery",
+        "reconciliation": [],
+        "reply_segments": [
+          {
+            "local_id": "segment:1",
+            "realizes_action_content_ids": [
+              "content:1"
+            ],
+            "text": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?"
+          }
+        ],
+        "state_patch": {
+          "item_operations": [
+            {
+              "content": "Набрал примерно 15 кг за последние три года.",
+              "evidence_origin": "current_user_material",
+              "existing_item_id": null,
+              "kind": "life_change",
+              "local_id": "item:1",
+              "operation": "add",
+              "source_span": {
+                "char_end": 52,
+                "char_start": 0
+              }
+            },
+            {
+              "content": "Особенно напрягает живот — это заметный источник неудовлетворения внешностью.",
+              "evidence_origin": "current_user_material",
+              "existing_item_id": null,
+              "kind": "stated_problem",
+              "local_id": "item:2",
+              "operation": "add",
+              "source_span": {
+                "char_end": 77,
+                "char_start": 53
+              }
+            },
+            {
+              "content": "Одежда сидит плохо из‑за изменений в фигуре.",
+              "evidence_origin": "current_user_material",
+              "existing_item_id": null,
+              "kind": "now",
+              "local_id": "item:3",
+              "operation": "add",
+              "source_span": {
+                "char_end": 98,
+                "char_start": 80
+              }
+            },
+            {
+              "content": "Не нравится, как выгляжу на фотографиях.",
+              "evidence_origin": "current_user_material",
+              "existing_item_id": null,
+              "kind": "emotion",
+              "local_id": "item:4",
+              "operation": "add",
+              "source_span": {
+                "char_end": 123,
+                "char_start": 102
+              }
+            }
+          ],
+          "proposal_materializations": [],
+          "relation_operations": []
+        },
+        "system_action": {
+          "contents": [
+            {
+              "kind": "system_question",
+              "local_id": "content:1",
+              "model_item_refs": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:1"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:2"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:3"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:4"
+                }
+              ],
+              "relation_refs": [],
+              "semantic_content": "Поняла — за последние три года +15 кг, особенно беспокоит живот: одежда сидит плохо, и вы не любите себя на фото. Что для вас важнее изменить в первую очередь — внешний вид живота/чтобы одежда сидела лучше, общий вес, или чтобы вам нравилось, как вы выглядите на фото? Или есть другое приоритетное беспокойство?"
+            }
+          ],
+          "response_targets": [
+            {
+              "active_content_local_id": "content:1",
+              "interaction": "open_response",
+              "local_id": "target:1",
+              "subject": {
+                "active_content_local_id": "content:1",
+                "item_reference": null,
+                "kind": "active_content",
+                "relation_reference": null
+              }
+            }
+          ]
+        }
+      },
+      "compatibility_update": {
+        "discovery_complete": false,
+        "history": [
+          {
+            "content": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю.",
+            "role": "user"
+          },
+          {
+            "content": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?",
+            "role": "assistant"
+          }
+        ]
+      },
+      "decision_intent": "human_discovery",
+      "dialogue_history_message_count": 2,
+      "human_model_item_count": 4,
+      "human_model_relation_count": 0,
+      "persisted_system_text": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?",
+      "persistence_after_apply": true,
+      "reconciliation": [],
+      "response_targets": [
+        {
+          "active_content_id": "aci_f77401a6391d4765b8701abbb51c1d90",
+          "id": "rt_a95473311a8241b4ad796bc5857df7fa",
+          "interaction": "open_response",
+          "subject": {
+            "id": "aci_f77401a6391d4765b8701abbb51c1d90",
+            "kind": "active_content"
+          }
+        }
+      ],
+      "return_shape": [
+        "reply",
+        "update"
+      ],
+      "returned_reply": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?",
+      "system_reply_matches_returned_reply": true,
+      "token_usage": {
+        "actual_model_snapshot": "gpt-5-mini-2025-08-07",
+        "cached_input_tokens": 0,
+        "input_tokens": 6352,
+        "output_tokens": 2486,
+        "reasoning_tokens": 1792,
+        "requested_model": "gpt-5-mini",
+        "total_tokens": 8838
+      },
+      "turn": 1,
+      "user_text": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю."
+    },
+    {
+      "acs_content_count": 1,
+      "acs_is_none": false,
+      "acs_target_count": 1,
+      "after_state": {
+        "active_conversation_state": {
+          "active_content": {
+            "aci_a1f36b42882441c59c0548c468f3f433": {
+              "content": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?",
+              "id": "aci_a1f36b42882441c59c0548c468f3f433",
+              "kind": "system_question",
+              "model_item_ids": [
+                "mi_8f98aa5c44994bb7962bfd781684a9cd",
+                "mi_f03dba558c1748f49ec541eda322bee8",
+                "mi_cb2c1186e800434e85b7c43ff81ffbd4"
+              ],
+              "relation_ids": [],
+              "source_message_id": "msg_3f002dfcd2534c9c8f1835cc599ed224"
+            }
+          },
+          "created_turn": 2,
+          "id": "acs_115a8cc3974947c7859fe8c3ced064b7",
+          "response_targets": {
+            "rt_86d429a9bdbc4492a33f60f74692e743": {
+              "active_content_id": "aci_a1f36b42882441c59c0548c468f3f433",
+              "id": "rt_86d429a9bdbc4492a33f60f74692e743",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_a1f36b42882441c59c0548c468f3f433",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_3f002dfcd2534c9c8f1835cc599ed224"
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-10-03T03:40:20.082261Z",
+              "id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d",
+              "role": "user",
+              "sequence": 1,
+              "text": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю."
+            },
+            {
+              "created_at": "2026-10-03T03:40:43.396623Z",
+              "id": "msg_1d5e2dd76d7742e3b5221e27458a42c5",
+              "role": "system",
+              "sequence": 2,
+              "text": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?"
+            },
+            {
+              "created_at": "2026-10-03T03:40:54.118266Z",
+              "id": "msg_76e72b3d80114476ad421ae5e3d4098d",
+              "role": "user",
+              "sequence": 3,
+              "text": "В первую очередь живот и общий вес. Фото — скорее напоминание, что я сильно изменился."
+            },
+            {
+              "created_at": "2026-10-03T03:41:16.178020Z",
+              "id": "msg_3f002dfcd2534c9c8f1835cc599ed224",
+              "role": "system",
+              "sequence": 4,
+              "text": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?"
+            }
+          ]
+        },
+        "human_model": {
+          "items": {
+            "mi_1155487797214b73806269faf1fe8395": {
+              "content": "Одежда сидит плохо из‑за изменений в фигуре.",
+              "created_turn": 1,
+              "id": "mi_1155487797214b73806269faf1fe8395",
+              "kind": "now",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 98,
+                  "char_start": 80,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_8f98aa5c44994bb7962bfd781684a9cd": {
+              "content": "Набрал примерно 15 кг за последние три года.",
+              "created_turn": 1,
+              "id": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+              "kind": "life_change",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 52,
+                  "char_start": 0,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                },
+                {
+                  "char_end": 86,
+                  "char_start": 67,
+                  "message_id": "msg_76e72b3d80114476ad421ae5e3d4098d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            },
+            "mi_b470b34506484146bb07fddb19b99135": {
+              "content": "Не нравится, как выгляжу на фотографиях.",
+              "created_turn": 1,
+              "id": "mi_b470b34506484146bb07fddb19b99135",
+              "kind": "emotion",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 123,
+                  "char_start": 102,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_cb2c1186e800434e85b7c43ff81ffbd4": {
+              "content": "В первую очередь — живот и общий вес; фото — скорее напоминание, что я сильно изменился.",
+              "created_turn": 2,
+              "id": "mi_cb2c1186e800434e85b7c43ff81ffbd4",
+              "kind": "desired_change",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 86,
+                  "char_start": 0,
+                  "message_id": "msg_76e72b3d80114476ad421ae5e3d4098d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            },
+            "mi_f03dba558c1748f49ec541eda322bee8": {
+              "content": "Особенно напрягает живот — это заметный источник неудовлетворения внешностью.",
+              "created_turn": 1,
+              "id": "mi_f03dba558c1748f49ec541eda322bee8",
+              "kind": "stated_problem",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 77,
+                  "char_start": 53,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                },
+                {
+                  "char_end": 35,
+                  "char_start": 0,
+                  "message_id": "msg_76e72b3d80114476ad421ae5e3d4098d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 2
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-10-03T03:41:16.178020Z"
+        }
+      },
+      "after_state_sha256": "6F6A2840A090EB87B90B2F2CA0B0B71E875830F8BB60A1DCA94BE0C49074CB00",
+      "applied_turn_mappings": {
+        "active_content": {
+          "content:1": "aci_a1f36b42882441c59c0548c468f3f433"
+        },
+        "items": {
+          "item:1": "mi_cb2c1186e800434e85b7c43ff81ffbd4"
+        },
+        "relations": {},
+        "response_targets": {
+          "target:1": "rt_86d429a9bdbc4492a33f60f74692e743"
+        }
+      },
+      "before_state": {
+        "active_conversation_state": {
+          "active_content": {
+            "aci_f77401a6391d4765b8701abbb51c1d90": {
+              "content": "Поняла — за последние три года +15 кг, особенно беспокоит живот: одежда сидит плохо, и вы не любите себя на фото. Что для вас важнее изменить в первую очередь — внешний вид живота/чтобы одежда сидела лучше, общий вес, или чтобы вам нравилось, как вы выглядите на фото? Или есть другое приоритетное беспокойство?",
+              "id": "aci_f77401a6391d4765b8701abbb51c1d90",
+              "kind": "system_question",
+              "model_item_ids": [
+                "mi_8f98aa5c44994bb7962bfd781684a9cd",
+                "mi_f03dba558c1748f49ec541eda322bee8",
+                "mi_1155487797214b73806269faf1fe8395",
+                "mi_b470b34506484146bb07fddb19b99135"
+              ],
+              "relation_ids": [],
+              "source_message_id": "msg_1d5e2dd76d7742e3b5221e27458a42c5"
+            }
+          },
+          "created_turn": 1,
+          "id": "acs_0ca05e40eb134695b13fe6815892273b",
+          "response_targets": {
+            "rt_a95473311a8241b4ad796bc5857df7fa": {
+              "active_content_id": "aci_f77401a6391d4765b8701abbb51c1d90",
+              "id": "rt_a95473311a8241b4ad796bc5857df7fa",
+              "interaction": "open_response",
+              "subject": {
+                "id": "aci_f77401a6391d4765b8701abbb51c1d90",
+                "kind": "active_content"
+              }
+            }
+          },
+          "source_system_message_id": "msg_1d5e2dd76d7742e3b5221e27458a42c5"
+        },
+        "dialogue_history": {
+          "messages": [
+            {
+              "created_at": "2026-10-03T03:40:20.082261Z",
+              "id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d",
+              "role": "user",
+              "sequence": 1,
+              "text": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю."
+            },
+            {
+              "created_at": "2026-10-03T03:40:43.396623Z",
+              "id": "msg_1d5e2dd76d7742e3b5221e27458a42c5",
+              "role": "system",
+              "sequence": 2,
+              "text": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?"
+            }
+          ]
+        },
+        "human_model": {
+          "items": {
+            "mi_1155487797214b73806269faf1fe8395": {
+              "content": "Одежда сидит плохо из‑за изменений в фигуре.",
+              "created_turn": 1,
+              "id": "mi_1155487797214b73806269faf1fe8395",
+              "kind": "now",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 98,
+                  "char_start": 80,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_8f98aa5c44994bb7962bfd781684a9cd": {
+              "content": "Набрал примерно 15 кг за последние три года.",
+              "created_turn": 1,
+              "id": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+              "kind": "life_change",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 52,
+                  "char_start": 0,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_b470b34506484146bb07fddb19b99135": {
+              "content": "Не нравится, как выгляжу на фотографиях.",
+              "created_turn": 1,
+              "id": "mi_b470b34506484146bb07fddb19b99135",
+              "kind": "emotion",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 123,
+                  "char_start": 102,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            },
+            "mi_f03dba558c1748f49ec541eda322bee8": {
+              "content": "Особенно напрягает живот — это заметный источник неудовлетворения внешностью.",
+              "created_turn": 1,
+              "id": "mi_f03dba558c1748f49ec541eda322bee8",
+              "kind": "stated_problem",
+              "provenance": "user_provided",
+              "source_refs": [
+                {
+                  "char_end": 77,
+                  "char_start": 53,
+                  "message_id": "msg_3c3bb50da2684a4d9fd5b77c130a4e1d"
+                }
+              ],
+              "status": "recorded",
+              "supersedes_item_ids": [],
+              "updated_turn": 1
+            }
+          },
+          "relations": {},
+          "schema_version": 1,
+          "updated_at": "2026-10-03T03:40:43.396623Z"
+        }
+      },
+      "before_state_sha256": "97ACC50680F7F4EC7A9CC2D96B4D2ECC1960F93D12471E08925082F7F7761A27",
+      "call_counts": {
+        "adapter": 1,
+        "api": 1,
+        "persistence": 1,
+        "propose": 1,
+        "state_applier": 1
+      },
+      "cognitive_turn_result": {
+        "decision_intent": "human_discovery",
+        "reconciliation": [
+          {
+            "outcome": "answered",
+            "previous_response_target_ids": [
+              "rt_a95473311a8241b4ad796bc5857df7fa"
+            ],
+            "source_span": null
+          }
+        ],
+        "reply_segments": [
+          {
+            "local_id": "segment:1",
+            "realizes_action_content_ids": [
+              "content:1"
+            ],
+            "text": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?"
+          }
+        ],
+        "state_patch": {
+          "item_operations": [
+            {
+              "content": "В первую очередь — живот и общий вес; фото — скорее напоминание, что я сильно изменился.",
+              "evidence_origin": "current_user_material",
+              "existing_item_id": null,
+              "kind": "desired_change",
+              "local_id": "item:1",
+              "operation": "add",
+              "source_span": {
+                "char_end": 86,
+                "char_start": 0
+              }
+            },
+            {
+              "content": null,
+              "evidence_origin": "current_user_material",
+              "existing_item_id": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+              "kind": null,
+              "local_id": null,
+              "operation": "reinforce",
+              "source_span": {
+                "char_end": 86,
+                "char_start": 67
+              }
+            },
+            {
+              "content": null,
+              "evidence_origin": "current_user_material",
+              "existing_item_id": "mi_f03dba558c1748f49ec541eda322bee8",
+              "kind": null,
+              "local_id": null,
+              "operation": "reinforce",
+              "source_span": {
+                "char_end": 35,
+                "char_start": 0
+              }
+            }
+          ],
+          "proposal_materializations": [],
+          "relation_operations": []
+        },
+        "system_action": {
+          "contents": [
+            {
+              "kind": "system_question",
+              "local_id": "content:1",
+              "model_item_refs": [
+                {
+                  "existing_item_id": "mi_8f98aa5c44994bb7962bfd781684a9cd",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_f03dba558c1748f49ec541eda322bee8",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:1"
+                }
+              ],
+              "relation_refs": [],
+              "semantic_content": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?"
+            }
+          ],
+          "response_targets": [
+            {
+              "active_content_local_id": "content:1",
+              "interaction": "open_response",
+              "local_id": "target:1",
+              "subject": {
+                "active_content_local_id": "content:1",
+                "item_reference": null,
+                "kind": "active_content",
+                "relation_reference": null
+              }
+            }
+          ]
+        }
+      },
+      "compatibility_update": {
+        "discovery_complete": false,
+        "history": [
+          {
+            "content": "За последние три года набрал килограммов пятнадцать. Особенно напрягает живот — одежда сидит плохо, и на фото себя не люблю.",
+            "role": "user"
+          },
+          {
+            "content": "Поняла — за последние три года +15 кг; особенно беспокоит живот, одежда сидит плохо, и вы не любите себя на фото. Что из этого вы бы хотели изменить в первую очередь — живот/посадка одежды, общий вес, или отношение к фото? Или есть другой приоритет?",
+            "role": "assistant"
+          },
+          {
+            "content": "В первую очередь живот и общий вес. Фото — скорее напоминание, что я сильно изменился.",
+            "role": "user"
+          },
+          {
+            "content": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?",
+            "role": "assistant"
+          }
+        ]
+      },
+      "decision_intent": "human_discovery",
+      "dialogue_history_message_count": 4,
+      "human_model_item_count": 5,
+      "human_model_relation_count": 0,
+      "persisted_system_text": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?",
+      "persistence_after_apply": true,
+      "reconciliation": [
+        {
+          "outcome": "answered",
+          "previous_response_target_ids": [
+            "rt_a95473311a8241b4ad796bc5857df7fa"
+          ],
+          "source_span": null
+        }
+      ],
+      "response_targets": [
+        {
+          "active_content_id": "aci_a1f36b42882441c59c0548c468f3f433",
+          "id": "rt_86d429a9bdbc4492a33f60f74692e743",
+          "interaction": "open_response",
+          "subject": {
+            "id": "aci_a1f36b42882441c59c0548c468f3f433",
+            "kind": "active_content"
+          }
+        }
+      ],
+      "return_shape": [
+        "reply",
+        "update"
+      ],
+      "returned_reply": "Понял — главным приоритетом для вас являются живот и общий вес; фото вы называете скорее напоминанием об изменениях. Уточните, пожалуйста: живот важнее общего веса, или оба приоритета примерно равны?",
+      "system_reply_matches_returned_reply": true,
+      "token_usage": {
+        "actual_model_snapshot": "gpt-5-mini-2025-08-07",
+        "cached_input_tokens": 5888,
+        "input_tokens": 7221,
+        "output_tokens": 2691,
+        "reasoning_tokens": 2048,
+        "requested_model": "gpt-5-mini",
+        "total_tokens": 9912
+      },
+      "turn": 2,
+      "user_text": "В первую очередь живот и общий вес. Фото — скорее напоминание, что я сильно изменился."
+    }
+  ],
+  "updated_at_utc": "2026-10-03T03:41:41.997361+00:00",
+  "user_id": 804607420
+}

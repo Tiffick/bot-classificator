@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "LEFT_HIGHER",
+        "RIGHT_HIGHER",
+        "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+        "INSUFFICIENT_BASIS"
+      ]
+    }
+  },
+  "required": [
+    "verdict"
+  ],
+  "additionalProperties": false
+}

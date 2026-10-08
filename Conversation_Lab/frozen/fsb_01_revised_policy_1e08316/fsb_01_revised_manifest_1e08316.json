@@ -1,0 +1,88 @@
+{
+  "experiment": "FSB-01 REVISED VALUE-POLICY BEHAVIORAL REGRESSION",
+  "head": "1e08316",
+  "production_boundary": "SELECTED_ONLY",
+  "production_model": "gpt-5-mini",
+  "evaluator_model": "gpt-6-astra",
+  "production_prompt": {"git_path": "1e08316:ai/prompts/cognitive_core_system_prompt.txt", "sha256": "1FDB65F45FABCB6CC313659FAF288C309E599D869D7E8D46D72407B2F1E64CE7"},
+  "contract_boundary": {
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "cognitive_core_wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39",
+    "selected_action_evaluator_file_sha256": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0"
+  },
+  "historical_source": {
+    "path": "Conversation_Lab/frozen/fsb_01_672455a",
+    "sha256": {
+      "fsb_01_cases_672455a.json": "E9CB63B9D54F19EBCEF06A592C83DF70C3E75561C934C0D453BD9D40E914CEA1",
+      "fsb_01_challengers_672455a.json": "23F38F097ED4B2A30902D22EEE128CB88EAE9B446EDA5E8C9912F1752960AF51",
+      "fsb_01_evaluator_prompt_672455a.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+      "fsb_01_evaluator_schema_672455a.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B",
+      "fsb_01_offline_validator_672455a.py": "B8F71D2DC24631D363E61FF0AABB41BC2806E499EF3979CC066B7FBC4EB837F1"
+    }
+  },
+  "product_policy_source": {
+    "path": "Conversation_Lab/frozen/fsb_m_product_policy_ab_1550ec2",
+    "sha256": {
+      "fsb_m_product_policy_pair_1550ec2.json": "263F877DCD5346E399301E9C1B72EBC3BB3667C62791F10A0986C10C0E14C924",
+      "fsb_m_product_policy_evaluator_prompt_1550ec2.txt": "828E44FA534E2203284712B093E9A86A31DD12AEA8AA617A7E536D22F1F34453",
+      "fsb_m_product_policy_evaluator_schema_1550ec2.json": "0CF50E97EBF46F90F8ABECD8FC2A104BD8EC86CF9906D24A718F37CF5C96A216",
+      "fsb_m_product_policy_guards_1550ec2.json": "3BD4F1D63BD508DA31111285EAEB3033733749D7C9F2516CC2FF3B0DBBE561A4"
+    },
+    "fsb_m_working_version_sha256": "1A11CEB3CB4E94D4A090ED99C613CAD29A8D57E3E042A51C9D061A7EEA98B4F7"
+  },
+  "new_artifact_sha256": {
+    "fsb_d_case_1e08316.json": "27B60F09C230C6326EF5641C45B851A1346E6D9878E191DB7CE6A4BCAEC8117F",
+    "fsb_d_policy_pair_1e08316.json": "58819C30A951CE6A2BF68EC24611B270BA8D3548BB9344EAF78F679FC73DA973",
+    "fsb_01_revised_measurement_plan_1e08316.md": "7E0738A822BF9203F29290F1DBCCA8029C26A12A3E6597940BBFE5F36C9AFD49",
+    "fsb_01_revised_freeze_report_1e08316.md": "F771813911F921845FBC0D9734684C23299586C965BE8095A9F0B44336EA4E89"
+  },
+  "fsb_d": {
+    "case_sha256": "3D058A3005A90F0A386AD6F9D4E1B19FEE6F68ECF83C8EE5CB611770BC74531A",
+    "state_sha256": "214BA473778BF16F00B717DD9F445115BF5168C21A68FCB64F88B62CACD9B890",
+    "direct_action_sha256": "7E966A735CC47C63B7A4C37CFE3D506B662B6AF4C3D172BDB09301BA478561EA",
+    "working_version_sha256": "E984A7DFB8A427AC0E41ECF06282F37A28A6AC89B63583D9B5904ED252408789"
+  },
+  "qualification": {
+    "case_id": "FSB-D",
+    "direct_on_left": [true, false, true, false, true, false],
+    "pass_rule": "DIRECT_HIGHER in at least 4 of 6 judgments, with directional support present in both left and right orientations",
+    "failure_stops_before_production": true
+  },
+  "production_order": ["FSB-H", "FSB-M", "FSB-R", "FSB-S", "FSB-T", "FSB-A", "FSB-D"],
+  "historical_evaluator_cases": ["FSB-H", "FSB-R", "FSB-S", "FSB-T", "FSB-A"],
+  "revised_evaluator_cases": ["FSB-M", "FSB-D"],
+  "posthoc_orientations_selected_on_left": {
+    "FSB-H": [true, false, true], "FSB-M": [false, true, false],
+    "FSB-R": [true, false, true], "FSB-S": [false, true, false],
+    "FSB-T": [true, false, true], "FSB-A": [false, true, false],
+    "FSB-D": [true, false, true]
+  },
+  "protocol": {
+    "retry": 0, "smoke_calls": 0, "confirmations": 0,
+    "adaptive_sampling": false, "challenger_generation": false,
+    "candidate_materialization": false, "astra_production": false,
+    "qualification_precedes_production": true,
+    "qualification_only_phase_required": true,
+    "production_requires_explicit_resume_production": true,
+    "all_production_precedes_posthoc_evaluation": true
+  },
+  "api_budget": {
+    "qualification_evaluator": 6, "production": 7,
+    "posthoc_evaluator": 21, "maximum_evaluator": 27,
+    "maximum_total": 34, "qualification_only_maximum_total": 6
+  },
+  "stop_rules": [
+    "failed_head_hash_prompt_contract_or_offline_validation_stops_before_api",
+    "failed_or_indeterminate_D_qualification_stops_before_production",
+    "qualification_only_always_pauses_after_aggregate_even_on_pass",
+    "ordinary_resume_cannot_cross_qualification_review_pause",
+    "production_requires_explicit_resume_production_authorization",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_frozen_input_action_rubric_schema_guard_orientation_or_policy_mutation",
+    "no_confirmation_adaptation_smoke_retry_astra_production_or_extra_call"
+  ]
+}

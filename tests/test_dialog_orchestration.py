@@ -273,7 +273,7 @@ def test_cognitive_failure_preserves_persistent_memory(monkeypatch):
     user_id = 504
     reset_user_profile(user_id)
     before = get_user_memory(user_id)["shadow_discovery_memory"]
-    error = CognitiveCoreError("api_failure", "failed")
+    error = CognitiveCoreError("validation_failure", "semantic wire failed")
     dialog_engine, core = _install_core(monkeypatch, [error])
 
     with pytest.raises(CognitiveCoreError):

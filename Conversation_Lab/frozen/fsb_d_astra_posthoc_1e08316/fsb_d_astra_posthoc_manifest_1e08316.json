@@ -1,0 +1,111 @@
+{
+  "experiment": "FSB-D ASTRA OTHER VS FROZEN DIRECT POST-HOC COMPARISON",
+  "head": "1e08316",
+  "comparison_question": "For each of the three already-saved independent Astra FSB-D actions, is its observable expected product value higher than, lower than, or equivalent to the same qualified frozen Direct Discrimination benchmark?",
+  "evaluator_model": "gpt-6-astra",
+  "source_run": {
+    "run_id": "fsbdms-20260921T061353Z-40674805",
+    "checkpoint_path": "Conversation_Lab/traces/fsb_d_model_swap_1e08316_runs/fsbdms-20260921T061353Z-40674805/checkpoint.jsonl",
+    "checkpoint_sha256": "E5B2272F55DCD6CDCEFF9641FADF365ED7A7A1716286D6DC0D6019BBFB081027",
+    "run_json_path": "Conversation_Lab/traces/fsb_d_model_swap_1e08316_runs/fsbdms-20260921T061353Z-40674805/run.json",
+    "run_json_sha256": "451D1AD5A020EB3A78A469224D3491C99CDE8A8FEE1AFD14A6DB4C1E44B61D00",
+    "runner_path": "Conversation_Lab/fsb_d_model_swap_runner_1e08316.py",
+    "runner_sha256": "A852EBAE646896CE18A425475EB6003D9A574E359829B1B897401E6E2718B236"
+  },
+  "frozen_context": {
+    "case_path": "Conversation_Lab/frozen/fsb_01_revised_policy_1e08316/fsb_d_case_1e08316.json",
+    "case_file_sha256": "27B60F09C230C6326EF5641C45B851A1346E6D9878E191DB7CE6A4BCAEC8117F",
+    "case_sha256": "3D058A3005A90F0A386AD6F9D4E1B19FEE6F68ECF83C8EE5CB611770BC74531A",
+    "state_sha256": "214BA473778BF16F00B717DD9F445115BF5168C21A68FCB64F88B62CACD9B890"
+  },
+  "direct_benchmark": {
+    "pair_path": "Conversation_Lab/frozen/fsb_01_revised_policy_1e08316/fsb_d_policy_pair_1e08316.json",
+    "pair_file_sha256": "58819C30A951CE6A2BF68EC24611B270BA8D3548BB9344EAF78F679FC73DA973",
+    "direct_action_sha256": "7E966A735CC47C63B7A4C37CFE3D506B662B6AF4C3D172BDB09301BA478561EA",
+    "direct_projection_sha256": "F1AC60788BE5D1E073A0B652A33D20C95F7E7843198FB1E66A6BE814AF4C26CA"
+  },
+  "evaluator_contract": {
+    "prompt_path": "Conversation_Lab/frozen/fsb_m_product_policy_ab_1550ec2/fsb_m_product_policy_evaluator_prompt_1550ec2.txt",
+    "prompt_sha256": "828E44FA534E2203284712B093E9A86A31DD12AEA8AA617A7E536D22F1F34453",
+    "schema_path": "Conversation_Lab/frozen/fsb_m_product_policy_ab_1550ec2/fsb_m_product_policy_evaluator_schema_1550ec2.json",
+    "schema_sha256": "0CF50E97EBF46F90F8ABECD8FC2A104BD8EC86CF9906D24A718F37CF5C96A216",
+    "rubric_reused_byte_identically": true,
+    "semantic_modification": false
+  },
+  "saved_actions": {
+    "FSB-D-A1": {
+      "completed_event_sha256": "7D82465ECFC145E27FD67ED06E1F9B9614DFAF1D84FFC802FC3EC143DA87F61F",
+      "observable_action_sha256": "B84F1AFC09D6519E43F3DF4923C1C23864B04DD5A119329CD9F2F83626D02A12"
+    },
+    "FSB-D-A2": {
+      "completed_event_sha256": "6B3472165791C215EFB78BE06CA866142E48D813B4B3268E1ADE019B91FF41C8",
+      "observable_action_sha256": "B0FABA41E472D117337065BED80AEF5857B68314B02A5E1D6B91A68F323F2344"
+    },
+    "FSB-D-A3": {
+      "completed_event_sha256": "6C7CB3A160C6A98FA16027D800F8167AD3239DFC6ADB090D4F0ABD69CEDC1580",
+      "observable_action_sha256": "A299F2EF6C8A426995A3C7A604102E48B647BF7EECD4758BB57EAFAAC36A73DE"
+    }
+  },
+  "sample_order": ["FSB-D-A1", "FSB-D-A2", "FSB-D-A3"],
+  "orientation_astra_on_left": {
+    "FSB-D-A1": [true, false, true],
+    "FSB-D-A2": [true, false, true],
+    "FSB-D-A3": [true, false, true]
+  },
+  "expected_request_sha256": {
+    "FSB-D-A1": [
+      "0481058F7699027E8562A3DB8B89A699DAF73792525EC4A1FED7105C9B684220",
+      "F3606A3A209DD0C10A0D404CF3CA8B10BEF91EB8C44B9AE0D8F74869C99A28A4",
+      "0481058F7699027E8562A3DB8B89A699DAF73792525EC4A1FED7105C9B684220"
+    ],
+    "FSB-D-A2": [
+      "8E7AA39E3665C74109725E90427E122AAEB076806FF2810005C721E4956F0BBA",
+      "47D3B7289153D1A82389275A6B6901497DD01518AFDF29BD7C94E8FA8F689CCD",
+      "8E7AA39E3665C74109725E90427E122AAEB076806FF2810005C721E4956F0BBA"
+    ],
+    "FSB-D-A3": [
+      "7FAB56D71CD64F8CE2A3A350F9031CBA3E51BFD724D0E312B548924B816B3F21",
+      "F4975C0B7E08C11E7C50DA1F5529DDE2F4C08A2A46E7A97BE3E9D57BC2C4F862",
+      "7FAB56D71CD64F8CE2A3A350F9031CBA3E51BFD724D0E312B548924B816B3F21"
+    ]
+  },
+  "per_sample_verdicts": [
+    "ASTRA_HIGHER",
+    "DIRECT_HIGHER",
+    "EQUIVALENT_OR_BOTH_ACCEPTABLE",
+    "ABSTAIN"
+  ],
+  "per_sample_aggregation": "Existing selected-action three-judgment aggregation: unanimous verdict wins; a 2/3 directional majority yields that directional verdict; every materially split non-directional pattern yields ABSTAIN. EQUIVALENT requires unanimous equivalence.",
+  "overall_rules": {
+    "direct_3_of_3": "DIRECT_REPRODUCIBLY_HIGHER",
+    "astra_3_of_3": "ASTRA_REPRODUCIBLY_HIGHER",
+    "direct_at_least_2_and_astra_0": "DIRECT_MAJORITY_HIGHER",
+    "astra_at_least_2_and_direct_0": "ASTRA_MAJORITY_HIGHER",
+    "equivalent_3_of_3": "EQUIVALENT_PATTERN",
+    "any_abstain": "INCONCLUSIVE",
+    "otherwise": "MIXED_COMPARATIVE_VALUE"
+  },
+  "protocol": {
+    "production_calls": 0,
+    "evaluator_calls": 9,
+    "retry": 0,
+    "smoke_calls": 0,
+    "confirmations": 0,
+    "adaptive_sampling": false,
+    "challenger_generation": false,
+    "all_calls_fixed_before_live": true
+  },
+  "api_budget": {
+    "production": 0,
+    "evaluator": 9,
+    "maximum_total": 9
+  },
+  "stop_rules": [
+    "failed_head_hash_source_run_action_context_direct_rubric_schema_or_request_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_source_action_context_direct_rubric_schema_orientation_or_aggregation_mutation",
+    "no_production_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

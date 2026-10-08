@@ -198,6 +198,86 @@ def test_input_view_includes_current_message_model_and_disabled_he():
     assert relation["source_message_ids"] == [history.messages[0].id]
 
 
+def test_frozen_recurring_mechanism_context_is_available_for_decision():
+    """Input regression only: this does not assert live LLM policy compliance."""
+    messages = (
+        _message(
+            DialogueRole.USER,
+            "Несколько раз худел на 5–7 кг за полтора-два месяца.",
+            1,
+        ),
+        _message(DialogueRole.SYSTEM, "Что обычно происходило дальше?", 2),
+        _message(
+            DialogueRole.USER,
+            "После тяжёлой рабочей недели пропускал обед и вечером переедал.",
+            3,
+        ),
+        _message(DialogueRole.SYSTEM, "Что значил для вас такой вечер?", 4),
+        _message(
+            DialogueRole.USER,
+            "Считал один неудачный вечер провалом всей попытки и всё бросал на недели.",
+            5,
+        ),
+        _message(DialogueRole.SYSTEM, "Это был разовый случай или повторялось?", 6),
+        _message(
+            DialogueRole.USER,
+            "Почти каждый раз повторялся тот же сценарий.",
+            7,
+        ),
+        _message(DialogueRole.SYSTEM, "Что происходило после первого срыва?", 8),
+    )
+    items = tuple(
+        ModelItem(
+            kind=kind,
+            content=content,
+            provenance=Provenance.USER_PROVIDED,
+            status=ItemStatus.RECORDED,
+            source_refs=(SourceReference(message_id=messages[index].id),),
+            created_turn=1,
+            updated_turn=4,
+        )
+        for kind, content, index in (
+            (
+                ModelItemKind.PREVIOUS_ATTEMPT,
+                "несколько успешных стартов со снижением веса на 5–7 кг",
+                0,
+            ),
+            (
+                ModelItemKind.EXPERIENCE,
+                "тяжёлая рабочая неделя, пропущенный обед и вечернее переедание",
+                2,
+            ),
+            (
+                ModelItemKind.BARRIER,
+                "после одного неудачного вечера считал попытку проваленной и прекращал усилия",
+                4,
+            ),
+            (
+                ModelItemKind.USER_INTERPRETATION,
+                "тот же механизм повторялся почти каждый раз",
+                6,
+            ),
+        )
+    )
+    model = HumanModel(items={item.id: item for item in items}, relations={})
+    current = _message(DialogueRole.USER, "Да, именно так и происходит.", 9)
+
+    payload = CognitiveCore._input_view(
+        current,
+        model,
+        None,
+        DialogueHistory(messages=messages),
+    )
+
+    assert [item["content"] for item in payload["human_model"]["items"]] == [
+        item.content for item in items
+    ]
+    assert [entry["text"] for entry in payload["dialogue_history"] if entry["sequence"] % 2] == [
+        messages[index].text for index in (0, 2, 4, 6)
+    ]
+    assert payload["human_experience"] == {"enabled": False}
+
+
 def test_previous_acs_view_and_system_prompt_are_sent():
     current, model, acs, history = _fixture()
     core, client = _core()
@@ -241,7 +321,8 @@ def test_system_prompt_requires_shared_handles_and_semantic_previous_targets():
     assert "resolution_kind=ordinary_addressed" in prompt
     assert "previous_target_handle" in prompt
     assert "Do not choose an internal outcome" in prompt
-    assert "ANSWERED remains explicit only for an appropriate CLARIFICATION target" in prompt
+    assert "OPEN_RESPONSE or CLARIFICATION target" in prompt
+    assert "records ANSWERED" in prompt
 
 
 def test_system_prompt_separates_target_support_from_item_reinforcement():
@@ -296,6 +377,18 @@ def test_system_prompt_distinguishes_consent_from_open_response():
         assert instruction in prompt
 
 
+def test_system_prompt_ends_cognitive_discovery_after_transition_consent():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+    for instruction in (
+        "согласием на предыдущий SYSTEM_TRANSITION",
+        "reconciliate его как CONSENTED",
+        "не утверждай, что консультант уже уведомлён",
+        "не спрашивай про канал, время или видеозвонок",
+        "deterministic runtime отдельно запросит и обработает телефон",
+    ):
+        assert instruction in prompt
+
+
 def test_system_prompt_uses_simple_consultant_policy():
     prompt = " ".join(CognitiveCore._system_prompt().split())
     for principle in (
@@ -315,6 +408,19 @@ def test_system_prompt_uses_simple_consultant_policy():
         "существенный или повторяющийся паттерн",
         "Reflection нужна, когда она соединяет части истории",
         "Не повторяй последнюю понятную реплику ради подтверждения",
+        "не начинай обычный factual turn ритуальным",
+        "Чувствительность темы сама по себе не оправдывает",
+        "для любого DecisionIntent убирай вступление",
+        "если оно добавляет значимую связь, следствие, паттерн или новое понимание",
+        "один focal conversational request за ход",
+        "не объединяй несколько независимых вопросов в анкету",
+        "expected consultation value",
+        "Валидную, но малозначимую локальную тему не нужно исчерпывать",
+        "вернись к более раннему пользовательскому материалу",
+        "достаточно надёжно устанавливает повторяющийся mechanism",
+        "существенно изменить рабочее понимание или следующий conversational Decision",
+        "содержательную Reflection, Recognition или уместное продвижение разговора",
+        "не обязательная Reflection после фиксированного числа ходов",
         "Не добывай ту же деталь снова",
         "Можно перейти к другой важной части истории",
         "ни один тип действия не имеет глобального приоритета",
@@ -372,6 +478,14 @@ def test_cognitive_cycle_uses_working_memory_not_decision_optimizer():
         "Уточнение нужно, когда одновременно есть существенно разные",
         "Отдельный эпизод не требует расследования точной причинной цепочки",
         "Такой вопрос не обязателен для каждого эпизода",
+        "не как привычное начало ходов",
+        "Для любого DecisionIntent вступление",
+        "один focal conversational request",
+        "по ожидаемой консультационной ценности",
+        "можно вернуться к более раннему пользовательскому материалу",
+        "достаточно надёжно устанавливает повторяющийся mechanism",
+        "существенно изменить рабочее понимание или следующий Decision",
+        "не обязательная Reflection после фиксированного числа ходов",
         "Stop Exploration является допустимым действием",
     ):
         assert principle.lower() in normalized.lower()

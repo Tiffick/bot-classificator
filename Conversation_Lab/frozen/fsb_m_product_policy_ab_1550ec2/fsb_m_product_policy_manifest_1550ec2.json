@@ -1,0 +1,57 @@
+{
+  "experiment": "FSB-M FROZEN PRODUCT-POLICY A/B",
+  "head": "1550ec2",
+  "purpose": "Compare direct experiential discrimination with a testable working version without production generation.",
+  "source_freeze": "Conversation_Lab/frozen/fsb_01_672455a",
+  "source_artifact_sha256": {
+    "fsb_01_cases_672455a.json": "E9CB63B9D54F19EBCEF06A592C83DF70C3E75561C934C0D453BD9D40E914CEA1",
+    "fsb_01_challengers_672455a.json": "23F38F097ED4B2A30902D22EEE128CB88EAE9B446EDA5E8C9912F1752960AF51"
+  },
+  "source_case": {
+    "case_id": "FSB-M",
+    "case_sha256": "7130056269615EF73D1811BE8A0A68186F2B3C4E0B3D0611F43B2D2DF62E331E",
+    "state_sha256": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337"
+  },
+  "production_prompt_binding": {
+    "git_path": "1550ec2:ai/prompts/cognitive_core_system_prompt.txt",
+    "sha256": "4FEB93BE179B7F7976F099EF828A8B578EBAB6CA0C06FC0C09CD147EF2C0AA14",
+    "used_for_generation": false
+  },
+  "frozen_artifact_sha256": {
+    "fsb_m_product_policy_pair_1550ec2.json": "263F877DCD5346E399301E9C1B72EBC3BB3667C62791F10A0986C10C0E14C924",
+    "fsb_m_product_policy_evaluator_prompt_1550ec2.txt": "828E44FA534E2203284712B093E9A86A31DD12AEA8AA617A7E536D22F1F34453",
+    "fsb_m_product_policy_evaluator_schema_1550ec2.json": "0CF50E97EBF46F90F8ABECD8FC2A104BD8EC86CF9906D24A718F37CF5C96A216",
+    "fsb_m_product_policy_guards_1550ec2.json": "3BD4F1D63BD508DA31111285EAEB3033733749D7C9F2516CC2FF3B0DBBE561A4"
+  },
+  "action_sha256": {
+    "A": "D52EEA314F733BB674D203E9298323FB58B990B29A4668D1A4AACB8F368067D5",
+    "B": "1A11CEB3CB4E94D4A090ED99C613CAD29A8D57E3E042A51C9D061A7EEA98B4F7"
+  },
+  "evaluator_model": "gpt-6-astra",
+  "orientation_a_on_left": [true, false, true, false, true, false],
+  "protocol": {
+    "production_calls": 0,
+    "evaluator_calls": 6,
+    "retry": 0,
+    "smoke_calls": 0,
+    "confirmations": 0,
+    "adaptive_sampling": false,
+    "action_generation": false,
+    "blind_labels_only": true
+  },
+  "aggregation": {
+    "A_HIGHER": "at least 4 of 6 normalized judgments are A_HIGHER",
+    "B_HIGHER": "at least 4 of 6 normalized judgments are B_HIGHER",
+    "EQUIVALENT_OR_BOTH_ACCEPTABLE": "at least 4 of 6 judgments are EQUIVALENT_OR_BOTH_ACCEPTABLE",
+    "INDETERMINATE": "all other distributions, including split directional evidence or dominant abstention"
+  },
+  "api_budget": {"production": 0, "evaluator": 6, "maximum_total": 6},
+  "stop_rules": [
+    "failed_head_hash_source_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_action_context_rubric_schema_guard_orientation_or_policy_mutation",
+    "no_production_generation_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

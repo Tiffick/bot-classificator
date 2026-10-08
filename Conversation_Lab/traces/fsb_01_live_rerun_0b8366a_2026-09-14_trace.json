@@ -1,0 +1,639 @@
+{
+  "experiment": "FSB-01 live rerun",
+  "head": "0b8366a",
+  "status": "STOPPED",
+  "preflight": {
+    "head": "0b8366a",
+    "artifact_sha256": {
+      "fsb_01_cases_0b8366a.json": "0480F88294C633A787C2D7A3A9329374F3E110BAE16D3D469CAB0CC5D69642F1",
+      "fsb_01_challengers_0b8366a.json": "35B3F78ECB471617AC0D7D1BD43ACA842339972997382FCBB7B38E40CA7CFEDF",
+      "fsb_01_evaluator_prompt_0b8366a.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+      "fsb_01_evaluator_schema_0b8366a.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B",
+      "fsb_01_measurement_plan_0b8366a.md": "2A83EAB01B8F5D2E4E2BC08B82063453FD9CF00F452273206913CD24CDD425E0",
+      "fsb_01_offline_validator_0b8366a.py": "7C17C9DC4EF6386CB3502DA509B7490DF46F3C615FF81FE31597B9AC8770050E",
+      "fsb_01_manifest_0b8366a.json": "4EB126C9B0876F4B9563D56ADE03754886CA84D97B6B7841CEC334A6630BD877",
+      "fsb_01_freeze_report_0b8366a.md": "6FD9C9A09D8CF43205B1828E72221BBCB8BE004DC1C08A25D2EAB93639406AEF"
+    },
+    "passed": true
+  },
+  "counts": {
+    "production": 6,
+    "evaluator": 0,
+    "total": 6
+  },
+  "calls": [
+    {
+      "number": 1,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-H",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuPxKsim7kFASxGNCRCnDyP52JDG",
+      "usage": {
+        "input_tokens": 6046,
+        "cached_input_tokens": 0,
+        "output_tokens": 3717,
+        "reasoning_output_tokens": 2752
+      }
+    },
+    {
+      "number": 2,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-M",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuQpoiP1ZcFMPZ1u47BVvrqyz60Y",
+      "usage": {
+        "input_tokens": 5716,
+        "cached_input_tokens": 4864,
+        "output_tokens": 2655,
+        "reasoning_output_tokens": 1856
+      }
+    },
+    {
+      "number": 3,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-R",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuRVFA2Ncof171TWnnqs7MA7l1Se",
+      "usage": {
+        "input_tokens": 5832,
+        "cached_input_tokens": 4864,
+        "output_tokens": 2677,
+        "reasoning_output_tokens": 1792
+      }
+    },
+    {
+      "number": 4,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-S",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuS3pCQvAzVeqAd1IIjQrzHe72xH",
+      "usage": {
+        "input_tokens": 5691,
+        "cached_input_tokens": 4864,
+        "output_tokens": 2445,
+        "reasoning_output_tokens": 1856
+      }
+    },
+    {
+      "number": 5,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-T",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuSUuczjMGZ2WGlmvPGbHqMBBFYT",
+      "usage": {
+        "input_tokens": 5958,
+        "cached_input_tokens": 4864,
+        "output_tokens": 2152,
+        "reasoning_output_tokens": 1472
+      }
+    },
+    {
+      "number": 6,
+      "type": "production",
+      "phase": "baseline",
+      "case_id": "FSB-A",
+      "requested_model": "gpt-5-mini",
+      "response_model": "gpt-5-mini-2025-08-07",
+      "response_id": "chatcmpl-ENuSsPedAxFbglwazUnASc8a2Ax6r",
+      "usage": {
+        "input_tokens": 5681,
+        "cached_input_tokens": 4864,
+        "output_tokens": 1889,
+        "reasoning_output_tokens": 1472
+      }
+    }
+  ],
+  "baseline": {
+    "FSB-H": {
+      "production_result": {
+        "decision_intent": "reflection",
+        "state_patch": {
+          "item_operations": [
+            {
+              "operation": "add",
+              "local_id": "item:before_meetings",
+              "existing_item_id": null,
+              "kind": "before",
+              "content": "Раньше я после работы спокойно встречался с друзьями",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 0,
+                "char_end": 52
+              }
+            },
+            {
+              "operation": "add",
+              "local_id": "item:now_avoids_meetings",
+              "existing_item_id": null,
+              "kind": "now",
+              "content": "теперь избегаю встреч",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 54,
+                "char_end": 77
+              }
+            },
+            {
+              "operation": "add",
+              "local_id": "item:emotion_embarrassment",
+              "existing_item_id": null,
+              "kind": "emotion",
+              "content": "мне неловко из-за того, как сидит одежда",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 79,
+                "char_end": 120
+              }
+            }
+          ],
+          "relation_operations": [
+            {
+              "operation": "add",
+              "local_id": "relation:embarrassment_link_avoidance",
+              "existing_relation_id": null,
+              "source_items": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:emotion_embarrassment"
+                }
+              ],
+              "target_items": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:now_avoids_meetings"
+                }
+              ],
+              "meaning": "неловкость из-за одежды связана с избеганием встреч",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 79,
+                "char_end": 120
+              }
+            }
+          ],
+          "proposal_materializations": []
+        },
+        "reconciliation": [
+          {
+            "previous_response_target_ids": [
+              "rt_d544c7ea370b55ef9b656c43f0174027"
+            ],
+            "outcome": "answered",
+            "source_span": {
+              "char_start": 0,
+              "char_end": 120
+            }
+          }
+        ],
+        "system_action": {
+          "contents": [
+            {
+              "local_id": "content:reflection_1",
+              "kind": "system_reflection",
+              "semantic_content": "Вы говорите, что раньше спокойно встречались с друзьями, а теперь избегаете встреч, и связываете это с тем, что вам неловко из-за того, как сидит одежда.",
+              "model_item_refs": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:before_meetings"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:now_avoids_meetings"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:emotion_embarrassment"
+                },
+                {
+                  "existing_item_id": "mi_2a928f1105a55a7597a303d28388f5a8",
+                  "local_item_id": null
+                }
+              ],
+              "relation_refs": []
+            }
+          ],
+          "response_targets": [
+            {
+              "local_id": "target:reflection_eval",
+              "active_content_local_id": "content:reflection_1",
+              "subject": {
+                "kind": "active_content",
+                "active_content_local_id": "content:reflection_1",
+                "item_reference": null,
+                "relation_reference": null
+              },
+              "interaction": "evaluation"
+            }
+          ]
+        },
+        "reply_segments": [
+          {
+            "local_id": "segment:reflection_1",
+            "text": "Понимаю. Раньше вы встречались с друзьями после работы, а теперь избегаете таких встреч — вы связываете это с неловкостью из-за того, как сидит одежда. Так правильно?",
+            "realizes_action_content_ids": [
+              "content:reflection_1"
+            ]
+          }
+        ]
+      },
+      "selected_action": {
+        "decision_intent": "reflection",
+        "semantic_focus": "Вы говорите, что раньше спокойно встречались с друзьями, а теперь избегаете встреч, и связываете это с тем, что вам неловко из-за того, как сидит одежда.",
+        "basis_evidence_refs": []
+      }
+    },
+    "FSB-M": {
+      "production_result": {
+        "decision_intent": "reflection",
+        "state_patch": {
+          "item_operations": [
+            {
+              "operation": "add",
+              "local_id": "item:case1",
+              "existing_item_id": null,
+              "kind": "experience",
+              "content": "В одном случае пропустил обед (внутреннее/физиологическое истощение).",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 0,
+                "char_end": 31
+              }
+            },
+            {
+              "operation": "add",
+              "local_id": "item:case2",
+              "existing_item_id": null,
+              "kind": "experience",
+              "content": "В другом днём нормально поел, но перед ужином был тяжёлый разговор (эмоциональный триггер).",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 35,
+                "char_end": 101
+              }
+            }
+          ],
+          "relation_operations": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [
+          {
+            "previous_response_target_ids": [
+              "rt_a5a706ebfc76599aa2543ffe7eaa9920"
+            ],
+            "outcome": "answered",
+            "source_span": {
+              "char_start": 0,
+              "char_end": 102
+            }
+          }
+        ],
+        "system_action": {
+          "contents": [
+            {
+              "local_id": "content:reflection_1",
+              "kind": "system_reflection",
+              "semantic_content": "Похоже, что в одном случае основная причина — физиологический голод после пропуска обеда, а в другом — эмоциональная реакция на тяжёлый разговор, несмотря на то что днём вы поели. Это соотносится с вашей целью вернуть ощущение управления вечером и с попыткой заранее готовить ужин.",
+              "model_item_refs": [
+                {
+                  "existing_item_id": "mi_deff0fe0f0df51ee895699c27cf13763",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_c6b610b39ee0581386211d659d835b83",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:case1"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:case2"
+                }
+              ],
+              "relation_refs": []
+            }
+          ],
+          "response_targets": [
+            {
+              "local_id": "target:eval_reflection_1",
+              "active_content_local_id": "content:reflection_1",
+              "subject": {
+                "kind": "active_content",
+                "active_content_local_id": "content:reflection_1",
+                "item_reference": null,
+                "relation_reference": null
+              },
+              "interaction": "evaluation"
+            }
+          ]
+        },
+        "reply_segments": [
+          {
+            "local_id": "segment:reflection_1",
+            "text": "Похоже, что в первом случае причина была в голоде (вы пропустили обед), а во втором — в эмоциональной реакции после тяжёлого разговора, даже несмотря на то, что днём вы поели. Верно ли это описание, или я что‑то упустил?",
+            "realizes_action_content_ids": [
+              "content:reflection_1"
+            ]
+          }
+        ]
+      },
+      "selected_action": {
+        "decision_intent": "reflection",
+        "semantic_focus": "Похоже, что в одном случае основная причина — физиологический голод после пропуска обеда, а в другом — эмоциональная реакция на тяжёлый разговор, несмотря на то что днём вы поели. Это соотносится с вашей целью вернуть ощущение управления вечером и с попыткой заранее готовить ужин.",
+        "basis_evidence_refs": []
+      }
+    },
+    "FSB-R": {
+      "production_result": {
+        "decision_intent": "reflection",
+        "state_patch": {
+          "item_operations": [
+            {
+              "operation": "add",
+              "local_id": "item:prev_attempt",
+              "existing_item_id": null,
+              "kind": "previous_attempt",
+              "content": "Пробовал просто есть меньше",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 0,
+                "char_end": 107
+              }
+            },
+            {
+              "operation": "add",
+              "local_id": "item:barrier_hunger_after_shift",
+              "existing_item_id": null,
+              "kind": "barrier",
+              "content": "после поздней смены сильный голод быстро возвращает меня к прежнему режиму",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 0,
+                "char_end": 107
+              }
+            }
+          ],
+          "relation_operations": [
+            {
+              "operation": "add",
+              "local_id": "relation:attempt_hindered_by_barrier",
+              "existing_relation_id": null,
+              "source_items": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:prev_attempt"
+                }
+              ],
+              "target_items": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:barrier_hunger_after_shift"
+                }
+              ],
+              "meaning": "предыдущая попытка мешается из-за барьера (голод после смены)",
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 0,
+                "char_end": 107
+              }
+            }
+          ],
+          "proposal_materializations": []
+        },
+        "reconciliation": [
+          {
+            "previous_response_target_ids": [
+              "rt_0f64dde7f3e157e38639c674f8a313bb"
+            ],
+            "outcome": "answered",
+            "source_span": {
+              "char_start": 0,
+              "char_end": 107
+            }
+          }
+        ],
+        "system_action": {
+          "contents": [
+            {
+              "local_id": "content:reflection_1",
+              "kind": "system_reflection",
+              "semantic_content": "Похоже, вы пробовали есть меньше, но когда работа — поздняя смена, сильный голод быстро возвращает вас к прежнему режиму. Это выглядит как значимый барьер (физический голод после смены), который мешает удерживать сокращённый приём пищи. Верно ли такое описание?",
+              "model_item_refs": [
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:prev_attempt"
+                },
+                {
+                  "existing_item_id": null,
+                  "local_item_id": "item:barrier_hunger_after_shift"
+                }
+              ],
+              "relation_refs": []
+            }
+          ],
+          "response_targets": [
+            {
+              "local_id": "target:reflection_eval",
+              "active_content_local_id": "content:reflection_1",
+              "subject": {
+                "kind": "active_content",
+                "active_content_local_id": "content:reflection_1",
+                "item_reference": null,
+                "relation_reference": null
+              },
+              "interaction": "evaluation"
+            }
+          ]
+        },
+        "reply_segments": [
+          {
+            "local_id": "segment:1",
+            "text": "Похоже, вы пробовали есть меньше, но после поздней смены сильный голод быстро возвращает вас к прежнему режиму. Верно ли, что именно этот сильный голод после смены является главным препятствием для вашей попытки?",
+            "realizes_action_content_ids": [
+              "content:reflection_1"
+            ]
+          }
+        ]
+      },
+      "selected_action": {
+        "decision_intent": "reflection",
+        "semantic_focus": "Похоже, вы пробовали есть меньше, но когда работа — поздняя смена, сильный голод быстро возвращает вас к прежнему режиму. Это выглядит как значимый барьер (физический голод после смены), который мешает удерживать сокращённый приём пищи. Верно ли такое описание?",
+        "basis_evidence_refs": []
+      }
+    },
+    "FSB-S": {
+      "production_result": {
+        "decision_intent": "reflection",
+        "state_patch": {
+          "item_operations": [
+            {
+              "operation": "reinforce",
+              "local_id": null,
+              "existing_item_id": "mi_caafa1e1c3d95f48abe41e3a04fe5989",
+              "kind": null,
+              "content": null,
+              "evidence_origin": "current_user_material",
+              "source_span": {
+                "char_start": 14,
+                "char_end": 65
+              }
+            }
+          ],
+          "relation_operations": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [
+          {
+            "previous_response_target_ids": [
+              "rt_3022a1aebd5e519f98b4abe4d030e054"
+            ],
+            "outcome": "answered",
+            "source_span": {
+              "char_start": 14,
+              "char_end": 65
+            }
+          }
+        ],
+        "system_action": {
+          "contents": [
+            {
+              "local_id": "content:reflection_1",
+              "kind": "system_reflection",
+              "semantic_content": "Понял — вы не отслеживали начало эпизодов. Из того, что уже известно: по вечерам вы иногда едите больше, но нет наблюдения о том, что конкретно это запускает.",
+              "model_item_refs": [
+                {
+                  "existing_item_id": "mi_325809be034856d1bdde60dc79f20c20",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_caafa1e1c3d95f48abe41e3a04fe5989",
+                  "local_item_id": null
+                }
+              ],
+              "relation_refs": []
+            }
+          ],
+          "response_targets": [
+            {
+              "local_id": "target:reflection_eval_1",
+              "active_content_local_id": "content:reflection_1",
+              "subject": {
+                "kind": "active_content",
+                "active_content_local_id": "content:reflection_1",
+                "item_reference": null,
+                "relation_reference": null
+              },
+              "interaction": "evaluation"
+            }
+          ]
+        },
+        "reply_segments": [
+          {
+            "local_id": "segment:reflection_1",
+            "text": "Понял — вы не отслеживали начало эпизодов. Судя по тому, что вы сказали, по вечерам иногда едите больше, но нет наблюдений, что именно это запускает. Это верно?",
+            "realizes_action_content_ids": [
+              "content:reflection_1"
+            ]
+          }
+        ]
+      },
+      "selected_action": {
+        "decision_intent": "reflection",
+        "semantic_focus": "Понял — вы не отслеживали начало эпизодов. Из того, что уже известно: по вечерам вы иногда едите больше, но нет наблюдения о том, что конкретно это запускает.",
+        "basis_evidence_refs": []
+      }
+    },
+    "FSB-T": {
+      "production_result": {
+        "decision_intent": "transition",
+        "state_patch": {
+          "item_operations": [],
+          "relation_operations": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [
+          {
+            "previous_response_target_ids": [
+              "rt_5cc51f0170225be88ddc6e7fd25e601f"
+            ],
+            "outcome": "supported",
+            "source_span": {
+              "char_start": 0,
+              "char_end": 90
+            }
+          }
+        ],
+        "system_action": {
+          "contents": [
+            {
+              "local_id": "content:transition_1",
+              "kind": "system_transition",
+              "semantic_content": "Предложить переход к живому консультанту, кратко объяснив, чем он может помочь (проработать препятствия — поздние смены и голод, обсудить реальные шаги и варианты поддержки, согласовать удобный формат и время), и запросить согласие пользователя на передачу истории / запись на консультацию.",
+              "model_item_refs": [
+                {
+                  "existing_item_id": "mi_9d93dd3e6f9b5e4a87562f51a3c0db30",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_2df026ae90f15f969d0bf1e7cc8c3e5a",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_9c4a216ae56555a7995ec71c84df6b1f",
+                  "local_item_id": null
+                },
+                {
+                  "existing_item_id": "mi_e539ec8df9eb5d8599a2dfc6f50eab0b",
+                  "local_item_id": null
+                }
+              ],
+              "relation_refs": []
+            }
+          ],
+          "response_targets": [
+            {
+              "local_id": "target:consent_transition_1",
+              "active_content_local_id": "content:transition_1",
+              "subject": {
+                "kind": "active_content",
+                "active_content_local_id": "content:transition_1",
+                "item_reference": null,
+                "relation_reference": null
+              },
+              "interaction": "consent"
+            }
+          ]
+        },
+        "reply_segments": [
+          {
+            "local_id": "segment:offer_transition_1",
+            "text": "Рад(а), что это описание подходит и достаточно. Могу предложить передать вашу историю живому консультанту и записать на краткую консультацию — он поможет подробнее проработать препятствия (поздние смены и сильный голод), обсудить практические шаги и варианты поддержки и согласовать удобное время/формат. Хотите, чтобы я передал(а) вашу историю и помог(ла) записаться на консультацию?",
+            "realizes_action_content_ids": [
+              "content:transition_1"
+            ]
+          }
+        ]
+      },
+      "selected_action": {
+        "decision_intent": "transition",
+        "semantic_focus": "Предложить переход к живому консультанту, кратко объяснив, чем он может помочь (проработать препятствия — поздние смены и голод, обсудить реальные шаги и варианты поддержки, согласовать удобный формат и время), и запросить согласие пользователя на передачу истории / запись на консультацию.",
+        "basis_evidence_refs": []
+      }
+    }
+  },
+  "confirmations": {},
+  "frozen_verdict": "INCONCLUSIVE",
+  "failure": "CognitiveCoreError: Cognitive Core response violates CognitiveTurnResult.",
+  "traceback": "Traceback (most recent call last):\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\cognitive_core.py\", line 216, in propose\n    result = CognitiveTurnResult.model_validate(converted_payload)\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\venv\\lib\\site-packages\\pydantic\\main.py\", line 705, in model_validate\n    return cls.__pydantic_validator__.validate_python(\npydantic_core._pydantic_core.ValidationError: 1 validation error for CognitiveTurnResult\n  Value error, RECOGNITION decision requires RECOGNITION_OPTION content. [type=value_error, input_value={'decision_intent': 'reco...'content:question_1']}]}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.11/v/value_error\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\.fsb_01_rerun_tmp.py\", line 255, in <module>\n    full, selected = production(cases[case_id], \"baseline\")\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\Conversation_Lab\\.fsb_01_rerun_tmp.py\", line 125, in production\n    result = CognitiveCore(ProductionClient(case[\"case_id\"], phase), model=\"gpt-5-mini\").propose(*load_input(case))\n  File \"C:\\1_ALL\\Bot_classificator\\Ai_lead_bot_project\\ai\\cognitive_core.py\", line 222, in propose\n    raise CognitiveCoreError(\nai.cognitive_core.CognitiveCoreError: Cognitive Core response violates CognitiveTurnResult.\n"
+}

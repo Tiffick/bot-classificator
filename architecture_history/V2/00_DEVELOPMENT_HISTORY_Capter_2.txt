@@ -1611,3 +1611,3722 @@ Operational Decision Policy не изменена.
 повторный полный live Conversation Lab на том же синтетическом профиле
 для завершения behavioral regression gate Operational Decision Policy
 и проверки, устранён ли Turn 6 reference failure.
+
+================================================================================
+COGNITIVE CORE — SELECTED-ACTION EVALUATION AND VALUE-BASED DECISION POLICY
+================================================================================
+
+КОНТЕКСТ
+
+После Reference Ownership Hardening работа продолжилась над главным
+незакрытым вопросом Cognitive Core:
+
+насколько выбранный Decision действительно является наиболее полезным
+следующим действием в конкретном контексте Discovery.
+
+Технический контракт Cognitive Core к этому моменту уже был достаточно
+устойчив:
+
+- один Cognitive LLM call;
+- explicit DecisionIntent;
+- deterministic Python state boundary;
+- fail-closed validation;
+- persistent HumanModel / ACS / DialogueHistory;
+- Operational Decision Policy;
+- Product Boundary;
+- Reference Ownership.
+
+Основная неопределённость сместилась с технической корректности на
+качество Formulation → Decision.
+
+
+SELECTED-ONLY PRODUCTION BOUNDARY
+---------------------------------
+
+В ходе экспериментального проектирования было установлено важное ограничение:
+
+материализация нескольких внутренних candidates / consideration внутри
+production Cognitive Core сама является вмешательством в процесс Decision
+и способна изменить выбранное действие.
+
+Поэтому production architecture сохраняет SELECTED-ONLY boundary.
+
+Cognitive Core возвращает только:
+
+- выбранный DecisionIntent;
+- выбранный SystemAction;
+- Response.
+
+Не добавляются:
+
+- список внутренних кандидатов;
+- rationale;
+- chain-of-thought;
+- scores;
+- скрытая сравнительная таблица;
+- persistent consideration state.
+
+Нельзя делать выводы о том, какие альтернативы модель "внутренне рассматривала".
+
+Наблюдаемая ошибка формулируется только через фактический output:
+
+MISSED HIGH-VALUE ALTERNATIVE.
+
+
+SELECTED ACTION EVALUATOR
+-------------------------
+
+Для независимой оценки выбранного действия был создан offline/lab evaluator.
+
+Основные файлы:
+
+Conversation_Lab/selected_action_evaluator.py
+tests/fixtures/selected_action_evaluator_frozen_7674220.json
+tests/test_selected_action_evaluator.py
+
+Evaluator получает:
+
+- frozen conversation context;
+- фактически выбранное действие;
+- независимо заранее frozen challenger;
+- blind orientation.
+
+Он НЕ получает и не реконструирует hidden reasoning production model.
+
+Используются три blind judgments с перестановкой orientation.
+
+Возможные aggregate verdicts:
+
+SELECTED_HIGHER
+CHALLENGER_HIGHER
+EQUIVALENT_OR_BOTH_ACCEPTABLE
+ABSTAIN
+
+CHALLENGER_HIGHER означает наблюдаемый:
+
+MISSED HIGH-VALUE ALTERNATIVE.
+
+
+FROZEN SCENARIO BATTERY
+-----------------------
+
+Для behavioral evaluation была сформирована frozen battery FSB:
+
+H — Human / Meaningful Change
+M — Mechanism / Expertise
+R — Reflection
+S — Stop / exhausted semantic axis
+T — Transition
+A — Ambiguous short answer
+
+Эксперименты проводились с frozen context и frozen challengers,
+чтобы изменения Decision Policy можно было сравнивать воспроизводимо.
+
+
+INITIAL FSB RESULT
+------------------
+
+На ранней policy версии воспроизводимые проблемы наблюдались в:
+
+M
+R
+S
+
+При этом:
+
+H — selected action оценивался выше challenger;
+T — действия были эквивалентно приемлемыми;
+A — действия были эквивалентно приемлемыми.
+
+Первоначальные prompt corrections marginal-value policy не устранили
+устойчивые M/R/S misses.
+
+
+MODEL-CAPABILITY ISOLATION
+--------------------------
+
+Для отделения архитектурной проблемы от model-execution были проведены
+сравнения моделей на одинаковых frozen inputs.
+
+ASTRA:
+
+- R стала выдавать полноценную integrative working-picture Reflection;
+- S корректно выбирала STOP_EXPLORATION;
+- M продолжала предпочитать осторожную Reflection/Evaluation вместо
+  прямого discriminating question.
+
+Это показало, что representation/state достаточны как минимум для R/S.
+
+Отдельный matched M audit подтвердил:
+
+Astra получает необходимый пользовательский материал,
+может сформулировать альтернативы hunger / tension,
+но устойчиво выбирает Reflection вместо direct discrimination.
+
+После двух последовательных prompt tie-breaker clarifications поведение
+Astra в M практически не изменилось.
+
+На matched A/B:
+
+control и treatment:
+
+- REFLECTION 3/3;
+- direct discrimination 0/3;
+- challenger higher во всех judgments.
+
+Следовательно, дополнительное prompt clarification само по себе
+не изменило Astra Decision execution.
+
+
+MODEL-SWAP FALSIFICATION
+------------------------
+
+Тот же frozen FSB-M был запущен на gpt-5-mini.
+
+Результат:
+
+- 2/3 outputs выбрали direct discrimination;
+- 0/3 выбрали Reflection;
+- 1/3 содержал semantic/context error.
+
+Это стало наблюдаемым evidence model effect.
+
+Earliest localized boundary:
+
+MODEL EXECUTION
+Formulation → Decision selection.
+
+Не было найдено оснований считать первичной причиной:
+
+- HumanModel representation;
+- ACS;
+- Data Contract;
+- adapter;
+- StateApplier;
+- selected-only boundary;
+- one-call architecture.
+
+
+FULL CROSS-MODEL REGRESSION
+---------------------------
+
+Полная FSB battery на mini показала:
+
+H — PASS
+M — FAIL / semantic context error
+R — FAIL / слишком локальная Reflection
+S — FAIL / ritual Reflection вместо Stop
+T — PASS
+A — PASS
+
+Повторные Astra runs показали:
+
+R — устойчивый PASS;
+S — устойчивый PASS;
+H — PASS;
+T — PASS;
+A — PASS;
+M — failure по действовавшей тогда frozen policy.
+
+Таким образом старый cross-model matrix показывал trade-off:
+
+- Astra сильнее на R/S;
+- mini иногда легче выбирает direct discrimination в M;
+- ни одна модель не покрывала H/M/R/S/T/A идеально по старому стандарту.
+
+Однако это ещё не стало основанием для model routing.
+
+
+ПЕРЕСМОТР ПРОДУКТОВОГО СТАНДАРТА FSB-M
+--------------------------------------
+
+После анализа M был поставлен более фундаментальный продуктовый вопрос:
+
+должна ли система вообще собирать дополнительное discriminating observation,
+если уже имеющегося пользовательского материала достаточно, чтобы осторожно
+вынести человеку рабочую версию и попросить её подтвердить, отвергнуть
+или исправить?
+
+Была сформулирована альтернативная стратегия:
+
+TESTABLE WORKING VERSION.
+
+Пример функции:
+
+"Похоже, здесь могли действовать разные вещи.
+Это только рабочие версии, не установленные причины.
+На ваш опыт это похоже, частично похоже или было иначе?"
+
+Ключевая идея:
+
+неопределённость системы сама по себе не является причиной задавать
+дополнительный вопрос.
+
+Если grounded working version уже можно безопасно вынести пользователю,
+Evaluation этой версии сама может дать полезный Human Model delta.
+
+Возможные результаты:
+
+SUPPORTED
+REJECTED
+PARTIALLY_SUPPORTED
+UNCERTAIN
+user correction
+
+Все они являются полноценным Discovery result.
+
+
+ARCHITECTURE AUDIT OF TESTABLE WORKING VERSION
+----------------------------------------------
+
+Offline audit подтвердил, что новая сущность или новый intent не нужны.
+
+Существующая архитектура уже поддерживает этот путь через:
+
+RECOGNITION
++
+RECOGNITION_OPTION
++
+EVALUATION
++
+ProposalMaterialization
++
+SYSTEM_PROPOSED provenance.
+
+REFLECTION также может использоваться, если осторожная версия встроена
+в более широкую working picture.
+
+Expert Recognition остаётся:
+
+NOT Objective Diagnosis.
+
+Working version:
+
+- не становится фактом;
+- сохраняет provenance;
+- может быть отвергнута;
+- может быть частично поддержана;
+- может остаться uncertain;
+- может быть исправлена пользователем.
+
+Human Experience по-прежнему:
+
+NOT evidence о конкретном пользователе.
+
+
+DIRECT DISCRIMINATION VS TESTABLE WORKING VERSION
+-------------------------------------------------
+
+Был подготовлен отдельный frozen product-policy A/B experiment.
+
+A — DIRECT DISCRIMINATION
+
+Вопрос запрашивает доступное пользователю наблюдение,
+которое может различить materially different working explanations.
+
+B — TESTABLE WORKING VERSION
+
+Уже имеющийся пользовательский материал используется для осторожной,
+явно гипотетической working version, после чего пользователь оценивает её.
+
+Для эксперимента была создана новая симметричная product rubric.
+
+Она сравнивала:
+
+- Expected Human Model delta;
+- User burden;
+- Grounding;
+- Correctability;
+- Epistemic safety;
+- Forward value;
+- Natural consultation quality;
+- Product Boundary.
+
+Критическое правило rubric:
+
+REDUCTION OF SYSTEM UNCERTAINTY
+не имеет самостоятельной пользовательской ценности.
+
+Ни A, ни B не получают преимущества по типу действия.
+
+
+PRODUCT-POLICY A/B RESULT
+-------------------------
+
+Run:
+
+fsbmpp-20260916T062431Z-56927728
+
+Production calls:
+
+0
+
+Evaluator calls:
+
+6
+
+Orientations:
+
+A-left: 3
+B-left: 3
+
+Результат:
+
+B_HIGHER: 6/6
+A_HIGHER: 0/6
+EQUIVALENT: 0/6
+ABSTAIN: 0/6
+
+В обеих orientation:
+
+TESTABLE WORKING VERSION выиграла 3/3.
+
+Position bias не обнаружен.
+
+Эксперимент относится к конкретному frozen FSB-M context
+и НЕ доказывает универсальное преимущество Recognition над вопросами.
+
+Он поддержал более узкий продуктовый вывод:
+
+direct discrimination не должна автоматически получать преимущество
+только потому, что уменьшает epistemic uncertainty Core.
+
+
+REVISED VALUE PRINCIPLE
+-----------------------
+
+Принято новое value-based правило:
+
+REDUCTION OF SYSTEM UNCERTAINTY
+САМА ПО СЕБЕ
+НЕ ЯВЛЯЕТСЯ ПОЛЬЗОВАТЕЛЬСКОЙ ЦЕННОСТЬЮ.
+
+Если уже имеющийся пользовательский материал позволяет сформулировать:
+
+- grounded;
+- безопасную;
+- легко отвергаемую;
+- provenance-aware
+
+TESTABLE WORKING VERSION,
+
+и Evaluation этой версии способна существенно улучшить:
+
+- Human Model;
+- Formulation;
+- или следующий полезный Decision,
+
+дополнительный epistemic question НЕ ОБЯЗАТЕЛЕН.
+
+DIRECT DISCRIMINATION сохраняет полноценную роль.
+
+Она предпочтительна, когда доступное пользователю различающее наблюдение
+даёт больший expected useful delta для:
+
+- Formulation;
+- различения materially different working explanations;
+- следующего полезного Decision.
+
+Таким образом правило НЕ является:
+
+"Recognition лучше вопроса."
+
+И НЕ является:
+
+"Не задавать уточняющих вопросов."
+
+Правило является:
+
+сравнивать ожидаемую ПОЛЕЗНУЮ ценность действий,
+а не количество неопределённости, которое Core сможет убрать.
+
+
+GUARDS
+------
+
+Testable Working Version допустима только при сохранении границ:
+
+- grounded в пользовательском материале;
+- hypothesis != fact;
+- system-proposed provenance;
+- Human Experience != evidence;
+- пользователь может подтвердить;
+- частично подтвердить;
+- отвергнуть;
+- исправить;
+- сказать "не знаю";
+- никакого objective medical / physiological / psychological diagnosis;
+- никакой generic ungrounded causal guess;
+- никакой ritual Reflection;
+- rejected version не возвращается автоматически без нового основания;
+- Recognition не используется для продавливания согласия;
+- дополнительная деталь не собирается только ради уверенности Core.
+
+
+SOURCE-OF-TRUTH AND PRODUCTION POLICY UPDATE
+--------------------------------------------
+
+После отдельного design audit новая policy была минимально перенесена в:
+
+Research/Human_Experience/Weight/12_Cognitive_Cycle.txt
+
+ai/prompts/cognitive_core_system_prompt.txt
+
+tests/test_cognitive_core.py
+
+Source of Truth:
+
+Recognition теперь явно может использовать осторожную working version,
+grounded непосредственно в уже имеющемся пользовательском материале.
+
+Human Experience остаётся источником возможностей, но не evidence.
+
+Value / Sufficiency теперь симметрично сравнивает:
+
+- useful delta нового discriminating observation;
+- useful delta Evaluation testable working version.
+
+Production prompt:
+
+удалена старая асимметрия, при которой direct discriminator получал
+преимущество за epistemic information value, а Reflection фактически
+рассматривалась как ограниченный override.
+
+Новая production policy не даёт глобального преимущества:
+
+- DIRECT DISCRIMINATION;
+- RECOGNITION;
+- TESTABLE WORKING VERSION;
+- REFLECTION.
+
+Выбор остаётся value-based.
+
+
+SYMMETRY TEST HARDENING
+-----------------------
+
+Pre-commit review обнаружил не ошибку самой policy,
+а недостаточную защиту focused tests от будущей противоположной асимметрии.
+
+Tests были усилены.
+
+Теперь они проверяют весь marginal-value policy block и должны обнаруживать:
+
+1. глобальный приоритет DIRECT DISCRIMINATION;
+2. глобальный приоритет TESTABLE WORKING VERSION / RECOGNITION.
+
+Были проведены mutation checks.
+
+MUTATION A:
+
+"Always prefer direct discrimination whenever a discriminating
+question is available."
+
+Result:
+
+CAUGHT.
+
+MUTATION B:
+
+"Always prefer Recognition whenever a grounded working version
+can be formulated."
+
+Result:
+
+CAUGHT.
+
+Production prompt после mutation checks восстановлен byte-for-byte.
+
+FSB-M gold DecisionIntent намеренно НЕ добавлен.
+
+Оба качественных действия остаются допустимыми.
+
+
+FINAL VALIDATION
+----------------
+
+После финального policy и test hardening:
+
+Focused policy tests:
+PASS
+
+Cognitive Core:
+92 passed
+
+CognitiveTurn + StateApplier:
+78 passed
+
+Full project pytest:
+329 passed
+
+py_compile:
+PASS
+
+git diff --check:
+PASS
+
+Mutation A:
+CAUGHT
+
+Mutation B:
+CAUGHT
+
+Final pre-commit review:
+PASS
+
+Blockers:
+NONE
+
+
+HISTORY INTERPRETATION
+----------------------
+
+История старых экспериментов НЕ переписывается.
+
+Astra FSB-M outputs остаются:
+
+FAILURES UNDER OLD FROZEN POLICY,
+
+поскольку старый evaluator корректно сравнивал их с direct discrimination
+по действовавшему тогда стандарту.
+
+Product-policy A/B 6/6 является отдельным последующим evidence,
+которое послужило основанием изменить policy вперёд.
+
+По revised policy осторожная Recognition / Reflection + Evaluation
+может быть самостоятельным high-value action.
+
+Но это не означает автоматической ретроспективной переклассификации
+всех старых Astra outputs как правильных.
+
+Их точное качество по revised policy должно оцениваться отдельно,
+если это потребуется.
+
+
+MODEL ROUTING
+-------------
+
+Прежний M/R/S cross-model trade-off больше не является достаточным
+основанием для model routing.
+
+Причина:
+
+M failure был определён относительно старого product standard,
+который теперь изменён.
+
+При этом routing также не объявлен окончательно ненужным.
+
+Сначала должна быть проверена фактическая behavioral работа Cognitive Core
+по новой value-based policy.
+
+Никакой model routing в рамках этого этапа не добавлялся.
+
+
+ARCHITECTURE STATUS
+-------------------
+
+Не потребовались:
+
+- новый Engine;
+- новый DecisionIntent;
+- новый persistent state;
+- изменение HumanModel;
+- изменение ACS;
+- изменение Discovery Data Model;
+- изменение CognitiveTurn contract;
+- изменение StateApplier;
+- второй LLM call;
+- reasoning/rationale;
+- candidate materialization;
+- numeric Value scores;
+- model routing.
+
+Сохранена архитектура:
+
+ONE COGNITIVE LLM CALL
++
+SELECTED-ONLY DECISION OUTPUT
++
+DETERMINISTIC PYTHON STATE BOUNDARY.
+
+
+FINAL COMMIT
+------------
+
+Commit:
+
+1e08316 Refine Cognitive Core value-based decision policy
+
+Изменены только:
+
+Research/Human_Experience/Weight/12_Cognitive_Cycle.txt
+ai/prompts/cognitive_core_system_prompt.txt
+tests/test_cognitive_core.py
+
+Commit отправлен в main.
+
+GitHub main:
+
+1550ec2
+→
+1e08316
+
+
+ТЕКУЩЕЕ СОСТОЯНИЕ
+-----------------
+
+Cognitive Core теперь имеет явно зафиксированную value-based policy,
+в которой дополнительный вопрос не получает преимущество только потому,
+что повышает уверенность системы.
+
+TESTABLE WORKING VERSION является полноценным Discovery action,
+когда Evaluation способна дать существенный полезный delta.
+
+DIRECT DISCRIMINATION остаётся полноценным Discovery action,
+когда новое различающее наблюдение даёт больший полезный delta.
+
+Ни один тип действия не имеет глобального приоритета.
+
+Следующий этап:
+
+поведенческая проверка Cognitive Core уже на новой policy.
+
+Нужно проверить в frozen / Conversation Lab:
+
+- как новая policy реально влияет на FSB-M;
+- сохраняются ли сильные Astra результаты H/R/S/T/A;
+- не появился ли новый bias в сторону Recognition;
+- не исчезли ли действительно ценные discriminating questions;
+- сохраняются ли Human / Meaningful Change и Mechanism / Expertise;
+- сохраняются ли Reflection, Stop, ambiguity и Transition;
+- требуется ли после новой behavioral evidence вообще возвращаться
+  к вопросу model routing.
+
+================================================================================
+
+================================================================================
+COGNITIVE CORE — SIMPLIFIED CONSULTANT POLICY AND SEMANTIC WIRE BOUNDARY
+================================================================================
+
+КОНТЕКСТ
+--------
+
+После commit:
+
+    1e08316 Refine Cognitive Core value-based decision policy
+
+работа продолжилась над фактическим поведением Cognitive Core и границей
+ответственности между Cognitive LLM и deterministic Python layer.
+
+К этому моменту production architecture сохраняла:
+
+    ONE COGNITIVE LLM CALL
+    +
+    SELECTED-ONLY DECISION OUTPUT
+    +
+    DETERMINISTIC PYTHON STATE BOUNDARY.
+
+Однако последующий behavioral analysis показал две связанные проблемы:
+
+1. Decision Policy стала чрезмерно операционализированной и заставляла модель
+   выполнять искусственную процедуру выбора вместо естественного
+   консультативного мышления.
+
+2. Один Cognitive LLM call одновременно отвечал и за человеческий смысл
+   следующего хода, и за значительный объём технической упаковки
+   CognitiveTurnResult.
+
+Этот этап был посвящён упрощению обеих границ без создания нового Engine,
+второго LLM call или нового persistent state.
+
+
+================================================================================
+I. SIMPLIFICATION OF CONSULTANT POLICY
+================================================================================
+
+Предыдущая Operational Decision Policy требовала от Cognitive Core
+внутренне выполнять развитый candidate-selection protocol, включавший:
+
+- candidate generation;
+- response forecasting;
+- decision hinge;
+- strongest alternative;
+- Direct-vs-Working-Version comparison;
+- winner commitment.
+
+Эта конструкция появилась как попытка сделать Value / Sufficiency
+и выбор следующего Decision более надёжными.
+
+Дальнейший анализ показал, что система стала слишком сильно оптимизироваться
+под эпистемическую точность и формальный выбор действия.
+
+Для естественной консультации это неверная цель.
+
+Ключевой продуктовый вывод:
+
+    хороший консультант не обязан исчерпывать неопределённость
+    перед каждым следующим ходом.
+
+Допустимы grounded, low-cost, reversible assumptions.
+
+Если такая рабочая версия немного неточна, пользователь может её поправить.
+Исправление пользователя является нормальной частью разговора,
+а не failure системы.
+
+
+SIMPLIFIED CONSULTANT POLICY
+----------------------------
+
+Операционная policy была сведена к более естественным принципам:
+
+1. Сначала понять / принять.
+
+   Использовать уже сказанный пользователем материал и не требовать
+   дополнительного подтверждения ясных фактов только потому,
+   что теоретически возможна другая интерпретация.
+
+2. Не уточнять без необходимости.
+
+   Clarification оправдан только тогда, когда существуют materially different
+   plausible interpretations смысла пользователя и выбор между ними
+   существенно меняет следующий полезный ход.
+
+3. Исследовать patterns, а не устраивать causal autopsy каждого episode.
+
+   Один отдельный эпизод сам по себе не требует подробного поиска причин.
+
+   Повторяющийся или центральный pattern может оправдывать
+   Mechanism / Expertise exploration.
+
+4. Reflection использовать только тогда, когда она добавляет synthesis,
+   working picture или новое понимание.
+
+   Простое повторение последней пользовательской реплики не является
+   достаточной причиной для Reflection.
+
+5. Уметь двигаться дальше.
+
+   Возможность получить ещё одну деталь не означает,
+   что эту деталь нужно обязательно получать.
+
+Итоговый ориентир:
+
+    "Меня действительно поняли"
+
+важнее, чем:
+
+    "Меня идеально классифицировали."
+
+Старая многоступенчатая candidate-selection machinery была удалена
+из production policy.
+
+DecisionIntent contract при этом не изменялся.
+
+Selected-only boundary сохранена.
+
+
+================================================================================
+II. SEMANTIC / TECHNICAL RESPONSIBILITY BOUNDARY
+================================================================================
+
+Отдельный architecture audit показал,
+что Cognitive LLM выполняла слишком много deterministic bookkeeping.
+
+В одном structured output модель должна была одновременно:
+
+- понять человека;
+- интегрировать текущую реплику;
+- выбрать semantic Decision;
+- сформулировать SystemAction;
+- определить state changes;
+- создать technical local IDs;
+- соблюдать namespaces;
+- оформлять ownership;
+- связывать targets и contents;
+- связывать ReplySegments;
+- оформлять references;
+- соблюдать evidence representation;
+- удовлетворять многочисленным cross-reference invariants.
+
+Это создавало неправильную failure boundary:
+
+    семантически хороший консультативный ход
+    мог быть отвергнут из-за ошибки технической упаковки.
+
+Принят архитектурный принцип:
+
+    LLM decides WHAT the conversation means.
+
+    Python decides HOW to technically record/package it.
+
+При этом Python не получает права интерпретировать человеческий смысл.
+
+Python не должен:
+
+- угадывать semantic intent;
+- классифицировать смысл по keywords;
+- исправлять semantic decisions модели;
+- выводить причинность;
+- выбирать за LLM Human / Mechanism / Reflection / Transition;
+- подменять semantic reasoning deterministic rules.
+
+
+================================================================================
+III. SEMANTIC TURN CONTRACT
+================================================================================
+
+Добавлен новый production module:
+
+    ai/cognitive_semantic_wire.py
+
+Он содержит SemanticTurn contract и deterministic adapter.
+
+Новый Cognitive Core path:
+
+    gpt-5-mini
+    →
+    SemanticTurn
+    →
+    deterministic Python adapter
+    →
+    CognitiveTurnResult
+
+SemanticTurn выражает semantic result одного Cognitive LLM turn
+без требования к модели выполнять лишний deterministic bookkeeping.
+
+
+SEMANTIC RESPONSIBILITY
+-----------------------
+
+LLM по-прежнему определяет:
+
+- state meaning;
+- ADD / REINFORCE / CORRECT semantic operation;
+- semantic referent;
+- evidence fragment;
+- reconciliation meaning;
+- selected DecisionIntent;
+- semantic ActionContent;
+- ResponseTarget meaning;
+- interaction semantics;
+- user-facing response.
+
+
+DETERMINISTIC RESPONSIBILITY
+----------------------------
+
+Python adapter выполняет техническую материализацию:
+
+- назначает technical IDs;
+- разрешает local handles;
+- разворачивает references;
+- создаёт operation fields;
+- преобразует exact source_quote в SourceSpan;
+- материализует reconciliation;
+- материализует proposal references;
+- создаёт content / target / segment IDs;
+- собирает существующий CognitiveTurnResult;
+- запускает его structural validation.
+
+Adapter не выполняет semantic guessing.
+
+Невалидный SemanticTurn по-прежнему обрабатывается fail closed.
+
+
+================================================================================
+IV. COGNITIVE CORE PRODUCTION PATH
+================================================================================
+
+CognitiveCore.propose() переведён с прямой генерации полного технического
+CognitiveTurnResult wire на SemanticTurn Structured Output.
+
+Production flow теперь:
+
+    input context
+    →
+    one Cognitive LLM call
+    →
+    SemanticTurn
+    →
+    deterministic adapter
+    →
+    CognitiveTurnResult
+
+Сохранены:
+
+- один Cognitive LLM call;
+- gpt-5-mini как текущая production model;
+- selected-only output;
+- DecisionIntent;
+- существующий CognitiveTurnResult downstream contract;
+- persistent HumanModel;
+- ActiveConversationState;
+- DialogueHistory;
+- deterministic state application boundary;
+- fail-closed validation;
+- отсутствие retry/fallback внутри Cognitive Core.
+
+Не добавлены:
+
+- новый Engine;
+- второй LLM call;
+- semantic Python classifier;
+- keyword routing;
+- reasoning/rationale;
+- candidate materialization;
+- persistent Decision state;
+- numeric Value scores.
+
+Main DialogEngine на этом этапе НЕ интегрирован с Cognitive Core.
+
+ai/dialog_engine.py продолжает использовать прежний Engines route.
+
+Интеграция Cognitive Core в основной DialogEngine является отдельным
+следующим архитектурным этапом.
+
+
+================================================================================
+V. META-CONVERSATION DEFECT
+================================================================================
+
+После первоначального упрощения policy был проведён live behavioral acceptance.
+
+Он выявил систематический defect:
+
+    META_CONVERSATION.
+
+В нескольких сценариях Core начинал обсуждать с пользователем
+сам процесс консультации:
+
+    "Нужно ли вообще знать больше?"
+    "Хотите, чтобы я уточнил подробнее?"
+    "Нужно ли здесь продолжать разбираться?"
+
+Root cause оказался локальным.
+
+Внутренний decision criterion был сформулирован в policy слишком буквально
+как инструкция сначала спросить, нужно ли знать больше.
+
+Модель выполняла эту инструкцию как пользовательский вопрос.
+
+
+АРХИТЕКТУРНОЕ УТОЧНЕНИЕ
+-----------------------
+
+Необходимость дополнительной информации является внутренним
+Cognitive Decision.
+
+Core должен сам решить:
+
+    нужна ли ещё информация для следующего полезного хода?
+
+Этот внутренний критерий не должен автоматически становиться
+темой разговора с пользователем.
+
+Production policy была уточнена:
+
+- не озвучивать внутренний критерий необходимости информации;
+- не предлагать пользователю выбирать режим
+  "уточнять или продолжать";
+- не обсуждать механику консультационного процесса,
+  если она сама не является содержанием разговора.
+
+Последующий live confirmation:
+
+    META_CONVERSATION = PASS.
+
+Старый systematic meta-pattern не воспроизвёлся.
+
+
+================================================================================
+VI. PRODUCT BOUNDARY — UNDERSTANDING VS PERSONAL SOLUTION DESIGN
+================================================================================
+
+Во время behavioral acceptance был уточнён фундаментальный Product Boundary.
+
+Принято owner/product решение:
+
+    AI помогает человеку глубоко понять его проблему,
+    но НЕ проектирует персональное решение за него.
+
+Discovery имеет самостоятельную пользовательскую ценность.
+
+Его функция не сводится к сбору информации для будущего консультанта.
+
+
+AI МОЖЕТ
+--------
+
+В текущем Discovery layer AI может:
+
+- связывать известные факты;
+- показывать patterns;
+- помогать человеку увидеть,
+  где именно возникает трудность;
+- исследовать meaningful Previous Attempts / Barriers / Mechanisms;
+- формировать grounded synthesis;
+- давать Recognition;
+- объяснять general mechanisms / principles,
+  если это помогает пониманию;
+- отвечать на прямые вопросы пользователя,
+  пока ответ остаётся в understanding / problem framing.
+
+Желаемый эффект:
+
+    "Теперь я понимаю, где именно у меня ломается."
+
+
+AI НЕ ДОЛЖЕН
+------------
+
+Текущий Discovery layer не должен:
+
+- выбирать конкретную практику для пользователя;
+- выбирать привычку;
+- проектировать изменение окружения;
+- создавать персональный if-then plan;
+- составлять индивидуальный режим;
+- назначать диету / калории;
+- выбирать продукты или программу;
+- превращать general principle в конкретный способ действий
+  для данного пользователя;
+- предлагать самому AI подобрать, адаптировать
+  или разработать персональное решение.
+
+Это:
+
+    PERSONAL SOLUTION DESIGN.
+
+Personal Solution Design относится к следующему human consultation layer.
+
+
+================================================================================
+VII. GENERAL EXPLANATION IS NOT PERSONAL SOLUTION DESIGN
+================================================================================
+
+Зафиксировано важное различие:
+
+    GENERAL EXPLANATION
+    !=
+    PERSONAL SOLUTION DESIGN.
+
+Прямой вопрос пользователя:
+
+    "Что мне делать?"
+
+или:
+
+    "Как сделать так, чтобы результат не развалился?"
+
+НЕ отменяет Product Boundary.
+
+Он также НЕ создаёт автоматический Transition.
+
+Cognitive Core сначала должен дать столько полезного понимания,
+сколько естественно следует из уже известного материала пользователя.
+
+Допустимо:
+
+    "Похоже, у вас проблема действительно не в способности начать.
+     Вы уже несколько раз показали, что начинать и получать результат можете.
+     Сложность возникает позже — когда изменения должны превратиться
+     из временного усилия в устойчивую часть жизни."
+
+Это углубляет понимание проблемы,
+но не проектирует персональное решение.
+
+Если следующий полезный шаг уже требует:
+
+- выбора конкретного подхода;
+- адаптации метода;
+- проектирования практики;
+- построения персонального плана;
+
+тогда это естественная граница для Transition
+к живому консультанту с meaningful consent.
+
+Transition определяется содержанием следующего полезного шага,
+а не формой вопроса пользователя.
+
+
+================================================================================
+VIII. UNSUPPORTED CAUSAL FILL-IN
+================================================================================
+
+Первый live Product Boundary check после этого решения дал FAIL.
+
+Контрольный USER:
+
+    "Вот именно. Начать я могу. Я не понимаю, как сделать так,
+     чтобы через пару месяцев опять всё не развалилось."
+
+Core правильно начал с synthesis:
+
+    "начать вам обычно удаётся,
+     а главная трудность в удержании результата"
+
+но затем добавил:
+
+    "Чаще всего возвраты происходят из-за среды,
+     слишком жёстких правил, отсутствия рутин и плана на откат."
+
+После этого Core перечислил способы действий и предложил:
+
+    "пройти эти варианты и найти то, что ближе именно вам."
+
+
+ДВА ОТДЕЛЬНЫХ DEFECT
+--------------------
+
+1. UNSUPPORTED CAUSAL FILL-IN
+
+Среда, жёсткие правила, отсутствие рутин и плана отката
+не были установлены материалом конкретного пользователя.
+
+General knowledge было подставлено как объяснение его случая.
+
+Принцип:
+
+    углублять понимание конкретного человека,
+    а не заполнять неизвестное типовыми причинами.
+
+General principle допустим.
+
+Но general principle нельзя выдавать за установленную причину
+конкретного пользователя без grounding в его материале.
+
+
+2. SOLUTION MENU → PERSONAL SOLUTION DESIGN
+
+Фраза:
+
+    "Людям помогают..."
+
+сама по себе могла бы быть general information.
+
+Но в контексте личного вопроса она превратилась в menu of solutions,
+после чего Core предложил самому подобрать:
+
+    "что ближе именно вам."
+
+Это уже Personal Solution Design.
+
+Production policy была операционно уточнена:
+
+- ANSWER_USER_QUESTION не отменяет Product Boundary;
+- сначала использовать уже известный пользовательский материал;
+- grounded synthesis разрешён;
+- general principle разрешён;
+- нельзя выдавать generic cause за установленную причину пользователя;
+- нельзя превращать explanation в menu of solutions;
+- нельзя предлагать AI выбрать / адаптировать / разработать
+  персональный способ действий;
+- если следующий полезный шаг требует такого выбора,
+  возможен Transition к живому консультанту с meaningful consent;
+- Transition не становится автоматическим только из-за вопроса "как?".
+
+
+================================================================================
+IX. FINAL ONE-CALL BOUNDARY CHECK
+================================================================================
+
+После narrow operational Product Boundary patch был повторён тот же
+контрольный сценарий.
+
+USER:
+
+    "Вот именно. Начать я могу. Я не понимаю, как сделать так,
+     чтобы через пару месяцев опять всё не развалилось."
+
+Фактический Core reply:
+
+    "Понимаю — вы можете начать, а главная трудность в том,
+     чтобы удержать изменения. Можете коротко описать,
+     что обычно происходит через ~1–3 месяца:
+     есть ли конкретные ситуации, события, мысли или эмоции,
+     которые чаще всего приводят к возврату к прежнему режиму?"
+
+DecisionIntent:
+
+    MECHANISM_DISCOVERY
+
+Selected action:
+
+    SYSTEM_QUESTION
+
+ResponseTarget:
+
+    OPEN_RESPONSE
+
+Final verdict:
+
+    PRODUCT BOUNDARY = PASS
+
+    META_CONVERSATION = PASS
+
+    UNSUPPORTED CAUSAL FILL-IN = NO
+
+    SOLUTION MENU = NO
+
+    PERSONAL SOLUTION DESIGN = NO
+
+Core не повторил прежнее нарушение:
+
+- не подставил generic causes как причины пользователя;
+- не перечислил способы решения;
+- не предложил выбрать практику;
+- не предложил самому адаптировать решение;
+- не вышел за текущий Discovery layer.
+
+Отдельное наблюдение:
+
+ответ повторяет часть уже известного synthesis
+и продолжает Mechanism Discovery вопросом о том,
+что происходит перед возвратом прежнего режима.
+
+Полезность именно этого дополнительного вопроса
+одним live call не доказана.
+
+Это НЕ было Product Boundary failure
+и сознательно не стало основанием продолжать behavioral refinement
+в рамках данного этапа.
+
+
+================================================================================
+X. CHECKPOINT VALIDATION
+================================================================================
+
+Перед фиксацией checkpoint был проведён полный review рабочего дерева.
+
+Архитектурный checkpoint включил ровно 8 файлов:
+
+    Research/Human_Experience/Weight/10_TRANSITION_TO_HUMAN_CONSULTANT.txt
+    Research/Human_Experience/Weight/11_BOUNDARIES.txt
+    Research/Human_Experience/Weight/12_Cognitive_Cycle.txt
+    ai/cognitive_core.py
+    ai/cognitive_semantic_wire.py
+    ai/prompts/cognitive_core_system_prompt.txt
+    tests/test_cognitive_core.py
+    tests/test_cognitive_semantic_wire.py
+
+Manual modification:
+
+    architecture_history/V2/00_DEVELOPMENT_HISTORY_Capter_2.txt
+
+не была автоматически включена в checkpoint.
+
+Conversation_Lab runners, frozen artifacts, reports и traces
+также не вошли в checkpoint.
+
+Pre-commit verification:
+
+    full pytest:
+    319 passed
+
+    py_compile:
+    PASS
+
+    git diff --check:
+    PASS
+
+    staged git diff --check:
+    PASS
+
+Проверка production architecture подтвердила:
+
+    gpt-5-mini
+    →
+    SemanticTurn
+    →
+    deterministic adapter
+    →
+    CognitiveTurnResult
+
+В Cognitive Core не осталось второго параллельного active production wire.
+
+Main DialogEngine в этот checkpoint не интегрировался.
+
+
+================================================================================
+XI. FINAL COMMIT
+================================================================================
+
+Commit:
+
+    ae57835 Introduce semantic Cognitive Core contract
+
+Commit отправлен в main.
+
+GitHub main:
+
+    1e08316
+    →
+    ae57835
+
+
+================================================================================
+XII. ТЕКУЩЕЕ СОСТОЯНИЕ
+================================================================================
+
+На checkpoint ae57835:
+
+1. Cognitive Core использует упрощённую consultant policy,
+   ориентированную на естественное полезное продолжение разговора,
+   а не на исчерпывание неопределённости.
+
+2. Cognitive LLM отвечает за semantic meaning следующего хода.
+
+3. Deterministic Python отвечает за техническую материализацию
+   SemanticTurn в существующий CognitiveTurnResult.
+
+4. Python не выполняет semantic guessing.
+
+5. Selected-only и one-LLM-call architecture сохранены.
+
+6. Systematic META_CONVERSATION defect устранён
+   в проверенных live-сценариях.
+
+7. Product Boundary теперь явно разделяет:
+
+       understanding the problem
+
+   и:
+
+       personal solution design.
+
+8. General explanation допустимо,
+   но generic causes нельзя выдавать за установленные причины
+   конкретного пользователя.
+
+9. Прямой вопрос "как действовать?" не отменяет Product Boundary.
+
+10. Personal Solution Design остаётся задачей human consultation layer.
+
+11. Cognitive Core всё ещё standalone относительно main DialogEngine.
+
+
+NEXT
+----
+
+Следующий отдельный архитектурный этап:
+
+    INTEGRATION OF COGNITIVE CORE INTO MAIN DIALOGENGINE.
+
+Нужно спроектировать и проверить включение Cognitive Core
+в основной runtime route без возврата к legacy semantic decomposition
+и без нарушения существующих deterministic state boundaries.
+
+До начала интеграции полезно подключить GitHub read access / plugin
+для удобного контроля:
+
+- repository history;
+- commits;
+- diffs;
+- integration changes.
+
+Codex по-прежнему не получает автоматического права:
+
+- commit;
+- push;
+- merge.
+
+================================================================================
+
+======================================================================
+COGNITIVE CORE — MAIN DIALOGENGINE RUNTIME INTEGRATION
+======================================================================
+
+КОНТЕКСТ
+
+Предыдущий checkpoint:
+
+ae57835 — Introduce semantic Cognitive Core contract
+
+К этому моменту Cognitive Core уже имел рабочую архитектурную цепочку:
+
+gpt-5-mini
+→ SemanticTurn
+→ deterministic adapter
+→ CognitiveTurnResult
+→ deterministic state application
+
+Были подтверждены:
+
+- simplified consultant policy;
+- SemanticTurn как LLM-facing semantic contract;
+- deterministic adapter между SemanticTurn и CognitiveTurnResult;
+- Product Boundary между пониманием проблемы и personal solution design;
+- отсутствие необходимости заставлять LLM заниматься технической упаковкой state;
+- принцип:
+
+  LLM decides WHAT the conversation means.
+  Python decides HOW to technically record/package it.
+
+Однако Cognitive Core ещё не являлся основным runtime path DialogEngine.
+
+Реальный DialogEngine продолжал использовать legacy cognitive chain,
+а новый Discovery runtime существовал параллельно как shadow path.
+
+Следующий этап был посвящён переключению реального runtime на Cognitive Core.
+
+
+======================================================================
+I. PRE-INTEGRATION RUNTIME AUDIT
+======================================================================
+
+Перед изменением runtime был проведён read-only integration audit.
+
+FILES CHANGED = 0
+API CALLS = 0
+
+Аудит показал, что основной production response path выглядел так:
+
+USER
+→ LLMSemanticEngine
+→ HumanModelEngine
+→ ReasoningEngine
+→ DecisionEngine
+→ ImpactEngine
+→ EmotionalEngine
+→ ResponseEngine
+→ reply
+
+Параллельно существовал shadow Discovery path:
+
+USER
+→ ShadowPerceptionEngine
+→ ShadowIntegrationEngine
+→ shadow HumanModel persistence
+
+Shadow Discovery:
+
+- анализировал пользовательский материал;
+- обновлял новый Discovery HumanModel;
+- не принимал основное решение;
+- не формировал пользовательский ответ;
+- не управлял реальным conversation flow.
+
+Таким образом, фактически существовали две параллельные когнитивные системы.
+
+
+======================================================================
+II. IMPORTANT INTEGRATION FINDING
+======================================================================
+
+Аудит подтвердил, что новый Cognitive Core уже технически совместим
+с существующим deterministic state layer.
+
+CognitiveCore.propose():
+
+→ возвращает CognitiveTurnResult.
+
+Существующий:
+
+apply_cognitive_turn()
+
+→ уже принимает CognitiveTurnResult напрямую.
+
+StateApplier уже умеет:
+
+- проверять предыдущую Discovery memory;
+- применять reconciliation;
+- применять item/relation operations;
+- материализовывать proposals;
+- назначать persistent IDs;
+- строить новый ActiveConversationState;
+- создавать ResponseTargets;
+- добавлять USER/SYSTEM messages;
+- валидировать итоговую Discovery memory;
+- возвращать immutable AppliedTurn.
+
+Следовательно:
+
+НОВЫЙ ENGINE НЕ НУЖЕН.
+
+Дополнительный semantic intermediate layer между Cognitive Core
+и StateApplier также не нужен.
+
+Нужен только deterministic orchestration glue:
+
+CognitiveTurnResult
+→ join ReplySegments
+→ SYSTEM DialogueMessage
+→ apply_cognitive_turn()
+→ persist AppliedTurn.
+
+
+======================================================================
+III. TARGET RUNTIME ARCHITECTURE
+======================================================================
+
+Был принят целевой основной runtime path:
+
+USER message
+→ load Discovery memory
+→ create USER DialogueMessage
+→ CognitiveCore.propose()
+→ SemanticTurn
+→ deterministic adapter
+→ CognitiveTurnResult
+→ join ReplySegments
+→ create SYSTEM DialogueMessage
+→ apply_cognitive_turn()
+→ atomic persistence
+→ return reply
+
+Архитектурный принцип:
+
+ONE COGNITIVE LLM CALL PER USER TURN.
+
+Legacy cognitive Engines не должны работать параллельно с Cognitive Core.
+
+Python не должен восстанавливать человеческий смысл
+из нового HumanModel обратно в legacy flat facts.
+
+
+======================================================================
+IV. DIALOGENGINE INTEGRATION
+======================================================================
+
+Основной runtime DialogEngine был переключён на Cognitive Core.
+
+Основное production изменение:
+
+ai/dialog_engine.py
+
+Также были обновлены orchestration/runtime tests.
+
+После интеграции DialogEngine больше не импортирует и не вызывает:
+
+- ShadowPerceptionEngine;
+- ShadowIntegrationEngine;
+- LLMSemanticEngine;
+- SemanticEngine fallback;
+- legacy HumanModelEngine;
+- ReasoningEngine;
+- DecisionEngine;
+- ImpactEngine;
+- EmotionalEngine;
+- ResponseEngine.
+
+Важно:
+
+эти классы и файлы НЕ удалены.
+
+Удалён только их active runtime wiring.
+
+Это позволяет отдельно удалить legacy architecture позже,
+после стабилизации нового runtime.
+
+
+======================================================================
+V. NEW ACTIVE RUNTIME PATH
+======================================================================
+
+Новый фактический путь:
+
+run_dialog_engine()
+→ load Discovery memory
+→ validate_discovery_memory()
+→ create USER DialogueMessage
+→ CognitiveCore.propose() exactly once
+→ SemanticTurn strict validation
+→ deterministic adapter
+→ CognitiveTurnResult
+→ join ReplySegments
+→ create SYSTEM DialogueMessage
+→ apply_cognitive_turn()
+→ persist complete AppliedTurn
+→ return {"reply", "update"}
+
+OpenAI client:
+
+max_retries=0
+
+Таким образом:
+
+- второй Cognitive LLM call отсутствует;
+- retry отсутствует;
+- legacy semantic fallback отсутствует;
+- ResponseEngine больше не генерирует отдельный ответ;
+- ReplySegments Cognitive Core являются непосредственно пользовательским ответом.
+
+
+======================================================================
+VI. PERSISTENCE AND ATOMICITY
+======================================================================
+
+Discovery persistence выполняется только после полного успешного:
+
+CognitiveCore.propose()
+→ SemanticTurn validation
+→ deterministic adapter
+→ CognitiveTurnResult
+→ apply_cognitive_turn()
+
+Только после этого одной заменой сохраняются:
+
+- updated HumanModel;
+- new ActiveConversationState;
+- updated DialogueHistory.
+
+При CognitiveCore failure:
+
+- persistent Discovery memory не меняется;
+- USER message отдельно не сохраняется;
+- fallback LLM не запускается.
+
+При StateApplier failure:
+
+- partial HumanModel не сохраняется;
+- ACS не сохраняется;
+- partial DialogueHistory не сохраняется.
+
+Это сохраняет atomic turn semantics:
+
+либо весь когнитивный ход принят и сохранён,
+либо persistent state остаётся прежним.
+
+
+======================================================================
+VII. LEGACY COMPATIBILITY BOUNDARY
+======================================================================
+
+Внешний return contract сохранён:
+
+{"reply": reply, "update": compatibility_update}
+
+Это позволяет не ломать существующий bot handler.
+
+Compatibility update содержит только механически совместимые legacy данные.
+
+Новый Discovery HumanModel НЕ преобразуется обратно в legacy flat facts.
+
+STOP_EXPLORATION НЕ приравнивается автоматически
+к legacy discovery_complete.
+
+Это важно, потому что эти состояния имеют разный смысл.
+
+
+======================================================================
+VIII. STATELESS USER_ID=None
+======================================================================
+
+Сохранён stateless runtime для user_id=None.
+
+В этом режиме:
+
+- создаётся временная пустая Discovery memory;
+- выполняется полный Cognitive turn;
+- persistent user storage не создаётся;
+- Discovery state не сохраняется после завершения;
+- внешний return contract остаётся прежним.
+
+Legacy profile не используется для семантического восстановления
+Discovery HumanModel.
+
+
+======================================================================
+IX. INTEGRATION TESTING
+======================================================================
+
+После реализации были проверены:
+
+- DialogEngine orchestration;
+- application smoke;
+- Discovery runtime lifecycle;
+- memory lifecycle;
+- CognitiveCore;
+- SemanticTurn wire;
+- CognitiveTurn contract;
+- DiscoveryStateApplier.
+
+Targeted integration/runtime + contract suites:
+
+182 passed
+
+Full pytest:
+
+314 passed
+
+Дополнительно:
+
+py_compile — PASS
+git diff --check — PASS
+
+Тестами подтверждено:
+
+- CognitiveCore.propose() вызывается ровно один раз;
+- legacy Engines не вызываются;
+- Core → StateApplier → persistence работает как единый путь;
+- второй ход получает state первого хода;
+- returned reply byte-for-byte совпадает с joined ReplySegments;
+- сохранённый SYSTEM message совпадает с returned reply;
+- reconciliation предыдущего ResponseTarget применяется;
+- CognitiveCore failure не создаёт partial persistence;
+- StateApplier failure не создаёт partial persistence;
+- user_id=None остаётся stateless;
+- внешний {"reply", "update"} contract сохранён.
+
+
+======================================================================
+X. FIRST LIVE DIALOGENGINE SMOKE — OUTPUT CAPTURE FAILURE
+======================================================================
+
+После offline validation был запущен первый live integration smoke
+через реальный run_dialog_engine().
+
+Ограничения:
+
+- один разрешённый run;
+- max_retries=0;
+- без fallback;
+- без повторного API call.
+
+Процесс завершился примерно за 35 секунд,
+но execution environment не вернул stdout/stderr.
+
+Поэтому первый результат был классифицирован:
+
+INCONCLUSIVE
+
+Важно:
+
+это НЕ было установлено как production runtime failure.
+
+Точная известная граница проблемы:
+
+terminal/tool stdout capture after process completion.
+
+Retry не выполнялся.
+
+Дополнительный API call не выполнялся.
+
+Код после этого результата не изменялся.
+
+
+======================================================================
+XI. DURABLE LIVE SMOKE CONFIRMATION
+======================================================================
+
+Для повторной проверки был использован durable diagnostic capture:
+
+результат smoke-run сначала сохранялся во временный JSON-файл
+вне repository,
+а затем читался отдельной offline operation.
+
+Был разрешён ровно один новый API request.
+
+Test user_id:
+
+923202602
+
+User message:
+
+"Последние пару лет набрал вес, и больше всего меня раздражает живот."
+
+Результат:
+
+LIVE INTEGRATION VERDICT — PASS
+
+
+======================================================================
+XII. LIVE RUNTIME PATH CONFIRMED
+======================================================================
+
+Фактически подтверждён полный runtime:
+
+run_dialog_engine()
+→ load Discovery memory
+→ CognitiveCore.propose() ×1
+→ strict SemanticTurn validation
+→ deterministic adapter
+→ CognitiveTurnResult
+→ join ReplySegments
+→ SYSTEM DialogueMessage
+→ apply_cognitive_turn()
+→ atomic persistence
+→ {"reply", "update"}
+
+Подтверждено:
+
+SemanticTurn valid = true
+Adapter valid = true
+StateApplier success = true
+Persistence after StateApplier = true
+Partial persistence = false
+
+API calls = 1
+CognitiveCore.propose() calls = 1
+StateApplier calls = 1
+Persistence calls = 1
+Legacy Engine calls = 0
+Retry = 0
+Fallback = 0
+
+
+======================================================================
+XIII. LIVE BEHAVIOR OBSERVATION
+======================================================================
+
+DecisionIntent:
+
+HUMAN_DISCOVERY
+
+Returned reply:
+
+"Понял — спасибо, что рассказал. Насколько важно для тебя уменьшить живот и пробовал ли ты что-то уже делать по этому поводу?"
+
+На этом этапе данный ответ НЕ использовался как отдельный behavioral benchmark.
+
+Цель smoke-test была архитектурной:
+
+подтвердить, что реальный DialogEngine целиком проходит новый Cognitive Core runtime path.
+
+Behavioral optimization в рамках integration checkpoint не проводилась.
+
+
+======================================================================
+XIV. LIVE PERSISTED STATE
+======================================================================
+
+После одного live turn:
+
+Memory persisted = true
+
+HumanModel:
+- valid = true
+- items = 2
+- relations = 1
+
+ActiveConversationState:
+- present
+- content count = 1
+- target count = 1
+
+DialogueHistory:
+- messages = 2
+- roles = USER → SYSTEM
+
+Saved SYSTEM text byte-for-byte equals returned reply = true.
+
+Это подтверждает, что новый runtime не только сформировал ответ,
+но и корректно завершил полный state lifecycle.
+
+
+======================================================================
+XV. LIVE TOKEN TELEMETRY
+======================================================================
+
+Requested model:
+
+gpt-5-mini
+
+Actual model snapshot:
+
+gpt-5-mini-2025-08-07
+
+Usage:
+
+input tokens = 6106
+cached input tokens = 0
+output tokens = 1878
+reasoning tokens = 1472
+total tokens = 7984
+
+Это первая зафиксированная telemetry point
+для полного рабочего DialogEngine runtime после интеграции Cognitive Core.
+
+На данном этапе token/cost optimization не выполняется.
+
+Приоритет остаётся:
+
+correct behavior and architecture first,
+cost optimization later.
+
+
+======================================================================
+XVI. CHECKPOINT SCOPE
+======================================================================
+
+В integration checkpoint вошли ровно 8 файлов:
+
+1. ai/dialog_engine.py
+2. tests/conftest.py
+3. tests/test_application_smoke.py
+4. tests/test_dialog_orchestration.py
+5. tests/test_discovery_completion.py
+6. tests/test_discovery_runtime_lifecycle.py
+7. tests/test_llm_semantic_engine.py
+8. tests/test_memory_lifecycle.py
+
+Не вошли:
+
+- architecture_history/V2/00_DEVELOPMENT_HISTORY_Capter_2.txt;
+- untracked Conversation_Lab runners;
+- frozen scenarios;
+- reports;
+- traces;
+- temporary live-smoke diagnostic JSON.
+
+Research не менялся.
+
+CognitiveTurn contract не менялся.
+
+SemanticTurn contract не менялся.
+
+Discovery Data Model не менялся.
+
+Cognitive Core behavioral policy не менялась.
+
+
+======================================================================
+XVII. FINAL COMMIT
+======================================================================
+
+Commit:
+
+94390e6 — Integrate Cognitive Core into DialogEngine
+
+Commit statistics:
+
+8 files changed
+484 insertions
+746 deletions
+
+Commit успешно отправлен в:
+
+main
+
+Remote transition:
+
+ae57835..94390e6
+
+
+======================================================================
+XVIII. CURRENT STATE
+======================================================================
+
+На checkpoint 94390e6:
+
+1. Cognitive Core больше не является отдельным экспериментальным path.
+
+2. Cognitive Core является основным cognitive runtime DialogEngine.
+
+3. Каждый обычный пользовательский ход использует один
+   CognitiveCore.propose().
+
+4. LLM возвращает SemanticTurn.
+
+5. Python deterministic adapter переводит SemanticTurn
+   в CognitiveTurnResult.
+
+6. StateApplier детерминированно применяет результат к state.
+
+7. ReplySegments являются непосредственным пользовательским ответом.
+
+8. Legacy cognitive Engines остаются в repository,
+   но не участвуют в active DialogEngine runtime.
+
+9. Shadow Discovery cognition больше не выполняется параллельно.
+
+10. Persistent Discovery state обновляется атомарно.
+
+11. Реальный live API smoke подтвердил полный путь end-to-end.
+
+12. Основная архитектурная формула теперь фактически работает в runtime:
+
+    USER
+    → ONE COGNITIVE LLM CALL
+    → SEMANTIC TURN
+    → DETERMINISTIC PYTHON BOUNDARY
+    → STATE APPLICATION
+    → REPLY
+
+
+======================================================================
+NEXT
+======================================================================
+
+Следующий этап НЕ должен начинаться с нового архитектурного rewrite.
+
+После checkpoint 94390e6 нужно оценить реальное поведение уже
+интегрированного DialogEngine в последовательном разговоре.
+
+Следующая задача:
+
+MULTI-TURN RUNTIME BEHAVIOR VALIDATION.
+
+Нужно проверить не отдельный Cognitive Core в лаборатории,
+а реальный production path через несколько последовательных ходов:
+
+- сохраняется ли HumanModel между ходами;
+- правильно ли работает ActiveConversationState;
+- понимает ли Core короткие ответы относительно предыдущего вопроса;
+- корректно ли reconciliation меняет состояние;
+- не возвращается ли meta-conversation;
+- не появляется ли unnecessary clarification;
+- сохраняется ли Product Boundary;
+- естественно ли разговор движется вперёд;
+- не начинает ли Core снова вести себя как questionnaire.
+
+Только после этого имеет смысл решать:
+
+- какие behavioral defects реально остались;
+- нужны ли изменения policy/prompt;
+- какие legacy components можно физически удалить;
+- когда переименовать ShadowDiscoveryMemory;
+- когда убирать legacy profile/history compatibility;
+- когда заниматься token/cost optimization.
+
+======================================================================
+
+===============================================================================
+MULTI-TURN RUNTIME VALIDATION — PRODUCT BOUNDARY AND SEMANTIC TARGET REFERENCES
+===============================================================================
+
+КОНТЕКСТ
+--------
+
+Предыдущий checkpoint:
+
+    94390e6 — Integrate Cognitive Core into DialogEngine
+
+После интеграции Cognitive Core в основной DialogEngine следующим этапом стала
+проверка уже не отдельного Cognitive Core, а реального production runtime
+в последовательном multi-turn разговоре.
+
+Цель:
+
+    проверить фактическое поведение цепочки
+
+    USER
+    → run_dialog_engine()
+    → CognitiveCore.propose()
+    → SemanticTurn
+    → deterministic adapter
+    → CognitiveTurnResult
+    → StateApplier
+    → persistence
+    → следующий USER turn.
+
+Архитектура на этом этапе не переписывалась.
+
+
+===============================================================================
+I. MULTI-TURN RUNTIME VALIDATION
+===============================================================================
+
+Для проверки был создан отдельный Conversation Lab runner:
+
+    Conversation_Lab/dialogengine_multiturn_runtime_validation.py
+
+Runner использовал:
+
+- реальный run_dialog_engine();
+- один изолированный user_id;
+- один Python process на весь разговор;
+- реальный persistent Discovery state между ходами;
+- human gate перед каждым следующим USER turn;
+- максимум 6 Cognitive LLM calls;
+- max_retries=0;
+- без fallback;
+- без evaluator;
+- durable diagnostic artifacts вне repository.
+
+Run:
+
+    dialog-multiturn-20260924T083709Z-1a291f0b
+
+user_id:
+
+    386618721
+
+Run завершился технически успешно:
+
+- 6 API calls;
+- 6 CognitiveCore.propose() calls;
+- 6 успешных SemanticTurn validations;
+- 6 успешных deterministic adapter applications;
+- 6 успешных StateApplier applications;
+- 6 persistence operations;
+- retry = 0;
+- fallback = 0;
+- partial persistence = 0.
+
+HumanModel, ACS и DialogueHistory корректно переносились между ходами.
+
+
+===============================================================================
+II. OBSERVED CONVERSATION
+===============================================================================
+
+TURN 1
+
+USER:
+
+    "Последние пару лет набрал вес, и больше всего меня раздражает живот."
+
+SYSTEM:
+
+    "Понял. Можете чуть подробнее: за эти пару лет живот увеличивался
+     постепенно или были периоды, когда это случилось быстрее?
+     И насколько это мешает вам в повседневной жизни
+     (как вы это замечаете — в зеркале, одежде, самочувствии)?"
+
+DecisionIntent:
+
+    HUMAN_DISCOVERY
+
+
+TURN 2
+
+USER:
+
+    "Да постепенно. Просто одежда стала тесной,
+     и на фотографиях я себе совсем не нравлюсь."
+
+SYSTEM:
+
+    "Поняла — спасибо. Что для вас важнее изменить:
+     чтобы одежда снова сидела комфортно,
+     чтобы на фото вам нравился образ,
+     улучшить самочувствие или что-то другое?"
+
+DecisionIntent:
+
+    HUMAN_DISCOVERY
+
+
+TURN 3
+
+USER:
+
+    "Наверное, больше всего хочу снова нормально смотреть на себя
+     в зеркало и не думать постоянно о животе."
+
+SYSTEM:
+
+    "Поняла. Кажется, главное — вернуть ощущение,
+     что можно спокойно смотреть на себя в зеркало
+     и не зацикливаться на животе.
+     Так я правильно понимаю ваш приоритет?"
+
+DecisionIntent:
+
+    REFLECTION
+
+Наблюдение:
+
+Reflection была преимущественно ritual confirmation уже ясного материала,
+а не новой integrative working-picture Reflection.
+
+
+TURN 4
+
+USER:
+
+    "Да, именно."
+
+SYSTEM:
+
+    "Спасибо — понял(а). Чтобы дальше понять, что может помочь:
+     пробовали ли вы раньше что-то делать, чтобы уменьшить вес или живот?
+     Какие были попытки и что, по-вашему, помешало им сработать?"
+
+DecisionIntent:
+
+    MECHANISM_DISCOVERY
+
+Предыдущий EVALUATION target был корректно reconciled как SUPPORTED.
+
+Короткий ответ пользователя был правильно связан
+с единственным активным ResponseTarget.
+
+При этом Core избыточно REINFORCE несколько существующих HumanModel items
+одной и той же короткой репликой пользователя.
+
+Это было отмечено как отдельный state-quality issue,
+но не как blocker текущего этапа.
+
+
+TURN 5
+
+USER:
+
+    "Пару раз просто начинал меньше есть.
+     Сначала всё получалось и вес уходил,
+     но через несколько недель на работе становилось напряжённо,
+     один вечер срывался —
+     и после этого возвращался к прежнему режиму."
+
+SYSTEM:
+
+    "Понял(а). Похоже, вы несколько раз сокращали еду
+     и добивались снижения веса,
+     но рабочий стресс и хотя бы один вечерний срыв
+     приводили к возврату к прежнему режиму.
+     Уточню, пожалуйста:
+     такие срывы случались один–два раза
+     или это повторяющийся паттерн
+     (например, при каждом напряжённом периоде на работе)?"
+
+DecisionIntent:
+
+    HUMAN_DISCOVERY
+
+Вопрос о recurrence был признан допустимым:
+повторяемость stress → lapse → abandonment ещё не была установлена явно.
+
+При этом formulation несколько усилила причинность относительно
+точного пользовательского материала.
+
+
+TURN 6
+
+USER:
+
+    "Да, почти каждый раз примерно так.
+     Я уже понял, что после первого срыва всё бросаю.
+     Что мне конкретно делать,
+     чтобы через пару месяцев опять не вернуться к прежнему режиму?"
+
+SYSTEM дал длинный actionable answer, включавший:
+
+- заранее планировать реакцию на срыв;
+- небольшие устойчивые привычки;
+- изменения распорядка;
+- stress-coping;
+- if-then plans;
+- подготовленные варианты еды;
+- правила для вечеров;
+- предложение AI выбрать и разработать конкретные варианты.
+
+DecisionIntent:
+
+    ANSWER_USER_QUESTION
+
+
+===============================================================================
+III. PRODUCT BOUNDARY FAILURE
+===============================================================================
+
+Turn 6 был классифицирован:
+
+    PRODUCT BOUNDARY = FAIL
+
+Пользователь уже сформулировал существенный pattern:
+
+    несколько успешных стартов
+    →
+    напряжённый период
+    →
+    первый срыв
+    →
+    отказ от всей попытки
+    →
+    возврат к прежнему режиму.
+
+Grounded synthesis этого pattern был допустим.
+
+Однако Core перешёл от понимания проблемы
+к проектированию способов действий.
+
+Нарушение включало два класса:
+
+1. UNSUPPORTED USER-SPECIFIC CAUSAL FILL-IN
+
+Core добавил причины и механизмы,
+не установленные пользовательским материалом,
+например зависимость от силы воли,
+жёсткие ограничения и emotional hunger.
+
+2. GENERIC ACTION MENU → PERSONAL SOLUTION DESIGN
+
+Core перечислил конкретные способы действий
+и затем предложил самому AI подобрать / разработать
+персональные варианты.
+
+Это нарушало уже принятую Product Boundary:
+
+    AI помогает человеку глубоко понять его проблему,
+    но не проектирует персональное решение за него.
+
+
+===============================================================================
+IV. ROOT-CAUSE AUDIT
+===============================================================================
+
+Offline audit установил:
+
+PRIMARY:
+
+    PRODUCT POLICY OPERATIONALIZATION GAP.
+
+Source-of-truth уже достаточно ясно запрещал
+Personal Solution Design.
+
+SemanticTurn, CognitiveTurnResult, adapter,
+StateApplier и DialogEngine не являлись причиной нарушения.
+
+Проблема находилась прежде всего
+в организации production prompt.
+
+Prompt одновременно требовал:
+
+- отвечать на прямой вопрос;
+- быть полезным;
+- вести естественную консультацию;
+- разрешал general explanation;
+
+и при этом в нескольких отдельных местах
+негативно ограничивал solution design.
+
+Для прямого вопроса:
+
+    "Что мне конкретно делать?"
+
+mini интерпретировала helpful answer как actionable advice,
+а затем называла рекомендации:
+
+    "general principles".
+
+Была выявлена недостающая operational distinction:
+
+A. grounded synthesis — ALLOWED;
+
+B. descriptive general explanation of an observed mechanism — ALLOWED;
+
+C. generic menu of possible actions — OUTSIDE CURRENT DISCOVERY;
+
+D. personalized solution design — OUTSIDE CURRENT DISCOVERY.
+
+
+===============================================================================
+V. PROMPT SIMPLIFICATION
+===============================================================================
+
+Вместо добавления нового слоя правил
+было принято owner/product решение вернуться
+к более простой организации prompt.
+
+Product Boundary была сведена к трём операционным блокам:
+
+1. WHAT YOU SHOULD DO
+
+   - understand;
+   - synthesize;
+   - connect patterns;
+   - explain mechanisms.
+
+2. WHAT YOU MUST NOT DO
+
+   - no action selection;
+   - no habits;
+   - no plans;
+   - no action menus;
+   - no AI-assisted personal solution design.
+
+3. WHAT YOU SHOULD DO INSTEAD WHEN THE BOUNDARY IS REACHED
+
+   - stop before solution design;
+   - if the next useful step requires selecting,
+     adapting or designing a personal solution,
+     use Transition to a human consultant
+     with meaningful consent.
+
+Важно:
+
+это НЕ было добавлением ещё одного policy layer.
+
+Накопившиеся перекрывающиеся правила
+были consolidated / replaced.
+
+Prompt size:
+
+BEFORE:
+
+    190 lines
+    1619 words
+
+AFTER:
+
+    189 lines
+    1618 words
+
+Таким образом prompt практически не вырос.
+
+Его Product Boundary section стала структурно проще.
+
+
+===============================================================================
+VI. FIRST LIVE REPLAY AFTER PROMPT SIMPLIFICATION
+===============================================================================
+
+Для matched validation использовался exact frozen pre-Turn-6 state
+из исходного multi-turn run.
+
+Exact USER message оставался тем же:
+
+    "Да, почти каждый раз примерно так.
+     Я уже понял, что после первого срыва всё бросаю.
+     Что мне конкретно делать,
+     чтобы через пару месяцев опять не вернуться к прежнему режиму?"
+
+Первый live sample после упрощения prompt
+поведенчески выбрал:
+
+    DecisionIntent = TRANSITION
+
+    Primary ActionContent = SYSTEM_TRANSITION
+
+    ResponseTarget = CONSENT
+
+Reply не содержал:
+
+- action menu;
+- habits;
+- if-then plan;
+- personal solution design;
+- предложения AI самостоятельно подобрать решение.
+
+Поведенчески Product Boundary была соблюдена.
+
+Однако SemanticTurn validation завершилась technical failure.
+
+
+===============================================================================
+VII. SEMANTIC TARGET REFERENCE FAILURE
+===============================================================================
+
+Failure:
+
+    reconciliation.previous_target_ids[0]
+
+ожидал persistent ResponseTarget ID:
+
+    rt_...
+
+но модель вернула:
+
+    aci_62f4e8f6107942c197fe758fa0bae2a0
+
+То есть ActiveContent ID был помещён в поле ResponseTarget ID.
+
+Frozen ACS при этом содержал:
+
+ActiveContent:
+
+    aci_62f4e8f6107942c197fe758fa0bae2a0
+
+ResponseTarget:
+
+    rt_20e2842676b54cb99eb8dc8b384ca2c4
+
+Interaction:
+
+    OPEN_RESPONSE
+
+ResponseTarget принадлежал указанному ActiveContent.
+
+Предыдущая unresolved target была только одна.
+
+Поэтому выбор конкретного persistent rt_* ID
+не содержал дополнительного semantic decision.
+
+Fail-closed behavior сработал корректно:
+
+- raw Structured Output получен;
+- SemanticTurn validation = FAIL;
+- adapter не завершён;
+- CognitiveTurnResult не создан;
+- StateApplier не вызван;
+- persistence не выполнена;
+- source state не изменён;
+- retry/fallback отсутствовали.
+
+Runner остановил дальнейшие samples.
+
+
+===============================================================================
+VIII. BOOKKEEPING LEAK AUDIT
+===============================================================================
+
+Read-only architecture audit подтвердил:
+
+    это небольшой оставшийся deterministic bookkeeping leak
+    в SemanticTurn contract.
+
+Принцип архитектуры:
+
+    LLM decides WHAT the conversation means.
+    Python decides HOW to technically record/package it.
+
+был ещё не полностью реализован
+для reconciliation previous ResponseTargets.
+
+LLM получала одновременно:
+
+- ActiveContent persistent ID;
+- ResponseTarget persistent ID;
+- ownership;
+- subject;
+- interaction;
+
+и должна была правильно скопировать технический rt_* ID.
+
+В singleton target state это не требовало semantic reasoning.
+
+Также был обнаружен redundant API-facing field:
+
+    previous_active_content_id
+
+поскольку выбранный ResponseTarget уже однозначно определяет
+связанный ActiveContent.
+
+
+===============================================================================
+IX. SEMANTIC TARGET REFERENCE CLEANUP
+===============================================================================
+
+SemanticTurn был узко очищен.
+
+API-facing contract изменён:
+
+BEFORE:
+
+    reconciliation.previous_target_ids
+
+AFTER:
+
+    reconciliation.previous_target_handles
+
+BEFORE:
+
+    resolution_target_id
+
+AFTER:
+
+    resolution_target_handle
+
+API-facing:
+
+    previous_active_content_id
+
+удалён.
+
+Previous ResponseTargets теперь проецируются модели
+через input-scoped semantic handles:
+
+    previous_target_1
+    previous_target_2
+    ...
+
+LLM определяет:
+
+    КАКУЮ semantic target пользователь адресовал.
+
+Python deterministic adapter определяет:
+
+    какой persistent rt_* соответствует этому handle.
+
+Для materialization используется тот же принцип.
+
+Связанный previous ActiveContent выводится Python
+механически из выбранного ResponseTarget.
+
+При нескольких previous targets:
+
+- LLM выбирает semantic target handle;
+- Python делает handle → persistent ID resolution;
+- Python не интерпретирует русский пользовательский текст.
+
+
+===============================================================================
+X. FAIL-CLOSED BOUNDARY AFTER CLEANUP
+===============================================================================
+
+Validation не была ослаблена.
+
+Fail closed сохраняется для:
+
+- unknown target handle;
+- duplicate target resolution;
+- incompatible reconciliation outcome / interaction;
+- invalid AMBIGUOUS structure;
+- materialization без подходящего resolution;
+- target со ссылкой на отсутствующий ActiveContent;
+- structurally invalid references.
+
+Старые persistent wire fields больше не принимаются.
+
+Внутренние downstream contracts не изменены.
+
+CognitiveTurnResult по-прежнему получает persistent rt_* IDs.
+
+StateApplier по-прежнему работает с прежним внутренним contract.
+
+HumanModel semantics не изменены.
+
+ACS semantics не изменены.
+
+DialogEngine не изменён.
+
+
+===============================================================================
+XI. OFFLINE VALIDATION AFTER TARGET-REFERENCE CLEANUP
+===============================================================================
+
+Focused Semantic Wire + Cognitive Core:
+
+    89 passed
+
+StateApplier / DialogEngine related:
+
+    95 passed
+
+Full pytest:
+
+    321 passed
+
+py_compile:
+
+    PASS
+
+git diff --check:
+
+    PASS
+
+API CALLS:
+
+    0
+
+
+===============================================================================
+XII. FINAL MATCHED PRODUCT BOUNDARY REPLAY
+===============================================================================
+
+После semantic target-reference cleanup
+был повторён exact matched frozen Turn-6 replay.
+
+Run:
+
+    pb-turn6-20260927T035349Z-0984dd4a
+
+Использовались:
+
+- exact same frozen HumanModel;
+- exact same ACS;
+- exact same DialogueHistory;
+- exact same USER message;
+- current simplified Product Boundary prompt;
+- current SemanticTurn contract;
+- gpt-5-mini;
+- independent deep copy для каждого sample;
+- max_retries=0;
+- no evaluator;
+- no fallback;
+- no adaptive calls;
+- no StateApplier;
+- no persistence.
+
+Выполнены ровно:
+
+    3 API calls.
+
+
+===============================================================================
+XIII. FINAL REPLAY RESULT
+===============================================================================
+
+SAMPLE 1
+
+DecisionIntent:
+
+    TRANSITION
+
+ActionContent:
+
+    SYSTEM_TRANSITION
+
+ResponseTarget:
+
+    CONSENT
+
+Reconciliation:
+
+    previous_target_1
+    →
+    rt_20e2842676b54cb99eb8dc8b384ca2c4
+    →
+    ANSWERED
+
+Technical validation:
+
+    PASS
+
+
+SAMPLE 2
+
+DecisionIntent:
+
+    TRANSITION
+
+Primary ActionContent:
+
+    SYSTEM_TRANSITION
+
+Additional ActionContent:
+
+    SYSTEM_STATEMENT
+
+ResponseTarget:
+
+    CONSENT
+
+Reconciliation:
+
+    previous_target_1
+    →
+    rt_20e2842676b54cb99eb8dc8b384ca2c4
+    →
+    ANSWERED
+
+Technical validation:
+
+    PASS
+
+
+SAMPLE 3
+
+DecisionIntent:
+
+    TRANSITION
+
+ActionContent:
+
+    SYSTEM_TRANSITION
+
+ResponseTarget:
+
+    CONSENT
+
+Reconciliation:
+
+    previous_target_1
+    →
+    rt_20e2842676b54cb99eb8dc8b384ca2c4
+    →
+    ANSWERED
+
+Technical validation:
+
+    PASS
+
+
+FINAL BEHAVIORAL VERDICT:
+
+    PRODUCT BOUNDARY = PASS 3/3
+
+FINAL TECHNICAL VERDICT:
+
+    SEMANTIC TURN / ADAPTER = PASS 3/3
+
+Ни один sample не содержал:
+
+- generic action menu;
+- конкретных habits/practices;
+- if-then plan;
+- environment change;
+- coping menu;
+- personal solution design;
+- предложения AI выбрать / адаптировать / разработать решение.
+
+Во всех трёх случаях Core остановился
+перед Personal Solution Design
+и выбрал Transition + meaningful consent.
+
+
+===============================================================================
+XIV. COMPARATIVE BEHAVIORAL EVIDENCE
+===============================================================================
+
+Exact frozen Turn-6 state/message
+на предыдущей overlapping Product Boundary policy:
+
+    0/3 clean Product Boundary passes.
+
+После простой реорганизации Product Boundary prompt:
+
+    первый отдельный live sample:
+    behaviorally correct TRANSITION + CONSENT,
+    но technical wire failure.
+
+После target-reference cleanup:
+
+    3/3 behaviorally correct;
+    3/3 technically valid.
+
+Таким образом наблюдаемое evidence для новой prompt organization:
+
+    4 последовательных behaviorally correct selections,
+
+из которых:
+
+    3 полностью прошли current production semantic contract.
+
+Это НЕ является доказательством,
+что gpt-5-mini всегда будет соблюдать Product Boundary.
+
+Но этого достаточно для текущего engineering checkpoint.
+
+Дополнительные API regression calls
+на этом этапе признаны ненужными.
+
+
+===============================================================================
+XV. TOKEN TELEMETRY — FINAL REPLAY
+===============================================================================
+
+Requested model:
+
+    gpt-5-mini
+
+Actual snapshot:
+
+    gpt-5-mini-2025-08-07
+
+Sample 1:
+
+    input = 8139
+    cached input = 0
+    output = 2317
+    reasoning = 1600
+    total = 10456
+
+Sample 2:
+
+    input = 8139
+    cached input = 8064
+    output = 3010
+    reasoning = 2176
+    total = 11149
+
+Sample 3:
+
+    input = 8139
+    cached input = 8064
+    output = 3410
+    reasoning = 2624
+    total = 11549
+
+TOTAL:
+
+    input = 24417
+    cached input = 16128
+    output = 8737
+    reasoning = 6400
+    total = 33154
+
+
+===============================================================================
+XVI. PRE-COMMIT CHECKPOINT AUDIT
+===============================================================================
+
+Read-only pre-commit audit:
+
+    PASS — READY TO COMMIT
+
+Intended checkpoint:
+
+    8 files
+    322 additions
+    89 deletions
+
+Files:
+
+1. Research/Human_Experience/Weight/10_TRANSITION_TO_HUMAN_CONSULTANT.txt
+2. Research/Human_Experience/Weight/11_BOUNDARIES.txt
+3. Research/Human_Experience/Weight/12_Cognitive_Cycle.txt
+4. ai/cognitive_core.py
+5. ai/cognitive_semantic_wire.py
+6. ai/prompts/cognitive_core_system_prompt.txt
+7. tests/test_cognitive_core.py
+8. tests/test_cognitive_semantic_wire.py
+
+Excluded:
+
+- architecture_history/V2/00_DEVELOPMENT_HISTORY_Capter_2.txt;
+- Conversation_Lab/**;
+- frozen artifacts;
+- reports;
+- traces;
+- live artifacts.
+
+Architecture verification:
+
+PASS
+
+- one Cognitive LLM call preserved;
+- selected-only preserved;
+- SemanticTurn → deterministic adapter → CognitiveTurnResult preserved;
+- DialogEngine unchanged;
+- StateApplier unchanged;
+- HumanModel semantics unchanged;
+- ACS semantics unchanged;
+- Python does not interpret Russian prose;
+- Product Boundary remains semantic policy;
+- fail-closed behavior preserved.
+
+Final offline validation:
+
+Focused Cognitive Core / Semantic Wire / StateApplier / DialogEngine:
+
+    184 passed
+
+Full pytest:
+
+    321 passed
+
+py_compile:
+
+    PASS
+
+git diff --check:
+
+    PASS
+
+Blockers:
+
+    NONE
+
+
+===============================================================================
+XVII. FINAL COMMIT
+===============================================================================
+
+Commit:
+
+    a7270ce — Clarify Product Boundary and semantic target references
+
+Commit statistics:
+
+    8 files changed
+    322 insertions
+    89 deletions
+
+Commit успешно отправлен в:
+
+    main
+
+Remote transition:
+
+    94390e6..a7270ce
+
+
+===============================================================================
+XVIII. CURRENT STATE
+===============================================================================
+
+На checkpoint a7270ce:
+
+1. Cognitive Core является основным cognitive runtime DialogEngine.
+
+2. Один пользовательский ход по-прежнему использует
+   один Cognitive LLM call.
+
+3. Production architecture остаётся:
+
+       USER
+       → Cognitive Core
+       → SemanticTurn
+       → deterministic Python adapter
+       → CognitiveTurnResult
+       → StateApplier
+       → atomic persistence
+       → REPLY
+
+4. Product Boundary теперь операционно организована просто:
+
+       WHAT YOU SHOULD DO
+       WHAT YOU MUST NOT DO
+       WHAT YOU SHOULD DO INSTEAD WHEN THE BOUNDARY IS REACHED.
+
+5. AI Discovery отвечает за понимание проблемы,
+   grounded synthesis, patterns, mechanisms и useful explanation.
+
+6. Generic action menu уже считается solution design,
+   даже если варианты названы "general principles"
+   и AI ещё не выбрал один из них.
+
+7. Personal Solution Design остаётся за human consultation layer.
+
+8. Когда следующий полезный шаг требует выбора,
+   адаптации или проектирования персонального решения,
+   Cognitive Core может использовать:
+
+       TRANSITION
+       +
+       SYSTEM_TRANSITION
+       +
+       CONSENT.
+
+9. SemanticTurn больше не требует от LLM
+   копировать persistent rt_* IDs
+   для reconciliation previous ResponseTargets.
+
+10. Previous targets представлены LLM
+    через input-scoped semantic handles.
+
+11. Python deterministic adapter выполняет:
+
+       target handle
+       →
+       persistent ResponseTarget ID.
+
+12. previous_active_content_id выводится механически
+    из выбранного ResponseTarget.
+
+13. Python не интерпретирует пользовательский текст
+    для определения semantic target.
+
+14. Fail-closed validation сохранена.
+
+15. Exact matched frozen Product Boundary replay:
+
+       3/3 behavioral PASS
+       3/3 technical PASS.
+
+16. Дополнительные API calls для этого checkpoint
+    больше не требуются.
+
+
+===============================================================================
+NEXT
+===============================================================================
+
+Следующий этап не должен начинаться
+с очередного расширения Product Boundary prompt.
+
+Нужно вернуться к результатам полного multi-turn runtime conversation
+и отдельно оценить оставшиеся behavioral observations,
+не смешивая их с уже закрытым Product Boundary checkpoint.
+
+Из наблюдавшегося:
+
+- ritual / redundant Reflection;
+- избыточный REINFORCE нескольких HumanModel items
+  коротким подтверждением пользователя;
+- местами слишком сильная causal formulation
+  относительно точного пользовательского материала;
+- presentation quality:
+  "Понял(а)",
+  отсутствие пробела между предложениями,
+  местами служебная формулировка Transition.
+
+Следующий этап должен определить:
+
+- какие из этих defects действительно архитектурно значимы;
+- какие относятся только к formulation / presentation;
+- какие требуют policy change;
+- какие требуют state semantics change;
+- какие вообще не стоит исправлять сейчас.
+
+Не следует:
+
+- снова переписывать архитектуру;
+- добавлять новый Engine;
+- добавлять второй LLM call;
+- вводить keyword-based semantic enforcement;
+- возвращать LLM persistent technical bookkeeping;
+- оптимизировать token/cost раньше поведения.
+
+После стабилизации оставшихся runtime behavioral issues
+можно отдельно решать:
+
+- удаление legacy components;
+- переименование ShadowDiscoveryMemory;
+- очистку legacy profile/history compatibility;
+- token/cost optimization.
+
+===============================================================================
+
+====================================================================
+
+HUMANMODEL REINFORCEMENT SEMANTIC SCOPE
+
+КОНТЕКСТ
+
+После checkpoint:
+
+a7270ce — Clarify Product Boundary and semantic target references
+
+был отдельно разобран один из оставшихся behavioral defects, обнаруженных в multi-turn runtime validation:
+
+dialog-multiturn-20260924T083709Z-1a291f0b
+
+На коротком подтверждении пользователя:
+
+«Да, именно.»
+
+предыдущий EVALUATION target корректно разрешался как SUPPORTED, однако Cognitive Core одновременно выпускал REINFORCE для всех HumanModel items, на которые ссылался предыдущий Reflection.
+
+В конкретном run Reflection был связан с пятью ModelItems, хотя видимая пользователю формулировка главным образом проверяла один смысл — desired change / priority.
+
+В результате текущая реплика пользователя становилась новым evidence для всех пяти ModelItems.
+
+Это было признано REAL DEFECT уровня persistent HumanModel state quality.
+
+ROOT CAUSE
+
+Проблема находилась не в:
+
+- StateApplier;
+- semantic adapter;
+- CognitiveTurnResult;
+- SemanticTurn schema;
+- HumanModel schema;
+- ACS;
+- DialogEngine.
+
+SemanticTurn уже содержал пять явных REINFORCE operations.
+
+StateApplier и adapter лишь механически применяли выбранные моделью операции.
+
+Причина:
+
+production prompt недостаточно явно разделял два независимых semantic decisions:
+
+1. reconciliation предыдущего ResponseTarget;
+2. reinforcement конкретных persistent HumanModel items.
+
+SUPPORTED для предыдущего EVALUATION target не означает, что текущая USER реплика автоматически является новым evidence для каждого ModelItem, связанного с предыдущим ActionContent.
+
+ARCHITECTURE PRINCIPLE
+
+Зафиксирован принцип:
+
+Reconciliation и HumanModel evidence update — независимые semantic decisions.
+
+Каждый REINFORCE должен отдельно поддерживаться текущей USER репликой для конкретного ModelItem.
+
+Допустимо:
+
+SUPPORTED reconciliation
++
+zero HumanModel item operations.
+
+Также допустимо несколько REINFORCE operations, если текущая USER реплика действительно семантически поддерживает несколько propositions.
+
+Не вводились:
+
+- ограничения по длине ответа;
+- special case для «да» / «именно»;
+- keyword matching;
+- Python semantic inference;
+- правило «short answer = максимум один REINFORCE».
+
+Сохраняется базовый принцип:
+
+LLM decides WHAT the conversation means.
+Python decides HOW to technically record/package it.
+
+IMPLEMENTATION
+
+Изменены только:
+
+- ai/prompts/cognitive_core_system_prompt.txt
+- tests/test_cognitive_core.py
+- tests/test_discovery_state_applier.py
+
+Production prompt получил узкий semantic-scope guard:
+
+- reconciliation и persistent evidence updates разделены;
+- SUPPORTED не усиливает автоматически все referenced ModelItems;
+- REINFORCE создаётся отдельно только для конкретного item, который поддержан текущей USER репликой;
+- SUPPORTED с zero item operations валиден;
+- multiple REINFORCE остаются валидными при реальной semantic support нескольких propositions.
+
+StateApplier implementation не изменялся.
+
+Добавлены 3 regression tests:
+
+1. prompt-contract test для разделения target support и item reinforcement;
+
+2. SUPPORTED Reflection с несколькими связанными HumanModel items и без item operations не изменяет эти items;
+
+3. несколько explicit legitimate REINFORCE operations продолжают корректно применяться одновременно.
+
+VALIDATION
+
+Focused Cognitive Core / CognitiveTurn / SemanticWire / StateApplier:
+
+170 passed
+
+Full pytest:
+
+324 passed
+
+py_compile:
+
+PASS
+
+git diff --check:
+
+PASS
+
+API CALLS:
+
+0
+
+Отдельный read-only review проверил размер изменения.
+
+99 inserted lines состоят из:
+
+- 7 строк production prompt;
+- 10 строк prompt-contract test;
+- 82 строк двух StateApplier regression tests, преимущественно explicit validated domain-object setup.
+
+Review verdict:
+
+KEEP AS IS
+
+Тесты признаны не дублирующими друг друга и защищающими разные стороны semantic boundary.
+
+UNCHANGED BOUNDARIES
+
+Не изменялись:
+
+- Product Boundary;
+- Research source of truth;
+- SemanticTurn schema;
+- CognitiveTurnResult;
+- semantic adapter;
+- StateApplier implementation;
+- HumanModel / ACS contracts;
+- DecisionIntent;
+- DialogEngine;
+- one-LLM-call architecture;
+- selected-only architecture;
+- retry/fallback behavior.
+
+COMMIT
+
+c88a55e — Scope HumanModel reinforcement to user evidence
+
+3 files changed, 99 insertions(+)
+
+Commit успешно pushed:
+
+a7270ce..c88a55e
+main -> main
+
+CURRENT STATE
+
+Checkpoint c88a55e находится на GitHub/main.
+
+Product Boundary checkpoint остаётся закрытым.
+
+Semantic target-reference cleanup остаётся закрытым.
+
+HumanModel reinforcement semantic-scope defect закрыт на policy/contract-test уровне.
+
+Оставшиеся ранее замеченные observations:
+
+- ritual / redundant Reflection;
+- местами слишком сильная causal formulation / provenance;
+- presentation quality:
+  - Понял(а);
+  - смена рода;
+  - ReplySegment boundary spacing;
+  - механические boundary formulations;
+  - terminology drift.
+
+Они НЕ признаны основанием для немедленного нового architecture work.
+
+NEXT
+
+Следующий крупный этап:
+
+END-TO-END BEHAVIORAL VALIDATION текущего runtime после checkpoint c88a55e.
+
+Цель — оценивать уже не отдельные локальные policy cases, а целостное поведение реального AI-консультанта в естественном multi-turn диалоге:
+
+- чувствует ли пользователь, что его действительно понимают;
+- движется ли разговор естественно;
+- не превращается ли Discovery в questionnaire;
+- умеет ли бот использовать уже известный материал;
+- не уточняет ли без необходимости;
+- исследует ли значимые повторяющиеся patterns вместо causal autopsy единичных эпизодов;
+- добавляет ли Reflection новый смысл вместо ритуального пересказа;
+- остаётся ли HumanModel семантически чистой рабочей памятью;
+- соблюдается ли Product Boundary;
+- происходит ли meaningful transition к живому консультанту тогда, когда следующий полезный шаг действительно требует personal solution design.
+
+После этой проверки решение должно приниматься по целостному product behavior, а не через бесконечную локальную полировку отдельных формулировок.
+
+Если текущий Cognitive Core уже даёт достаточно хорошее поведение, дальнейшая микрополировка policy должна быть остановлена и разработка должна двигаться к следующему product stage.
+
+====================================================================
+
+================================================================================
+OPEN_RESPONSE RECONCILIATION OWNERSHIP
+================================================================================
+
+КОНТЕКСТ
+
+После checkpoint c88a55e была запущена LIVE END-TO-END BEHAVIORAL VALIDATION
+через реальный production path DialogEngine.
+
+Run:
+dialog-multiturn-20261003T034000Z-75734633
+
+Разговор штатно прошёл первые два хода, но на третьем ходе произошёл hard stop.
+
+USER:
+«Примерно одинаково.»
+
+Предыдущий ResponseTarget имел:
+
+interaction_kind = OPEN_RESPONSE
+
+LLM содержательно правильно поняла ответ и сформировала разумное продолжение разговора,
+но в SemanticTurn выбрала reconciliation outcome:
+
+SUPPORTED
+
+Текущий контракт требовал для OPEN_RESPONSE:
+
+ANSWERED
+
+Adapter корректно отказал fail-closed:
+
+SemanticWireError:
+Reconciliation outcome is incompatible with target interaction.
+
+StateApplier и persistence не запускались.
+Partial persistence не произошло.
+
+
+ROOT CAUSE
+
+Проблема оказалась не просто единичной ошибкой модели.
+
+Архитектурный аудит показал, что SemanticTurn оставлял на LLM лишнюю техническую
+ответственность.
+
+Для обычного ответа на OPEN_RESPONSE модель должна была одновременно:
+
+1. семантически определить, какой предыдущий ResponseTarget пользователь адресовал;
+2. выбрать внутренний технический reconciliation label ANSWERED.
+
+После того как модель уже определила, что конкретный OPEN_RESPONSE был нормально
+адресован пользователем, выбор ANSWERED не добавлял новой семантической информации.
+
+Это было deterministic bookkeeping, а не отдельное смысловое решение.
+
+
+ARCHITECTURE PRINCIPLE
+
+Уточнена граница ответственности:
+
+LLM decides WHAT the conversation means.
+Python decides HOW that semantic declaration is technically represented.
+
+Для OPEN_RESPONSE:
+
+LLM определяет:
+«этот конкретный предыдущий target был нормально адресован».
+
+Python определяет техническое следствие:
+OPEN_RESPONSE + ordinary addressed
+→ canonical internal ANSWERED.
+
+Python не интерпретирует текст пользователя и не определяет, был ли вопрос реально
+адресован. Это по-прежнему семантическая ответственность LLM.
+
+
+IMPLEMENTATION
+
+В API-facing SemanticTurn добавлена отдельная reconciliation form:
+
+resolution_kind = ordinary_addressed
+
+Пример:
+
+{
+  "resolution_kind": "ordinary_addressed",
+  "previous_target_handle": "previous_target_1",
+  "source_quote": "Примерно одинаково."
+}
+
+Для этой формы adapter:
+
+1. разрешает semantic target handle;
+2. проверяет, что target действительно имеет interaction_kind = OPEN_RESPONSE;
+3. получает persistent ResponseTarget ID;
+4. детерминированно создаёт внутренний ReconciliationOutcome.ANSWERED.
+
+Внутренний CognitiveTurnResult не изменён.
+
+StateApplier по-прежнему получает старую canonical representation:
+
+persistent rt_* ID
++
+ANSWERED
+
+
+SEMANTIC OWNERSHIP PRESERVED
+
+Изменение намеренно ограничено OPEN_RESPONSE.
+
+LLM по-прежнему явно определяет:
+
+CLARIFICATION:
+- ANSWERED
+- SUPPORTED
+- REJECTED
+- PARTIALLY_SUPPORTED
+- UNCERTAIN
+
+EVALUATION:
+- SUPPORTED
+- REJECTED
+- PARTIALLY_SUPPORTED
+- UNCERTAIN
+
+CONSENT:
+- CONSENTED
+- DECLINED
+
+Также семантическими решениями LLM остаются:
+
+- REFUSED;
+- AMBIGUOUS;
+- выбор адресованного target;
+- отсутствие reconciliation при смене темы / неразрешённом target;
+- HumanModel corrections;
+- HumanModel reinforcement;
+- другие state operations.
+
+Explicit model-facing ANSWERED теперь не принимается для OPEN_RESPONSE.
+Для обычного OPEN_RESPONSE существует один model-facing path:
+
+ordinary_addressed.
+
+Никакого SUPPORTED → ANSWERED coercion или generic incompatible-outcome coercion
+не добавлено.
+
+
+FAIL-CLOSED BEHAVIOR
+
+ordinary_addressed принимается только для OPEN_RESPONSE.
+
+Он отклоняется для:
+
+- CLARIFICATION;
+- EVALUATION;
+- CONSENT;
+- неизвестного target handle;
+- duplicate resolution.
+
+Сохранены существующие проверки:
+
+- REFUSED;
+- AMBIGUOUS;
+- omission;
+- interaction/outcome compatibility;
+- source quote resolution;
+- duplicate targets;
+- structural invariants.
+
+
+SOURCE OF TRUTH
+
+Наряду с runtime contract узко обновлён:
+
+Research/Human_Experience/Weight/13_Active_Conversation_State.txt
+
+Зафиксировано:
+
+LLM определяет, что конкретный OPEN_RESPONSE был нормально адресован.
+Deterministic adapter записывает canonical internal ANSWERED.
+
+Концептуального redesign не потребовали:
+
+- 12_Cognitive_Cycle.txt;
+- 16_Discovery_Data_Model.txt;
+- 17_Discovery_Data_Model_Validation.txt.
+
+
+OFFLINE VALIDATION
+
+После реализации:
+
+Semantic wire:
+44 passed
+
+Cognitive Core:
+63 passed
+
+CognitiveTurn + StateApplier + DialogEngine:
+92 passed
+
+Full suite:
+341 passed
+
+py_compile:
+PASS
+
+git diff --check:
+PASS
+
+API calls:
+0
+
+
+LIVE MATCHED REPLAY
+
+После read-only pre-live review был выполнен ровно один matched production replay
+с сохранённым состоянием непосредственно перед исходным упавшим Turn 3.
+
+USER:
+«Примерно одинаково.»
+
+API calls:
+1
+
+Retries:
+0
+
+Fallbacks:
+0
+
+Evaluator calls:
+0
+
+Модель самостоятельно вернула:
+
+{
+  "resolution_kind": "ordinary_addressed",
+  "previous_target_handle": "previous_target_1",
+  "source_quote": "Примерно одинаково."
+}
+
+Adapter выполнил:
+
+ordinary_addressed(previous_target_1)
+→ rt_86d429a9bdbc4492a33f60f74692e743
+→ ANSWERED
+
+Далее успешно прошли:
+
+SemanticTurn
+→ adapter
+→ CognitiveTurnResult
+→ StateApplier
+→ persistence
+→ reload validation.
+
+Partial mutation:
+NO
+
+Frozen input:
+UNCHANGED
+
+Persisted SYSTEM reply:
+byte-for-byte equal to returned reply.
+
+Live replay verdict:
+
+PASS — ORIGINAL HARD STOP ELIMINATED
+
+
+OBSERVED BEHAVIOR OUTSIDE THIS FIX
+
+В matched replay модель выбрала:
+
+DecisionIntent = REFLECTION
+
+и дала достаточно подробный пересказ уже известной ситуации с последующим:
+
+«Правильно ли я это свёл?»
+
+Это соответствует ранее замеченному возможному паттерну ritual Reflection /
+«пересказ → подтверждение».
+
+Данный вопрос намеренно НЕ исправлялся в этом checkpoint.
+
+Он должен оцениваться в рамках следующей полноценной end-to-end behavioral validation,
+а не через локальную подстройку под один replay.
+
+
+UNCHANGED BOUNDARIES
+
+Не изменены:
+
+- Product Boundary;
+- CognitiveTurnResult;
+- StateApplier implementation;
+- CognitiveCore runtime;
+- DialogEngine;
+- HumanModel persistent contract;
+- ACS persistent storage contract;
+- one-call architecture;
+- selected-only architecture.
+
+
+COMMIT
+
+a467ac9 Simplify open-response reconciliation ownership
+
+Изменено:
+
+5 files
+168 insertions(+)
+29 deletions(-)
+
+Файлы:
+
+Research/Human_Experience/Weight/13_Active_Conversation_State.txt
+ai/cognitive_semantic_wire.py
+ai/prompts/cognitive_core_system_prompt.txt
+tests/test_cognitive_semantic_wire.py
+tests/test_cognitive_core.py
+
+Commit pushed to GitHub main:
+
+c88a55e..a467ac9
+
+
+CURRENT STATE
+
+Checkpoint a467ac9 является текущей зафиксированной production architecture state.
+
+Исходный runtime blocker с OPEN_RESPONSE reconciliation устранён и подтверждён
+ровно одним matched live replay.
+
+Дополнительные повторы этого случая не требуются.
+
+
+NEXT
+
+Вернуться к прерванной LIVE END-TO-END BEHAVIORAL VALIDATION.
+
+Цель следующего этапа — оценить уже не локальный reconciliation contract, а целостное
+поведение консультанта в естественном многоходовом разговоре:
+
+- ощущение «Меня действительно поняли»;
+- естественность разговора против questionnaire behavior;
+- clarification discipline;
+- patterns vs episodes;
+- Reflection только когда она добавляет смысл;
+- качество HumanModel;
+- ACS/reconciliation;
+- Product Boundary;
+- естественный Transition с meaningful consent;
+- presentation defects отдельно от архитектурных проблем.
+
+Если новая сквозная проверка не обнаружит product-significant blocker, прекратить
+локальную полировку Cognitive Core policy и перейти к следующему product stage.
+================================================================================

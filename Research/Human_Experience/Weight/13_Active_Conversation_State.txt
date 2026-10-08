@@ -260,6 +260,11 @@ Deterministic adapter проверяет,
 REFUSED, AMBIGUOUS или к target, который пользователь не разрешил:
 их смысл остаётся явным решением Cognitive Core.
 
+После CONSENTED к SYSTEM_TRANSITION соответствующий target разрешён, и ACS
+может завершиться. Следующий детерминированный сбор контактного телефона —
+операционный handoff state, а не новый Active Content или Response Target:
+телефон не требует интерпретации Cognitive Core.
+
 
 ============================================================
 ЕСЛИ TARGET НЕ ПОЛУЧИЛ ОТВЕТ

@@ -1,0 +1,81 @@
+{
+  "experiment": "FSB-R/S ASTRA REPEATABILITY REGRESSION",
+  "head": "1550ec2",
+  "production_boundary": "SELECTED_ONLY",
+  "production_model": "gpt-6-astra",
+  "evaluator_model": "gpt-6-astra",
+  "samples_per_case": 3,
+  "prompt": {
+    "git_path": "1550ec2:ai/prompts/cognitive_core_system_prompt.txt",
+    "sha256": "4FEB93BE179B7F7976F099EF828A8B578EBAB6CA0C06FC0C09CD147EF2C0AA14"
+  },
+  "source_freeze": "Conversation_Lab/frozen/fsb_01_672455a",
+  "source_artifact_sha256": {
+    "fsb_01_cases_672455a.json": "E9CB63B9D54F19EBCEF06A592C83DF70C3E75561C934C0D453BD9D40E914CEA1",
+    "fsb_01_challengers_672455a.json": "23F38F097ED4B2A30902D22EEE128CB88EAE9B446EDA5E8C9912F1752960AF51",
+    "fsb_01_evaluator_prompt_672455a.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+    "fsb_01_evaluator_schema_672455a.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B"
+  },
+  "contract_boundary": {
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "cognitive_core_wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39",
+    "selected_action_evaluator_file_sha256": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0",
+    "projection_owner": "Conversation_Lab.selected_action_evaluator.selected_action_from_cognitive_turn"
+  },
+  "base_cases": ["FSB-R", "FSB-S"],
+  "case_order": ["FSB-R-1", "FSB-R-2", "FSB-R-3", "FSB-S-1", "FSB-S-2", "FSB-S-3"],
+  "production_order": ["FSB-R-1", "FSB-R-2", "FSB-R-3", "FSB-S-1", "FSB-S-2", "FSB-S-3"],
+  "evaluator_order": ["FSB-R-1", "FSB-R-2", "FSB-R-3", "FSB-S-1", "FSB-S-2", "FSB-S-3"],
+  "sample_base_case": {
+    "FSB-R-1": "FSB-R", "FSB-R-2": "FSB-R", "FSB-R-3": "FSB-R",
+    "FSB-S-1": "FSB-S", "FSB-S-2": "FSB-S", "FSB-S-3": "FSB-S"
+  },
+  "case_sha256": {
+    "FSB-R-1": "45943932583EDDFF28520D4C3D680BC19803963FABC24C15B4841E83779149EB",
+    "FSB-R-2": "45943932583EDDFF28520D4C3D680BC19803963FABC24C15B4841E83779149EB",
+    "FSB-R-3": "45943932583EDDFF28520D4C3D680BC19803963FABC24C15B4841E83779149EB",
+    "FSB-S-1": "0AB079F9D67E291273BECB58E5EE8B56CB234554F6037422F5FD5A7DFD7CEC4D",
+    "FSB-S-2": "0AB079F9D67E291273BECB58E5EE8B56CB234554F6037422F5FD5A7DFD7CEC4D",
+    "FSB-S-3": "0AB079F9D67E291273BECB58E5EE8B56CB234554F6037422F5FD5A7DFD7CEC4D"
+  },
+  "state_sha256": {
+    "FSB-R-1": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F",
+    "FSB-R-2": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F",
+    "FSB-R-3": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F",
+    "FSB-S-1": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66",
+    "FSB-S-2": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66",
+    "FSB-S-3": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66"
+  },
+  "challenger_sha256": {
+    "FSB-R-1": "05654BD7167CE2E974BACCBA376EB7E71E8CD1E2E018388D2330D913AE5E692C",
+    "FSB-R-2": "05654BD7167CE2E974BACCBA376EB7E71E8CD1E2E018388D2330D913AE5E692C",
+    "FSB-R-3": "05654BD7167CE2E974BACCBA376EB7E71E8CD1E2E018388D2330D913AE5E692C",
+    "FSB-S-1": "ED6FA4E2E9B41073417D924B9392BCE165C557F1D5DC3C5E12D76AD1E382FCC1",
+    "FSB-S-2": "ED6FA4E2E9B41073417D924B9392BCE165C557F1D5DC3C5E12D76AD1E382FCC1",
+    "FSB-S-3": "ED6FA4E2E9B41073417D924B9392BCE165C557F1D5DC3C5E12D76AD1E382FCC1"
+  },
+  "evaluator_orientations_selected_on_left": {
+    "FSB-R-1": [true, false, true], "FSB-R-2": [true, false, true], "FSB-R-3": [true, false, true],
+    "FSB-S-1": [false, true, false], "FSB-S-2": [false, true, false], "FSB-S-3": [false, true, false]
+  },
+  "protocol": {
+    "retry": 0,
+    "smoke_calls": 0,
+    "confirmations": 0,
+    "adaptive_sampling": false,
+    "challenger_generation": false,
+    "candidate_materialization": false,
+    "all_production_before_evaluator": true
+  },
+  "api_budget": {"production": 6, "evaluator": 18, "maximum_total": 24},
+  "stop_rules": [
+    "failed_head_hash_prompt_source_or_offline_validation_stops_before_api",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "dangling_or_partial_call_is_not_resumable",
+    "terminal_stop_is_not_resumable",
+    "no_prompt_state_fixture_challenger_schema_contract_projection_evaluator_or_selected_boundary_mutation",
+    "no_confirmation_adaptation_smoke_retry_or_extra_call"
+  ]
+}

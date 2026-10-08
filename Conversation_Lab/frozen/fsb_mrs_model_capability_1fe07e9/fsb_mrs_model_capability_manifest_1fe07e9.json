@@ -1,0 +1,84 @@
+{
+  "adaptive_confirmation": false,
+  "api_budget": {
+    "evaluator": 9,
+    "maximum_total": 12,
+    "production": 3
+  },
+  "baseline_production_model": "gpt-5-mini",
+  "case_order": [
+    "FSB-M",
+    "FSB-R",
+    "FSB-S"
+  ],
+  "case_sha256": {
+    "FSB-M": "7130056269615EF73D1811BE8A0A68186F2B3C4E0B3D0611F43B2D2DF62E331E",
+    "FSB-R": "45943932583EDDFF28520D4C3D680BC19803963FABC24C15B4841E83779149EB",
+    "FSB-S": "0AB079F9D67E291273BECB58E5EE8B56CB234554F6037422F5FD5A7DFD7CEC4D"
+  },
+  "challenger_sha256": {
+    "FSB-M": "756E36B86FAFBA4123332C8DF62EA1ABBC21E94965D4697FB1371E670F7A9EAB",
+    "FSB-R": "05654BD7167CE2E974BACCBA376EB7E71E8CD1E2E018388D2330D913AE5E692C",
+    "FSB-S": "ED6FA4E2E9B41073417D924B9392BCE165C557F1D5DC3C5E12D76AD1E382FCC1"
+  },
+  "contract_boundary": {
+    "cognitive_core_file_sha256": "E22BA7ECB4E90B5BF89F9E7B8C8DD65099D42D239F77CA8D2EE3E473AAC96543",
+    "cognitive_core_wire_schema_sha256": "F37521D307E20C84A7FC9709791EBFBDD2653726F2B506D5D139BD7485C826BF",
+    "cognitive_turn_file_sha256": "BB8AF8ED4DF114964C3D5717FD15B6D8AAB52F592C070CE95AE9EFA69C51C7B6",
+    "cognitive_turn_schema_sha256": "CD1C41BB15F3EEB9D1B6D5FDC8FD1EADAE498D69DE6950A65A8AA00797775D39",
+    "production_prompt_sha256": "EFADD7944F729F4FB76BC5184AD009A81C173224D2B9AA4938A1C84355410920",
+    "production_prompt_sha256_old_672455a": "9F71228617730A13116B02E2A900035D210B327AF359F16F3BF36B3617477BA2",
+    "selected_action_evaluator_file_sha256": "8FB8B98D58911D9AEDAFD9A1B6778CB9ABEE3F81C7F17DAAF9AAF52E708B10D0"
+  },
+  "evaluator_model": "gpt-6-astra",
+  "evaluator_order": [
+    "FSB-M",
+    "FSB-R",
+    "FSB-S"
+  ],
+  "evaluator_orientations_selected_on_left": {
+    "FSB-M": [false, true, false],
+    "FSB-R": [true, false, true],
+    "FSB-S": [false, true, false]
+  },
+  "experiment": "FSB-M/R/S MATCHED MODEL-CAPABILITY ISOLATION",
+  "head": "1fe07e9",
+  "production_boundary": "SELECTED_ONLY",
+  "production_model": "gpt-6-astra",
+  "production_order": [
+    "FSB-M",
+    "FSB-R",
+    "FSB-S"
+  ],
+  "retry": 0,
+  "smoke_calls": 0,
+  "source_artifact_sha256": {
+    "fsb_mrs_cases_1fe07e9.json": "0607913232C57D389F48996E4305ADA1E0B0172A2D6E07A7E23E5C5F1CD5F0CD",
+    "fsb_mrs_challengers_1fe07e9.json": "37EFD89E28A7F6DB089E498AB153F08B70913BD195F8643844011CD400C1C486",
+    "fsb_mrs_evaluator_prompt_1fe07e9.txt": "C5ACFB34717B6F548CE7F0F65349E7F0C56DA3203580242E1B40A9BD3DB1FCF6",
+    "fsb_mrs_evaluator_schema_1fe07e9.json": "6D9B6D568D3F58C1D622F18B93FB3D428CA9631AB0B3C8029C134E9270FCB54B",
+    "fsb_mrs_freeze_report_1fe07e9.md": "9F916BBBECE09A5FFBAE54CDDFEFB8975162BCA4BCBF2316B6CC8726EBFFA293",
+    "fsb_mrs_manifest_1fe07e9.json": "6D4942F9DFD66CA9D56602BABBE583A21984DD36AAE3999A38DE6960C6BAC717",
+    "fsb_mrs_measurement_plan_1fe07e9.md": "11E4235C7A438D8A59ED6365DA7BDB55BACE1E2BCCA6648E55EA62A33A6CA24C",
+    "fsb_mrs_offline_validator_1fe07e9.py": "AA9747D1279C99EB445A38D05AD727983799BA295AAC3E54263CD931BEDD791B"
+  },
+  "source_freeze": "Conversation_Lab/frozen/fsb_01_mrs_policy_patch_1fe07e9",
+  "source_manifest_sha256": "6D4942F9DFD66CA9D56602BABBE583A21984DD36AAE3999A38DE6960C6BAC717",
+  "state_sha256": {
+    "FSB-M": "F69D71205B0C25EFB8815839D1882A2C1837C483BFA2E78F2AF07D3141BAE337",
+    "FSB-R": "053DF0D956958973626CF0D04BA5B74363DF9D18397A2835B31F90CB3AE1597F",
+    "FSB-S": "6E6A592CDAF9F3E61D9E27A7DFDCDCA92D69361782993810E4A4D882F0A25C66"
+  },
+  "stop_rules": [
+    "preflight_head_hash_or_offline_validation_failure_stops_with_zero_api_calls",
+    "transport_billing_structural_order_or_mapping_failure_stops_without_retry",
+    "no_unfrozen_prompt_contract_state_challenger_evaluator_or_policy_mutation",
+    "no_adaptive_confirmation_or_extra_call"
+  ],
+  "verdict_rule": {
+    "INCONCLUSIVE": "technical failure, critical abstain, or protocol drift",
+    "MIXED": "Astra eliminates comparative misses for only a proper subset of M/R/S",
+    "MODEL_CAPABILITY_SUPPORTED": "Astra eliminates comparative misses for all M/R/S",
+    "REPRESENTATION_ARCHITECTURE_REMAINS_PRIMARY": "Astra also receives CHALLENGER_HIGHER on the problematic cases"
+  }
+}

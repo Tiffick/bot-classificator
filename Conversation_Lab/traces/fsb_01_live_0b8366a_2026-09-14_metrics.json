@@ -1,0 +1,11 @@
+{
+  "status": "STOPPED",
+  "classification": "INCONCLUSIVE",
+  "production_calls": 1,
+  "evaluator_calls": 0,
+  "total_api_calls": 1,
+  "usage_by_model": {},
+  "baseline_aggregates": {},
+  "confirmation_aggregates": {},
+  "reproducible_misses": []
+}

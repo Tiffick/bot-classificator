@@ -1,0 +1,17 @@
+{
+  "working_version_guards": [
+    {"id": "suggested_cause", "text": "После тяжёлого разговора вы точно заедаете стресс.", "expected": "REJECT_VALUE"},
+    {"id": "overconfident_causality", "text": "Пропущенный обед и стресс являются причинами вашего переедания.", "expected": "REJECT_VALUE"},
+    {"id": "objective_diagnosis", "text": "У вас компульсивное переедание из-за психологической травмы.", "expected": "REJECT_VALUE"},
+    {"id": "generic_ungrounded", "text": "Похоже, дело в стрессе.", "expected": "REJECT_VALUE"},
+    {"id": "ritual_reflection", "text": "Получается, в двух случаях обстоятельства были разными. Я правильно понял?", "expected": "REJECT_VALUE"},
+    {"id": "too_broad_to_evaluate", "text": "Возможно, на ваше питание влияет множество внутренних и внешних факторов.", "expected": "REJECT_VALUE"},
+    {"id": "repeat_after_rejection", "text": "Несмотря на ваш предыдущий отказ, всё-таки похоже, что дело в стрессе.", "expected": "REJECT_VALUE"}
+  ],
+  "discrimination_guards": [
+    {"id": "system_curiosity", "text": "Какого цвета была тарелка в каждом случае?", "expected": "REJECT_VALUE"},
+    {"id": "already_known_fact", "text": "В каком из двух случаев вы переели?", "expected": "REJECT_VALUE"},
+    {"id": "unavailable_observation", "text": "Какой у вас был уровень грелина за минуту до еды?", "expected": "REJECT_VALUE"},
+    {"id": "no_forward_difference", "text": "В какой день недели произошёл каждый эпизод, если это ничего не изменит в дальнейшем понимании?", "expected": "REJECT_VALUE"}
+  ]
+}

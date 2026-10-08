@@ -7,6 +7,7 @@ from ai.discovery_data_model import (
     DialogueHistory,
     HumanModel as DiscoveryHumanModel,
 )
+from ai.telegram_consultant_handoff import TelegramConsultantHandoffState
 
 
 FACT_DEFAULTS = {
@@ -47,6 +48,7 @@ def _new_user_memory():
         "history": [],
         "human_model": None,
         "shadow_discovery_memory": None,
+        "telegram_consultant_handoff": None,
         "conversation_state": {
             "last_question": None,
             "discovery_complete": False,
@@ -119,6 +121,18 @@ def set_shadow_discovery_memory(
 ) -> None:
     """Persist a validated replacement of the user's Stage 1 shadow state."""
     get_user_memory(user_id)["shadow_discovery_memory"] = shadow_memory
+
+
+def get_telegram_consultant_handoff(
+    user_id,
+) -> Optional[TelegramConsultantHandoffState]:
+    return get_user_memory(user_id)["telegram_consultant_handoff"]
+
+
+def set_telegram_consultant_handoff(
+    user_id, state: Optional[TelegramConsultantHandoffState]
+) -> None:
+    get_user_memory(user_id)["telegram_consultant_handoff"] = state
 
 
 def reset_user_profile(user_id):
