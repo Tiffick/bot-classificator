@@ -2171,3 +2171,51 @@ Legacy route должен оставаться fallback на этапе мигр
 Нельзя создавать production ACS из hypothetical Cognitive Core reply, которого
 реальный пользователь не видел.
 ```
+
+===============================================================================
+CHECKPOINT — 2026-10-15
+
+Название:
+Cognitive Core, semantic knowledge retrieval и полная диагностическая трассировка
+
+Что сделано:
+- Уточнена консультационная policy Cognitive Core: приоритет содержательного
+  продвижения, anti-echo, ограничение questionnaire-поведения, корректная работа
+  с пользовательскими исправлениями и Product Boundary.
+- Сохранена одновызовная selected-only архитектура SemanticTurn -> deterministic
+  adapter -> CognitiveTurnResult -> StateApplier.
+- Human Experience включён по умолчанию как источник осторожных рабочих версий;
+  explicit emergency override HUMAN_EXPERIENCE_ENABLED=false сохранён.
+- Реализован semantic-only Professional Knowledge Retrieval на локальной
+  multilingual-e5-small; консервативный pilot-каталог и безопасное abstention
+  не используют lexical fallback.
+- Retrieval встроен в production DialogEngine без второго LLM-вызова; feature
+  flag KNOWLEDGE_RETRIEVAL_ENABLED и rollback-путь сохранены.
+- Добавлена полная локальная Cognitive Core diagnostics-трассировка одного
+  контролируемого диалога: входные views, retrieval results, assembled request,
+  raw SemanticTurn, adapter/state application, persistence и Telegram delivery.
+- Диагностический файл diagnostics/latest_test_dialog.json исключён из Git;
+  секреты и токены в трассу не записываются.
+- Обновлён Telegram handler: typing UX, consultant handoff/contact delivery и
+  диагностическая фиксация фактически отправленного ответа.
+- Добавлены и обновлены offline-тесты Cognitive Core, Semantic Wire, Human
+  Experience, knowledge retrieval, diagnostics и Telegram handoff.
+- Сохранены воспроизводимые экспериментальные пакеты, raw results и аудиты;
+  production prompt и treatment-варианты в отчётах явно разделены.
+
+Проверки этапа:
+- semantic retrieval проверен на реальной локальной embedding-модели;
+- текущая полная offline regression suite подготовлена к финальному запуску;
+- JSON/JSONL экспериментальных артефактов проверены на читаемость;
+- diagnostics/latest_test_dialog.json подтверждён как ignored;
+- поиск секретов в кандидатах на коммит не обнаружил ключей или токенов.
+
+Исключено из checkpoint:
+- live conversation_log.txt;
+- diagnostics/latest_test_dialog.json и временный diagnostic-файл;
+- .env, virtual environment, caches и случайные runtime/test artifacts.
+
+Текущее состояние:
+Проект подготовлен к единому checkpoint commit. Следующий этап после успешного
+commit/push: LIVE TELEGRAM TEST #4 WITH FULL COGNITIVE CORE DIAGNOSTICS.
+===============================================================================

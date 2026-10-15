@@ -16,6 +16,12 @@ from ai.discovery_data_model import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _disable_local_diagnostics_by_default(monkeypatch):
+    """Tests opt into the development trace explicitly."""
+    monkeypatch.setenv("COGNITIVE_CORE_DIAGNOSTICS_ENABLED", "false")
+
+
 @pytest.fixture
 def user_profile():
     return {

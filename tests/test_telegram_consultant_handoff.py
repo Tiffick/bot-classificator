@@ -341,8 +341,6 @@ def test_native_telegram_contact_is_forwarded_to_runtime(monkeypatch):
     monkeypatch.setattr(handlers, "get_user_profile", lambda user_id: {})
     monkeypatch.setattr(handlers, "update_user_profile", lambda user_id, data: {})
     monkeypatch.setattr(handlers, "set_last_question", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_user", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_bot", lambda *args: None)
     message = FakeMessage()
 
     asyncio.run(handlers.message_handler(message))
@@ -386,8 +384,6 @@ def test_post_consent_message_has_native_contact_button(monkeypatch):
     monkeypatch.setattr(handlers, "get_user_profile", lambda user_id: {})
     monkeypatch.setattr(handlers, "update_user_profile", lambda user_id, data: {})
     monkeypatch.setattr(handlers, "set_last_question", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_user", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_bot", lambda *args: None)
     message = FakeMessage()
 
     asyncio.run(handlers.message_handler(message))
@@ -432,8 +428,6 @@ def test_typing_refreshes_during_slow_cognitive_processing_without_extra_delay(
     monkeypatch.setattr(handlers, "get_user_profile", lambda user_id: {})
     monkeypatch.setattr(handlers, "update_user_profile", lambda user_id, data: {})
     monkeypatch.setattr(handlers, "set_last_question", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_user", lambda *args: None)
-    monkeypatch.setattr(handlers, "log_bot", lambda *args: None)
     monkeypatch.setattr(handlers, "TYPING_REFRESH_SECONDS", 0.01)
 
     async def scenario():
@@ -481,7 +475,6 @@ def test_typing_stops_when_cognitive_processing_raises(monkeypatch):
 
     monkeypatch.setattr(handlers, "run_dialog_engine", failing_engine)
     monkeypatch.setattr(handlers, "get_user_profile", lambda user_id: {})
-    monkeypatch.setattr(handlers, "log_user", lambda *args: None)
     monkeypatch.setattr(handlers, "TYPING_REFRESH_SECONDS", 0.01)
 
     async def scenario():

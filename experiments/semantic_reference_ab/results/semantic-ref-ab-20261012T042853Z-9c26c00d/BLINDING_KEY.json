@@ -1,0 +1,18 @@
+{
+  "run_id": "semantic-ref-ab-20261012T042853Z-9c26c00d",
+  "warning": "Keep separate from the human reviewer until scoring is complete.",
+  "mapping": {
+    "R01": "B.S1.3",
+    "R02": "A.S1.2",
+    "R03": "B.S3.2",
+    "R04": "B.S1.1",
+    "R05": "A.S1.1",
+    "R06": "B.S3.1",
+    "R07": "B.S3.3",
+    "R08": "A.S3.3",
+    "R09": "B.S1.2",
+    "R10": "A.S3.2",
+    "R11": "A.S3.1",
+    "R12": "A.S1.3"
+  }
+}

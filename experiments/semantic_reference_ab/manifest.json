@@ -1,0 +1,71 @@
+{
+  "experiment_id": "semantic-reference-ab-v1",
+  "status": "prepared_not_executed",
+  "question": "Do compact reference rules and concrete examples reduce SemanticTurn reference failures?",
+  "conditions": {
+    "A": "Current assembled production Cognitive Core system instructions, unchanged.",
+    "B": "Condition A plus treatment_appendix.txt and no other change."
+  },
+  "model": "gpt-5-mini-2025-08-07",
+  "reasoning_effort": "minimal",
+  "max_completion_tokens": 4000,
+  "max_retries": 0,
+  "evaluator_calls": 0,
+  "api_call_budget": 12,
+  "scenarios": [
+    "S1",
+    "S3"
+  ],
+  "repetitions_per_cell": 3,
+  "primary_metric": {
+    "name": "complete_semantic_turn_validity",
+    "pass_rule": "The saved response parses as JSON, passes the current scenario-specific JSON Schema, passes SemanticTurn.model_validate, passes adapt_semantic_turn, and the resulting CognitiveTurnResult validates.",
+    "unit": "one independent production response",
+    "reporting": "Valid samples / 6 for each condition, with scenario-level counts. Evaluator votes are not used."
+  },
+  "secondary_metric": {
+    "name": "consultation_response_quality",
+    "method": "After execution, conduct a read-only human review blinded to A/B labels where practical.",
+    "dimensions": [
+      "groundedness",
+      "useful understanding or purposeful progress",
+      "unnecessary repetition",
+      "unnecessary clarification or questionnaire behavior",
+      "Product Boundary compliance"
+    ],
+    "note": "Secondary judgments must not overwrite or repair invalid structured outputs and are not additional API calls."
+  },
+  "schedule": [
+    {"call_index": 1, "key": "A.S1.1", "condition": "A", "scenario_id": "S1", "repeat": 1},
+    {"call_index": 2, "key": "B.S1.1", "condition": "B", "scenario_id": "S1", "repeat": 1},
+    {"call_index": 3, "key": "B.S3.1", "condition": "B", "scenario_id": "S3", "repeat": 1},
+    {"call_index": 4, "key": "A.S3.1", "condition": "A", "scenario_id": "S3", "repeat": 1},
+    {"call_index": 5, "key": "B.S1.2", "condition": "B", "scenario_id": "S1", "repeat": 2},
+    {"call_index": 6, "key": "A.S1.2", "condition": "A", "scenario_id": "S1", "repeat": 2},
+    {"call_index": 7, "key": "A.S3.2", "condition": "A", "scenario_id": "S3", "repeat": 2},
+    {"call_index": 8, "key": "B.S3.2", "condition": "B", "scenario_id": "S3", "repeat": 2},
+    {"call_index": 9, "key": "A.S1.3", "condition": "A", "scenario_id": "S1", "repeat": 3},
+    {"call_index": 10, "key": "B.S1.3", "condition": "B", "scenario_id": "S1", "repeat": 3},
+    {"call_index": 11, "key": "B.S3.3", "condition": "B", "scenario_id": "S3", "repeat": 3},
+    {"call_index": 12, "key": "A.S3.3", "condition": "A", "scenario_id": "S3", "repeat": 3}
+  ],
+  "frozen_dependencies": {
+    "git_head": "0d693909da4a2a85eff22a8e65aa87aa76ed8309",
+    "production_prompt_file_sha256": "B9A28A5CB55981A0420CC41C53986498307EFD7E9A9A0339DAA263900B9BE17B",
+    "semantic_wire_sha256": "677656FA2B412899B5A9A869DD7953AC3B3DD63B180117788BE7EDDFAA5D4598",
+    "source_fixture_runner_sha256": "9D105C40FE1A647C44507B6216148A90E397F9014D1CFE8570BD86E904D68DA5",
+    "source_pilot_manifest_sha256": "89DE80C3E6F19331D0538BA3E93169BFF727457907171DE6D900C049693E8321",
+    "control_prompt_sha256": "30ED3AC456D77EAB8C2D100D961C57C02B6E3EF2109A97A2575F1D7740FBDBD0",
+    "treatment_appendix_sha256": "58CE424C0703D5DC51F705E232537388F23A61E05296EE35209695D2C1D36215",
+    "treatment_prompt_sha256": "E15C43238F98386EB1375D3E6725D98565AA4498E242CEA682C6FBF62AF14D5A",
+    "examples_sha256": "0260A779A7E3874D066748E6AF692A58E6A66F5E98C582B9F530109BA16EB538",
+    "scenario_input_sha256": {
+      "S1": "B0F04859420A5571949BC590FAF403B5E89523E2A89FF99FF55C4E448F24FA91",
+      "S3": "F9D3714CDC0CF54B8D757B97889E8C225109FFDE557E328EFBF9AF1791742622"
+    },
+    "schema_sha256": {
+      "S1": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4",
+      "S3": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC"
+    }
+  }
+}

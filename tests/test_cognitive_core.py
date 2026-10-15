@@ -9,7 +9,11 @@ from ai.cognitive_core import (
     CognitiveCoreError,
     _normalize_strict_schema,
 )
-from ai.cognitive_semantic_wire import SEMANTIC_TURN_JSON_SCHEMA, adapt_semantic_turn
+from ai.cognitive_semantic_wire import (
+    SEMANTIC_TURN_JSON_SCHEMA,
+    adapt_semantic_turn,
+    semantic_turn_json_schema,
+)
 from test_cognitive_semantic_wire import (
     COMPLEX_TEXT,
     MI_A,
@@ -47,6 +51,18 @@ from ai.discovery_data_model import (
     TargetSubjectKind,
 )
 from ai.discovery_state_applier import apply_cognitive_turn
+from ai.human_experience import HumanExperienceSelection
+from ai.knowledge_retrieval import (
+    KNOWLEDGE_RETRIEVAL_FLAG,
+    PROFESSIONAL_KNOWLEDGE_SYSTEM_INSTRUCTION,
+    KnowledgeRetrievalError,
+)
+
+
+@pytest.fixture(autouse=True)
+def _isolate_semantic_retrieval(monkeypatch):
+    """Unit tests opt in explicitly; production defaults are tested separately."""
+    monkeypatch.setenv(KNOWLEDGE_RETRIEVAL_FLAG, "false")
 
 
 class FakeCompletions:
@@ -176,9 +192,10 @@ def _selected_action_schema(intent):
     raise AssertionError(f"Missing wire branch for {intent}")
 
 
-def test_input_view_includes_current_message_model_and_disabled_he():
+def test_default_input_view_includes_current_message_model_and_enabled_he(monkeypatch):
     current, model, acs, history = _fixture()
     core, client = _core()
+    monkeypatch.delenv("HUMAN_EXPERIENCE_ENABLED", raising=False)
 
     core.propose(current, model, acs, history)
 
@@ -188,7 +205,8 @@ def test_input_view_includes_current_message_model_and_disabled_he():
         "sequence": 13,
         "text": "текущая реплика",
     }
-    assert payload["human_experience"] == {"enabled": False}
+    assert payload["human_experience"]["enabled"] is True
+    assert payload["human_experience"]["abstained"] is True
     assert {item["status"] for item in payload["human_model"]["items"]} == {
         "rejected",
         "corrected",
@@ -196,6 +214,124 @@ def test_input_view_includes_current_message_model_and_disabled_he():
     relation = payload["human_model"]["relations"][0]
     assert relation["status"] == "uncertain"
     assert relation["source_message_ids"] == [history.messages[0].id]
+
+
+def test_human_experience_flag_off_keeps_base_prompt_and_disabled_input(monkeypatch):
+    current, model, acs, history = _fixture()
+    monkeypatch.setenv("HUMAN_EXPERIENCE_ENABLED", "false")
+    explicit_off = CognitiveCore._messages(current, model, acs, history)
+
+    assert explicit_off[0]["content"] == CognitiveCore._system_prompt()
+    assert json.loads(explicit_off[1]["content"])["human_experience"] == {
+        "enabled": False
+    }
+
+
+def test_human_experience_flag_off_does_not_load_or_retrieve(monkeypatch):
+    current, model, acs, history = _fixture()
+    core, client = _core()
+    monkeypatch.setenv("HUMAN_EXPERIENCE_ENABLED", "false")
+
+    def unexpected_retrieval(*args, **kwargs):
+        raise AssertionError("retrieval must not run while the flag is off")
+
+    monkeypatch.setattr("ai.cognitive_core.select_human_experience", unexpected_retrieval)
+
+    core.propose(current, model, acs, history)
+
+    assert len(client.completions.calls) == 1
+
+
+def test_human_experience_flag_on_adds_bounded_p001_hypothesis(monkeypatch):
+    history = DialogueHistory(messages=(
+        _message(
+            DialogueRole.USER,
+            "После тяжёлой недели пропускаю обед и вечером переедаю.",
+            1,
+        ),
+        _message(DialogueRole.SYSTEM, "Что происходит после этого?", 2),
+        _message(DialogueRole.USER, "Думаю, что всё испортил.", 3),
+        _message(DialogueRole.SYSTEM, "И что вы тогда делаете?", 4),
+        _message(DialogueRole.USER, "Бросаю попытку на несколько недель.", 5),
+        _message(DialogueRole.SYSTEM, "Это повторяется?", 6),
+    ))
+    current = _message(DialogueRole.USER, "Да, почти каждый раз.", 7)
+    monkeypatch.delenv("HUMAN_EXPERIENCE_ENABLED", raising=False)
+
+    messages = CognitiveCore._messages(current, HumanModel(), None, history)
+    payload = json.loads(messages[1]["content"])
+
+    assert "EXPERIMENTAL HUMAN EXPERIENCE MODE" in messages[0]["content"]
+    assert "Human Experience отключён" not in messages[0]["content"]
+    assert "профессиональные working hypotheses" in messages[0]["content"]
+    assert payload["human_experience"]["enabled"] is True
+    assert payload["human_experience"]["status"] == (
+        "experimental_hypotheses_not_evidence"
+    )
+    assert [
+        card["id"] for card in payload["human_experience"]["selected_cards"]
+    ] == ["P001"]
+    card = payload["human_experience"]["selected_cards"][0]
+    assert "professional_hypothesis" in card
+    assert "recognition_to_user" not in card
+    assert "discriminating_question" not in card
+    serialized_context = json.dumps(payload["human_experience"], ensure_ascii=False)
+    assert "Возможно, сложнее всего не сам трудный вечер" not in serialized_context
+    assert "Что именно кажется потерянным после такого вечера" not in serialized_context
+    assert "original_v1" not in payload["human_experience"]
+
+
+def test_enabled_human_experience_can_abstain_without_cards(monkeypatch):
+    current, model, acs, history = _fixture(with_acs=False)
+    monkeypatch.setenv("HUMAN_EXPERIENCE_ENABLED", "true")
+
+    messages = CognitiveCore._messages(current, model, acs, history)
+    context = json.loads(messages[1]["content"])["human_experience"]
+
+    assert context["enabled"] is True
+    assert context["abstained"] is True
+    assert context["selected_cards"] == []
+    assert context["abstain_reason"] == "no_reliable_match"
+
+
+def test_enabled_human_experience_keeps_catalog_failure_as_abstention(monkeypatch):
+    current, model, acs, history = _fixture(with_acs=False)
+    monkeypatch.setenv("HUMAN_EXPERIENCE_ENABLED", "true")
+    monkeypatch.setattr(
+        "ai.cognitive_core.select_human_experience",
+        lambda *args, **kwargs: HumanExperienceSelection(
+            cards=(), abstain_reason="catalog_unavailable"
+        ),
+    )
+
+    messages = CognitiveCore._messages(current, model, acs, history)
+    context = json.loads(messages[1]["content"])["human_experience"]
+
+    assert context["abstained"] is True
+    assert context["abstain_reason"] == "catalog_unavailable"
+
+
+def test_human_experience_does_not_mask_ordinary_addressed_contract_failure(
+    monkeypatch,
+):
+    current, model, acs, history = _fixture()
+    payload = _semantic_baseline()
+    payload["reconciliation"] = [{
+        "resolution_kind": "ordinary_addressed",
+        "previous_target_handle": "previous_target_1",
+        "source_quote": current.text,
+    }]
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+    monkeypatch.setenv("HUMAN_EXPERIENCE_ENABLED", "true")
+
+    with pytest.raises(CognitiveCoreError) as error:
+        CognitiveCore(client).propose(current, model, acs, history)
+
+    assert error.value.category == "validation_failure"
+    assert "ordinary_addressed requires an OPEN_RESPONSE or CLARIFICATION" in str(
+        error.value.__cause__
+    )
+    assert len(client.completions.calls) == 1
 
 
 def test_frozen_recurring_mechanism_context_is_available_for_decision():
@@ -278,6 +414,90 @@ def test_frozen_recurring_mechanism_context_is_available_for_decision():
     assert payload["human_experience"] == {"enabled": False}
 
 
+def test_knowledge_retrieval_flag_off_preserves_previous_production_assembly(
+    monkeypatch,
+):
+    current, model, acs, history = _fixture()
+    monkeypatch.delenv("HUMAN_EXPERIENCE_ENABLED", raising=False)
+    monkeypatch.setenv(KNOWLEDGE_RETRIEVAL_FLAG, "false")
+
+    messages = CognitiveCore._messages(current, model, acs, history)
+    payload = json.loads(messages[1]["content"])
+
+    assert "professional_knowledge" not in payload
+    assert PROFESSIONAL_KNOWLEDGE_SYSTEM_INSTRUCTION not in messages[0]["content"]
+    assert payload["human_experience"]["enabled"] is True
+
+
+def test_enabled_knowledge_retrieval_adds_separate_blocks_and_keeps_one_call(
+    monkeypatch,
+):
+    _, model, acs, history = _fixture()
+    current = _message(
+        DialogueRole.USER,
+        "После тяжёлой недели пропускаю обед, вечером переедаю и всё бросаю.",
+        13,
+    )
+    core, client = _core()
+    monkeypatch.setenv(KNOWLEDGE_RETRIEVAL_FLAG, "true")
+    monkeypatch.delenv("HUMAN_EXPERIENCE_ENABLED", raising=False)
+    selection = SimpleNamespace(
+        professional_input_view=lambda: {
+            "enabled": True,
+            "status": "pilot_not_expert_validated",
+            "selected_cards": [{"id": "mechanism-1"}],
+        },
+        human_experience_input_view=lambda *, enabled: {
+            "enabled": enabled,
+            "selected_cards": [{"id": "P001"}],
+            "diagnostics": {"indexed_human_experience_count": 30},
+        },
+    )
+    monkeypatch.setattr(
+        "ai.cognitive_core.retrieve_professional_context",
+        lambda *args, **kwargs: selection,
+    )
+
+    result = core.propose(current, model, acs, history)
+
+    payload = _payload(client)
+    assert len(client.completions.calls) == 1
+    assert payload["professional_knowledge"]["enabled"] is True
+    assert payload["professional_knowledge"]["selected_cards"]
+    assert payload["professional_knowledge"]["status"] == (
+        "pilot_not_expert_validated"
+    )
+    assert payload["human_experience"]["enabled"] is True
+    assert payload["human_experience"]["diagnostics"][
+        "indexed_human_experience_count"
+    ] == 30
+    assert PROFESSIONAL_KNOWLEDGE_SYSTEM_INSTRUCTION in (
+        client.completions.calls[0]["messages"][0]["content"]
+    )
+    assert result.state_patch.item_operations == ()
+
+
+def test_retrieval_failure_logs_and_falls_back_to_previous_context_path(
+    monkeypatch, caplog
+):
+    current, model, acs, history = _fixture()
+    core, client = _core()
+    monkeypatch.setenv(KNOWLEDGE_RETRIEVAL_FLAG, "true")
+
+    def fail(*args, **kwargs):
+        raise KnowledgeRetrievalError("broken local index")
+
+    monkeypatch.setattr("ai.cognitive_core.retrieve_professional_context", fail)
+
+    core.propose(current, model, acs, history)
+
+    payload = _payload(client)
+    assert len(client.completions.calls) == 1
+    assert "professional_knowledge" not in payload
+    assert payload["human_experience"]["enabled"] is True
+    assert "using the previous production context path" in caplog.text
+
+
 def test_previous_acs_view_and_system_prompt_are_sent():
     current, model, acs, history = _fixture()
     core, client = _core()
@@ -297,13 +517,13 @@ def test_system_prompt_includes_critical_conditional_contract_rules():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "CONTRACT RULES",
+        "C. SEMANTIC OUTPUT CONTRACT",
         "ADD item/relation declares a new handle",
         "CORRECT declares a new handle AND explicitly names the existing object",
         "REINFORCE names only the existing object",
         "source_items, target_items and meaning",
         "AMBIGUOUS reconciliation names multiple distinct previous targets",
-        "Every targeted content must be realized by a segment",
+        "Every targeted content must be realized by a reply segment",
     ):
         assert instruction in prompt
 
@@ -378,7 +598,7 @@ def test_system_prompt_distinguishes_consent_from_open_response():
 
 
 def test_system_prompt_ends_cognitive_discovery_after_transition_consent():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
+    prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
     for instruction in (
         "согласием на предыдущий SYSTEM_TRANSITION",
         "reconciliate его как CONSENTED",
@@ -386,44 +606,37 @@ def test_system_prompt_ends_cognitive_discovery_after_transition_consent():
         "не спрашивай про канал, время или видеозвонок",
         "deterministic runtime отдельно запросит и обработает телефон",
     ):
-        assert instruction in prompt
+        assert instruction.casefold() in prompt
 
 
 def test_system_prompt_uses_simple_consultant_policy():
     prompt = " ".join(CognitiveCore._system_prompt().split())
     for principle in (
-        "опытным дружелюбным консультантом",
+        "A. HOW TO CONDUCT THE CONSULTATION",
+        "опытный дружелюбный консультант",
         "сам, внутренне реши, нужна ли дополнительная информация",
         "Уменьшение неопределённости системы само по себе не является ценностью",
-        "мягкое и легко исправляемое предположение",
-        "не предлагая отдельную Evaluation каждого такого предположения",
-        "Если пользователь поправил, прими поправку",
+        "Версия остаётся гипотезой, легко исправляется и не требует согласия",
+        "Поправку пользователя спокойно прими",
         "существенно разные правдоподобные трактовки",
-        "разумное предположение может заметно увести его не туда",
-        "Ясно сказанное не требует",
-        "Отдельный эпизод можно принять как достаточный контекст",
-        "не расследуй автоматически его точный механизм",
-        "можно коротко спросить, повторяется ли ситуация",
-        "это не обязательный вопрос после каждого эпизода",
-        "существенный или повторяющийся паттерн",
-        "Reflection нужна, когда она соединяет части истории",
-        "Не повторяй последнюю понятную реплику ради подтверждения",
-        "не начинай обычный factual turn ритуальным",
+        "Отдельный эпизод может быть достаточным контекстом",
+        "проверяй повторяемость только когда она действительно меняет",
+        "существенный или повторяющийся mechanism",
+        "REFLECTION соединяет существенные части пользовательской истории",
+        "B. STRICT BEHAVIORAL PROHIBITIONS",
+        "Не повторяй и не перефразируй механически ясное высказывание пользователя",
+        "Не начинай обычный factual turn ритуальным",
         "Чувствительность темы сама по себе не оправдывает",
-        "для любого DecisionIntent убирай вступление",
-        "если оно добавляет значимую связь, следствие, паттерн или новое понимание",
-        "один focal conversational request за ход",
-        "не объединяй несколько независимых вопросов в анкету",
+        "Вступление допустимо только если добавляет meaningful connection",
+        "Один turn обычно содержит один focal conversational request",
+        "Не превращай разговор в анкету",
         "expected consultation value",
-        "Валидную, но малозначимую локальную тему не нужно исчерпывать",
-        "вернись к более раннему пользовательскому материалу",
-        "достаточно надёжно устанавливает повторяющийся mechanism",
-        "существенно изменить рабочее понимание или следующий conversational Decision",
-        "содержательную Reflection, Recognition или уместное продвижение разговора",
+        "Не исчерпывай её вопросами ради полноты",
+        "разным working pictures или следующим действиям",
+        "meaningful REFLECTION / RECOGNITION, ответ, STOP_EXPLORATION или TRANSITION",
         "не обязательная Reflection после фиксированного числа ходов",
-        "Не добывай ту же деталь снова",
-        "Можно перейти к другой важной части истории",
-        "ни один тип действия не имеет глобального приоритета",
+        "Не задавай вопрос, на который разговор уже дал достаточный ответ",
+        "C. SEMANTIC OUTPUT CONTRACT",
     ):
         assert principle in prompt
 
@@ -440,25 +653,153 @@ def test_system_prompt_uses_simple_consultant_policy():
     assert "FSB-" not in prompt
 
 
+def test_system_prompt_has_one_ordered_policy_and_contract_structure():
+    prompt = CognitiveCore._system_prompt()
+    sections = (
+        "A. HOW TO CONDUCT THE CONSULTATION",
+        "B. STRICT BEHAVIORAL PROHIBITIONS",
+        "C. SEMANTIC OUTPUT CONTRACT",
+    )
+
+    assert all(prompt.count(section) == 1 for section in sections)
+    assert [prompt.index(section) for section in sections] == sorted(
+        prompt.index(section) for section in sections
+    )
+    for obsolete_heading in (
+        "CONSULTANT POLICY:",
+        "PRODUCT BOUNDARY:",
+        "WHAT YOU SHOULD DO:",
+        "WHAT YOU MUST NOT DO:",
+        "WHAT YOU SHOULD DO INSTEAD WHEN THE BOUNDARY IS REACHED:",
+    ):
+        assert obsolete_heading not in prompt
+
+
+def test_system_prompt_prohibits_questionnaire_echo_and_automatic_reflection_confirmation():
+    policy = " ".join(
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
+    ).casefold()
+
+    for invariant in (
+        "не повторяй и не перефразируй механически ясное высказывание пользователя",
+        "не проси подтвердить факт, который пользователь уже ясно сообщил",
+        "не задавай вопрос, на который разговор уже дал достаточный ответ",
+        "не превращай разговор в анкету",
+        "не выноси наружу внутреннее рассуждение",
+        "не используй gender-placeholder expressions",
+        "не превращай reflection автоматически в просьбу подтвердить пересказ",
+        "не выдумывай факты, причины, чувства, мотивы",
+    ):
+        assert invariant in policy
+    assert "genuinely new consequential hypothesis" in policy
+    assert "materially влияет на рабочее понимание или следующий decision" in policy
+
+
+def test_consultation_policy_requires_professional_initiative_and_meaningful_delta():
+    prompt = " ".join(
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
+    ).casefold()
+    source = " ".join(
+        (
+            Path(__file__).parents[1]
+            / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+        ).read_text(encoding="utf-8").split()
+    ).casefold()
+
+    for policy in (prompt, source):
+        assert "профессиональн" in policy and "инициатив" in policy
+        assert "ещё не" in policy and "переживан" in policy
+        assert "не проверенн" in policy and "не выдаётся за факт" in policy
+        assert "mechanism" in policy and "personal meaning" in policy
+        assert "повтор" in policy
+        assert "недостаточно" in policy or "не являются достаточным" in policy
+        assert "уже запросил объяснение" in policy
+        assert "объясни её сейчас" in policy or "объяснить сейчас" in policy
+        assert (
+            "самому выбрать" in policy
+            or "не перекладывай на человека выбор" in policy
+        )
+        assert "mechanism" in policy
+
+
+def test_consultation_policy_separates_user_owned_fact_from_system_delta():
+    prompt = " ".join(
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
+    ).casefold()
+    source = " ".join(
+        (
+            Path(__file__).parents[1]
+            / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+        ).read_text(encoding="utf-8").split()
+    ).casefold()
+
+    for policy in (prompt, source):
+        assert "что пользователь уже прямо сообщил" in policy or (
+            "что человек уже прямо сообщил" in policy
+        )
+        assert "какой новый профессиональный смысл" in policy
+        assert "существенная неизвестность" in policy
+        assert "пересказ" in policy and "новую системную гипотезу" in policy
+        assert "evaluation" in policy
+        assert "разные" in policy and "working pictures" in policy
+        assert "не созда" in policy and "responsetarget" in policy
+
+
+def test_prompt_uses_contrastive_examples_without_turning_them_into_templates():
+    prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
+
+    assert "контрастные ориентиры" in prompt
+    assert "не шаблоны обязательных фраз" in prompt
+    assert "ощущение, что прежние усилия обнулились" in prompt
+    assert "если гипотеза подтверждена" in prompt
+    assert "если отвергнута, откажись от неё" in prompt
+    assert "дисфункциональная когнитивная генерализация" in prompt
+    assert "один трудный вечер начинает выглядеть как доказательство" in prompt
+
+
+def test_consultation_value_precedes_nonrequested_transition():
+    prompt = " ".join(
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
+    ).casefold()
+    source = " ".join(
+        (
+            Path(__file__).parents[1]
+            / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+        ).read_text(encoding="utf-8").split()
+    ).casefold()
+
+    for policy in (prompt, source):
+        assert "несколько mechanisms" in policy
+        assert "спросил, что делать" in policy
+        assert "профессиональн" in policy and "ценност" in policy
+        assert "явное" in policy and "живому консультанту" in policy and "приоритет" in policy
+        assert "практическ" in policy
+        assert "формальн" in policy and "reflection" in policy and "не обязательн" in policy
+
+
 def test_more_information_criterion_is_internal_not_user_facing_meta_choice():
     source = (
         Path(__file__).parents[1]
         / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
     ).read_text(encoding="utf-8")
     policy_sections = (
-        CognitiveCore._system_prompt().split("CONSULTANT POLICY:", 1)[1]
-        .split("PRODUCT BOUNDARY:", 1)[0],
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0],
         source.split("VALUE / SUFFICIENCY ВНУТРИ DECISION", 1)[1]
         .split("PRODUCTION DECISION BOUNDARY", 1)[0],
     )
-    for section in policy_sections:
+    for index, section in enumerate(policy_sections):
         policy = " ".join(section.casefold().split())
         assert "внутренне" in policy
         assert "нужна ли дополнительная информация" in policy
-        assert "не вопрос пользователю" in policy
-        assert "не проговар" in policy
-        assert "уточнять или продолжать" in policy
-        assert "разговор о процессе консультации" in policy
+        if index == 0:
+            assert "не выноси наружу" in policy
+            assert "не спрашивай пользователя" in policy
+            assert "нужно ли тебе знать больше, уточнять дальше или продолжать" in policy
+        else:
+            assert "не вопрос пользователю" in policy
+            assert "не проговар" in policy
+            assert "уточнять или продолжать" in policy
+            assert "разговор о процессе консультации" in policy
         assert "уменьшение неопределённости системы само по себе" in policy
         assert "существенно разные" in policy
         assert "сначала спроси" not in policy
@@ -498,21 +839,22 @@ def test_cognitive_cycle_uses_working_memory_not_decision_optimizer():
 
 
 def test_simple_policy_preserves_safety_and_structural_guards():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
+    prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
     for guard in (
         "серьёзная медицинская или психологическая гипотеза не является фактом",
-        "Human Experience отключён и не является evidence",
-        "rejected не возвращай в иной формулировке",
+        "human experience предоставляет профессиональные working hypotheses",
+        "не приписывай человеку скрытые мотивы",
+        "не возвращай rejected version в иной формулировке",
         "bare yes при нескольких targets не подтверждает их все",
-        "отказ, паузу и коррекцию уважай",
-        "SYSTEM_TRANSITION должен быть явным и иметь CONSENT target",
-        "Не выбирай, не проектируй и не разрабатывай решение человека",
-        "SYSTEM_PROPOSAL не обходит эту границу",
-        "после DECLINED не продавливай соседний вариант",
-        "Отказ от предложения сам по себе не доказывает BARRIER",
-        "Не добавляй к Transition параллельное AI-предложение решения",
+        "уважай коррекцию, отказ, паузу",
+        "system_transition content and uses consent",
+        "не составляй программу",
+        "system_proposal не обходит эту границу",
+        "соседний вариант после declined",
+        "отказ от предложения сам по себе не доказывает barrier",
+        "не добавляй к transition параллельное ai-предложение решения",
     ):
-        assert guard in prompt
+        assert guard.casefold() in prompt
     assert set(SEMANTIC_TURN_JSON_SCHEMA["properties"]) == {
         "state_patch",
         "reconciliation",
@@ -528,57 +870,50 @@ def test_system_prompt_enforces_solution_action_product_boundary():
     prompt = " ".join(CognitiveCore._system_prompt().split())
 
     for instruction in (
-        "WHAT YOU SHOULD DO:",
-        "используй сказанное, соединяй факты",
+        "A. HOW TO CONDUCT THE CONSULTATION",
+        "Помогай человеку яснее увидеть собственную ситуацию",
         "Explanation помогает понять, что происходит и почему это важно",
-        "WHAT YOU MUST NOT DO:",
-        "Не выбирай, не проектируй и не разрабатывай решение человека",
-        "menu of actions",
-        "не предлагай выбрать, адаптировать или разработать их вместе с AI",
-        "Названия «общие принципы», «общие направления» или «примеры»",
-        "Solution design предлагает, что человеку делать",
-        "WHAT YOU SHOULD DO INSTEAD WHEN THE BOUNDARY IS REACHED:",
-        "остановись до действий, практик, тактик, планов и options",
+        "B. STRICT BEHAVIORAL PROHIBITIONS",
+        "Небольшая практическая польза также допустима",
+        "одно сфокусированное, безопасное, обратимое общее наблюдение или рекомендация",
+        "Product Boundary проходит не перед любым практическим смыслом",
+        "Перечень несвязанных action options",
+        "Не составляй программу, подробный рацион",
+        "Когда следующий полезный шаг требует выбрать, адаптировать или спроектировать",
         "Форма вопроса сама по себе не требует Transition",
-        "Transition, а не generic recommendation menu",
-        "Не добавляй к Transition параллельное AI-предложение решения",
-        "Never disguise a concrete experiment, recommendation, plan or practice as Discovery",
+        "предложи TRANSITION к живому консультанту",
+        "не добавляй к Transition параллельное AI-предложение решения",
+        "Не маскируй персональную программу",
     ):
         assert instruction in prompt
 
 
 def test_direct_solution_question_keeps_explanation_inside_product_boundary():
     policy = " ".join(
-        CognitiveCore._system_prompt()
-        .split("PRODUCT BOUNDARY:", 1)[1]
-        .split("DECISION INTENT:", 1)[0]
-        .split()
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
     ).casefold()
 
     # The direct question has a useful, grounded answer route, not a forced handoff.
-    assert "отвечай на прямые вопросы внутри этой роли" in policy
+    assert "прямой вопрос пользователя имеет приоритет" in policy
     assert "grounded synthesis" in policy
-    assert "объясняй общий механизм и его значение" in policy
+    assert "descriptive explanation" in policy
     assert "форма вопроса сама по себе не требует transition" in policy
-    assert "если прямой вопрос можно ответить через понимание или объяснение" in policy
+    assert "если на него можно честно ответить через понимание, объяснение" in policy
 
-    # General education cannot become invented user-specific causes or an AI offer
-    # to select a personal solution from a menu of techniques.
-    assert "используй сказанное" in policy
-    assert "solution design предлагает, что человеку делать" in policy
-    assert "не предлагай выбрать, адаптировать или разработать их вместе с ai" in policy
+    # A bounded general orientation is allowed, but it cannot become an invented
+    # user-specific cause or personalized solution design.
+    assert "не выдумывай факты, причины, чувства, мотивы" in policy
+    assert "небольшая практическая польза также допустима" in policy
+    assert "без изображения её персонально выбранным решением" in policy
+    assert "не составляй программу, подробный рацион" in policy
     assert "когда следующий полезный шаг требует выбрать, адаптировать или спроектировать" in policy
-    assert "предложи transition к живому консультанту" in policy
-    assert "meaningful consent" in policy
+    assert "предложи transition к живому консультанту с meaningful consent" in policy
 
 
-def test_product_boundary_separates_explanation_from_generic_action_menu():
+def test_product_boundary_allows_bounded_help_but_rejects_personal_design():
     root = Path(__file__).parents[1] / "Research/Human_Experience/Weight"
     prompt = " ".join(
-        CognitiveCore._system_prompt()
-        .split("PRODUCT BOUNDARY:", 1)[1]
-        .split("DECISION INTENT:", 1)[0]
-        .split()
+        CognitiveCore._system_prompt().split("C. SEMANTIC OUTPUT CONTRACT", 1)[0].split()
     ).casefold()
     boundaries = " ".join(
         (root / "11_BOUNDARIES.txt").read_text(encoding="utf-8").split()
@@ -592,41 +927,31 @@ def test_product_boundary_separates_explanation_from_generic_action_menu():
         .split()
     ).casefold()
 
-    # A/B remain allowed, and each active policy layer states the stopping point
-    # rather than treating understanding as a preface to recommendations.
+    # Understanding and one bounded practical orientation remain inside the product.
     assert "explanation помогает понять, что происходит и почему это важно" in prompt
-    assert "объясняй общий механизм и его значение" in prompt
-    assert "описательный общий принцип" in boundaries
-    assert "после чего закончиться" in boundaries
-    assert "descriptive general explanation" in cycle
-    assert "ответ может закончиться" in cycle
+    assert "descriptive explanation наблюдаемого mechanism" in prompt
+    assert "небольшая практическая польза" in boundaries
+    assert "одно сфокусированное безопасное и обратимое" in boundaries
+    assert "один ограниченный практический ориентир" in cycle
     assert "bounded answer может на этом закончиться" in transition
+    assert "один сфокусированный безопасный и обратимый" in transition
 
-    # C is already outside Discovery without choosing/personalizing an option,
-    # and cannot be relabelled as a set of "general principles".
-    assert "menu of actions" in prompt
-    assert "solution design предлагает, что человеку делать" in prompt
-    assert "общий перечень уже относится к проектированию решения" in boundaries
-    assert "система сама не выбирает между ними" in boundaries
-    assert "generic menu уже является solution design" in cycle
-    assert "система не выбирает между ними" in cycle
-    assert "общим меню" in transition and "уже является solution design" in transition
-    assert "«общие принципы»" in prompt
+    # A menu or adaptation remains outside; relabelling does not bypass the boundary.
+    assert "перечень несвязанных action options" in prompt
+    assert "общий перечень несвязанных" in boundaries
+    assert "generic menu" in cycle
+    assert "общим menu" in transition
     for policy in (boundaries, cycle, transition):
-        assert '"общими принципами"' in policy
+        assert '"общ' in policy and 'принцип' in policy
 
-    # A direct action question has only the bounded answer or a real Transition
-    # once useful work becomes action selection/design; it cannot smuggle a menu
-    # through ANSWER_USER_QUESTION.
-    assert "остановись до действий, практик, тактик, планов и options" in prompt
-    assert "не продолжай discovery ради обхода границы" in prompt
+    # Personal selection/adaptation/design still requires Transition.
+    assert "не продолжай discovery только для обхода product boundary" in prompt
     assert "выбрать, адаптировать или спроектировать" in prompt
     assert "transition" in prompt and "meaningful consent" in prompt
-    assert "нельзя оставаться в answer_user_question" in cycle
     assert "transition с осмысленным согласием" in transition
 
 
-def test_source_of_truth_separates_explanation_from_personal_solution_design():
+def test_source_of_truth_separates_bounded_practical_value_from_personal_design():
     root = Path(__file__).parents[1] / "Research/Human_Experience/Weight"
     boundaries = " ".join((root / "11_BOUNDARIES.txt").read_text(encoding="utf-8").split())
     cycle = " ".join((root / "12_Cognitive_Cycle.txt").read_text(encoding="utf-8").split())
@@ -635,26 +960,27 @@ def test_source_of_truth_separates_explanation_from_personal_solution_design():
         .read_text(encoding="utf-8").split()
     )
 
-    assert "Общее объяснение не равно проектированию решения" in boundaries
-    assert "Текущий AI не должен: - выбирать конкретные привычки" in boundaries
+    assert "не равны проектированию решения" in boundaries
+    assert "одно сфокусированное безопасное и обратимое" in boundaries
+    assert "Текущий AI не должен: - выбирать или проектировать систему привычек" in boundaries
     assert "Прямой вопрос пользователя не отменяет эту границу" in boundaries
     assert "Прямой вопрос не отменяет Product Boundary" in cycle
-    assert "не выбирать практику или план для этого человека" in cycle
+    assert "один ограниченный практический ориентир" in cycle
     assert "не делая переход автоматическим по форме вопроса" in cycle
-    assert "AI не подбирает программу питания или лечения" in cycle
+    assert "не подбирает программу питания или лечения" in cycle
     assert "на слое Discovery не должна" in transition
     assert "не должна обязательно" not in transition
 
 
 def test_system_prompt_respects_declined_without_inventing_problem_barrier():
-    prompt = " ".join(CognitiveCore._system_prompt().split())
+    prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
 
     for instruction in (
-        "Отказ и паузу уважай",
-        "после DECLINED не продавливай соседний вариант",
-        "Отказ от предложения сам по себе не доказывает BARRIER проблемы",
+        "уважай коррекцию, отказ, паузу",
+        "соседний вариант после declined",
+        "отказ от предложения сам по себе не доказывает barrier",
     ):
-        assert instruction in prompt
+        assert instruction.casefold() in prompt
 
 
 def test_system_prompt_defines_ephemeral_decision_intents_and_structural_limits():
@@ -673,9 +999,9 @@ def test_system_prompt_defines_ephemeral_decision_intents_and_structural_limits(
         "STOP_EXPLORATION ends the current Discovery",
         "ANSWER_USER_QUESTION answers a direct user question",
         "decision_intent does not prove semantic Product Boundary compliance",
-        "Never disguise a concrete experiment, recommendation, plan or practice as Discovery",
+        "Не маскируй персональную программу",
         "A CONSENT target subject must be current SYSTEM_PROPOSAL or SYSTEM_TRANSITION",
-        "SYSTEM_REFLECTION is evaluated, not accepted or declined",
+        "SYSTEM_REFLECTION is actually targeted for evaluation",
     ):
         assert instruction in prompt
 
@@ -715,6 +1041,127 @@ def test_production_request_uses_semantic_schema_after_one_call():
     }
     assert isinstance(result, CognitiveTurnResult)
     assert result.decision_intent is DecisionIntent.HUMAN_DISCOVERY
+
+
+def test_production_request_without_acs_forbids_unavailable_reconciliation():
+    current, model, acs, history = _fixture(with_acs=False)
+    core, client = _core()
+
+    core.propose(current, model, acs, history)
+
+    request_schema = client.completions.calls[0]["response_format"]["json_schema"][
+        "schema"
+    ]
+    assert request_schema == semantic_turn_json_schema(None)
+    assert request_schema["properties"]["reconciliation"]["maxItems"] == 0
+
+
+def test_user_correction_without_previous_acs_completes_and_is_preserved():
+    first_user = _message(
+        DialogueRole.USER,
+        "После тяжёлой недели пропускаю обед, вечером переедаю и потом бросаю попытку.",
+        1,
+    )
+    first_system = _message(
+        DialogueRole.SYSTEM,
+        "Рабочая гипотеза: один вечер ощущается как провал всей попытки.",
+        2,
+    )
+    history = DialogueHistory(messages=(first_user, first_system))
+    current = _message(
+        DialogueRole.USER,
+        "Нет, для меня один вечер не означает провал, и после него я обычно продолжаю.",
+        3,
+    )
+    payload = _semantic_baseline()
+    payload["state_patch"]["item_changes"] = [{
+        "operation": "add",
+        "handle": "explicit_correction",
+        "kind": "user_interpretation",
+        "content": "Один вечер не означает для пользователя провал; после него он обычно продолжает.",
+        "evidence_origin": "current_user_material",
+        "source_quote": current.text,
+    }]
+    payload["selected_action"] = {
+        "decision_intent": "mechanism_discovery",
+        "primary_content": {
+            "handle": "next_useful_question",
+            "kind": "system_question",
+            "semantic_content": (
+                "Выяснить, что действительно приводит к длительной паузе, "
+                "если не один вечер с перееданием."
+            ),
+            "model_item_refs": [{"handle": "explicit_correction"}],
+            "relation_refs": [],
+        },
+        "additional_contents": [],
+        "response_targets": [{
+            "owner_content": "next_useful_question",
+            "subject": {"content_handle": "next_useful_question"},
+            "interaction": "open_response",
+        }],
+    }
+    payload["reply_segments"] = [{
+        "text": (
+            "Если один такой вечер не останавливает попытку, что обычно всё-таки "
+            "приводит к паузе на несколько недель?"
+        ),
+        "realizes": ["next_useful_question"],
+    }]
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+
+    result = CognitiveCore(client).propose(current, HumanModel(), None, history)
+    system = _message(
+        DialogueRole.SYSTEM,
+        "".join(segment.text for segment in result.reply_segments),
+        4,
+    )
+    applied = apply_cognitive_turn(
+        HumanModel(), None, history, current, system, result
+    )
+
+    assert result.reconciliation == ()
+    assert result.decision_intent is DecisionIntent.MECHANISM_DISCOVERY
+    assert applied.new_acs is not None
+    assert next(iter(applied.new_acs.response_targets.values())).interaction is (
+        TargetInteractionKind.OPEN_RESPONSE
+    )
+    assert any(
+        "один вечер не означает" in item.content.casefold()
+        and "обычно продолжает" in item.content.casefold()
+        for item in applied.updated_human_model.items.values()
+    )
+    assert applied.updated_history.messages[-2:] == (current, system)
+
+
+def test_prompt_distinguishes_unmaterialized_correction_from_acs_resolution():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+
+    assert "If previous_active_conversation_state is null" in prompt
+    assert "reconciliation and proposal_materializations MUST both be empty" in prompt
+    assert "treat the USER's explicit correction as current evidence" in prompt
+    assert "Do not invent an ACS target or silently discard the correction" in prompt
+
+
+def test_correction_policy_separates_state_update_from_next_conversational_move():
+    prompt = " ".join(CognitiveCore._system_prompt().split())
+    source = " ".join(
+        (
+            Path(__file__).parents[1]
+            / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+        ).read_text(encoding="utf-8").split()
+    )
+
+    for policy in (prompt, source):
+        assert "не определяют пользовательский ответ" in policy or (
+            "не являются сами по себе следующим пользовательским ходом" in policy
+        )
+        assert "не должна расходовать весь ответ на подтверждение или пересказ поправки" in policy or (
+            "Не расходуй весь turn на подтверждение или пересказ поправки" in policy
+        )
+        assert "по consultation value" in policy or (
+            "по ожидаемой консультационной ценности" in policy
+        )
 
 
 def _semantic_context(text, *, multiple=False, proposal=False):
@@ -891,8 +1338,75 @@ def test_exact_quote_resolution_through_production(branch, text, quote):
     assert len(client.completions.calls) == 1
 
 
+def test_capitalization_only_quote_is_canonicalized_to_current_user_text():
+    text = (
+        "Да, я уже много раз пытался похудеть. Сначала получается, "
+        "а потом всё возвращается."
+    )
+    quote = "сначала получается, а потом всё возвращается"
+    payload, current, model, acs, history = _quote_case("item", text, quote)
+    original = deepcopy(payload)
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+
+    result = CognitiveCore(client).propose(current, model, acs, history)
+
+    assert payload == original
+    span = result.state_patch.item_operations[0].source_span
+    assert text[span.char_start:span.char_end] == (
+        "Сначала получается, а потом всё возвращается"
+    )
+    assert len(client.completions.calls) == 1
+
+
+def test_unique_exact_quote_remains_preferred_over_case_insensitive_candidates():
+    text = "текст и Текст"
+    quote = "текст"
+    payload, current, model, acs, history = _quote_case("item", text, quote)
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+
+    result = CognitiveCore(client).propose(current, model, acs, history)
+
+    span = result.state_patch.item_operations[0].source_span
+    assert (span.char_start, span.char_end) == (0, len(quote))
+    assert text[span.char_start:span.char_end] == quote
+
+
+def test_ambiguous_case_insensitive_quote_fails_closed():
+    text = (
+        "СНАЧАЛА получается, а потом всё возвращается. "
+        "Сначала получается, а потом всё возвращается."
+    )
+    quote = "сначала получается, а потом всё возвращается"
+    payload, current, model, acs, history = _quote_case("item", text, quote)
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+
+    with pytest.raises(CognitiveCoreError) as error:
+        CognitiveCore(client).propose(current, model, acs, history)
+
+    assert error.value.category == "validation_failure"
+    assert "case-insensitive matches=2" in str(error.value.__cause__.__cause__)
+    assert len(client.completions.calls) == 1
+
+
+def test_genuinely_incorrect_case_insensitive_quote_fails_closed():
+    text = (
+        "Да, я уже много раз пытался похудеть. Сначала получается, "
+        "а потом всё возвращается."
+    )
+    quote = "сначала получается, но потом всё возвращается"
+    payload, current, model, acs, history = _quote_case("item", text, quote)
+    client = FakeClient(json.dumps(payload, ensure_ascii=False))
+
+    with pytest.raises(CognitiveCoreError) as error:
+        CognitiveCore(client).propose(current, model, acs, history)
+
+    assert error.value.category == "validation_failure"
+    assert "case-insensitive matches=0" in str(error.value.__cause__.__cause__)
+    assert len(client.completions.calls) == 1
+
+
 @pytest.mark.parametrize("quote", (
-    "нет", "да", "aa", "", None, 123, "текст", "a b", "e\u0301", "Текст!", " Текст "
+    "нет", "да", "aa", "", None, 123, "a b", "e\u0301", "Текст!", " Текст "
 ))
 def test_invalid_quotes_fail_closed_through_production(quote):
     text = (
@@ -973,7 +1487,7 @@ def test_input_view_history_closure_and_manual_state_application():
 def test_prompt_describes_semantic_responsibilities_without_old_wire_bookkeeping():
     prompt = " ".join(CognitiveCore._system_prompt().split())
     for instruction in (
-        "SEMANTIC WIRE", "SEMANTIC CONTRACT", "semantic handles",
+        "SEMANTIC WIRE", "SEMANTIC OUTPUT CONTRACT", "semantic handles",
         "exact existing_id", "ADD item/relation", "CORRECT",
         "REINFORCE", "source_items", "target_items", "reconciliation",
         "proposal_materializations", "primary_content", "owner_content",

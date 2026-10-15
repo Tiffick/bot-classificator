@@ -1,0 +1,549 @@
+{
+  "git_head": "0d693909da4a2a85eff22a8e65aa87aa76ed8309",
+  "working_patch_sha256": "C91CD475429DE06DD424FCC9AB47D69AB74DC33D38C862F11A26B1E0D035B250",
+  "model": "gpt-5-mini",
+  "repeats": 3,
+  "api_call_budget": 72,
+  "max_retries": 0,
+  "prompts_sha256": {
+    "A": "30ED3AC456D77EAB8C2D100D961C57C02B6E3EF2109A97A2575F1D7740FBDBD0",
+    "B": "D8721DBC8C76D70E8E151DD7262D8A58BF4F6F47FA6BC4C20A29D9A0EAB06805",
+    "C": "AB406A4454552D81151F58666335B823BB4044BF393BD36DB6E00C79A6F037A9",
+    "D": "4F686E7FC8D9A290E0FDF6AF93FF8FA978DB8D0E5BD3DAC75042A9DF5283D8BC"
+  },
+  "condition_d_minus_a": "USER INFORMATION REPETITION — CONDITIONAL POLICY\n\nDefault: do not repeat, summarize or paraphrase information the USER has just\nprovided. Treat it as input for understanding and choosing what to do next,\nnot as material that must be reproduced in the response.\n\nRepetition is permitted only when the minimum necessary fragment serves one\nof these concrete purposes:\n1. CLARIFICATION — genuine ambiguity requires briefly restating the relevant\n   fragment to verify its meaning.\n2. CONTRADICTION RESOLUTION — conflicting USER statements must be explicitly\n   compared to resolve the conflict.\n3. NEW MEANINGFUL CONNECTION — a short reference is necessary to explain a new,\n   grounded relationship, mechanism or distinction that adds understanding.\n4. EMOTIONAL ACKNOWLEDGEMENT — a brief reflection of an expressed emotion is\n   genuinely useful for recognition or rapport. Never invent emotion or use\n   this as a routine opening.\n\nBefore finalizing, decide internally: \"If I remove the repeated information,\ndoes the response lose necessary meaning, clarity or conversational value?\"\nIf no, remove it. If yes, retain only the minimum necessary fragment. Do not\nexpose this internal check.\n\nAfter USER correction: update the internal understanding, abandon unsupported\ninterpretations, and then choose the useful next conversational move. Do not\nspend the whole response acknowledging or paraphrasing the correction. Ask a\nquestion only when it resolves meaningful uncertainty or advances the\nconsultation. Do not force an insight without evidence. A short answer or a\nnatural end to the branch is acceptable.",
+  "schema_sha256_by_scenario": {
+    "S1": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4",
+    "S2": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S3": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S4": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4",
+    "S5": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S6": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4"
+  },
+  "schedule": [
+    {
+      "call_index": 1,
+      "key": "A.S1.1",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 1
+    },
+    {
+      "call_index": 2,
+      "key": "B.S1.1",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 1
+    },
+    {
+      "call_index": 3,
+      "key": "C.S1.1",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 1
+    },
+    {
+      "call_index": 4,
+      "key": "D.S1.1",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 1
+    },
+    {
+      "call_index": 5,
+      "key": "B.S2.1",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 1
+    },
+    {
+      "call_index": 6,
+      "key": "C.S2.1",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 1
+    },
+    {
+      "call_index": 7,
+      "key": "D.S2.1",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 1
+    },
+    {
+      "call_index": 8,
+      "key": "A.S2.1",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 1
+    },
+    {
+      "call_index": 9,
+      "key": "C.S3.1",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 1
+    },
+    {
+      "call_index": 10,
+      "key": "D.S3.1",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 1
+    },
+    {
+      "call_index": 11,
+      "key": "A.S3.1",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 1
+    },
+    {
+      "call_index": 12,
+      "key": "B.S3.1",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 1
+    },
+    {
+      "call_index": 13,
+      "key": "D.S4.1",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 1
+    },
+    {
+      "call_index": 14,
+      "key": "A.S4.1",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 1
+    },
+    {
+      "call_index": 15,
+      "key": "B.S4.1",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 1
+    },
+    {
+      "call_index": 16,
+      "key": "C.S4.1",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 1
+    },
+    {
+      "call_index": 17,
+      "key": "A.S5.1",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 1
+    },
+    {
+      "call_index": 18,
+      "key": "B.S5.1",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 1
+    },
+    {
+      "call_index": 19,
+      "key": "C.S5.1",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 1
+    },
+    {
+      "call_index": 20,
+      "key": "D.S5.1",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 1
+    },
+    {
+      "call_index": 21,
+      "key": "B.S6.1",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 1
+    },
+    {
+      "call_index": 22,
+      "key": "C.S6.1",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 1
+    },
+    {
+      "call_index": 23,
+      "key": "D.S6.1",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 1
+    },
+    {
+      "call_index": 24,
+      "key": "A.S6.1",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 1
+    },
+    {
+      "call_index": 25,
+      "key": "B.S1.2",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 2
+    },
+    {
+      "call_index": 26,
+      "key": "C.S1.2",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 2
+    },
+    {
+      "call_index": 27,
+      "key": "D.S1.2",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 2
+    },
+    {
+      "call_index": 28,
+      "key": "A.S1.2",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 2
+    },
+    {
+      "call_index": 29,
+      "key": "C.S2.2",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 2
+    },
+    {
+      "call_index": 30,
+      "key": "D.S2.2",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 2
+    },
+    {
+      "call_index": 31,
+      "key": "A.S2.2",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 2
+    },
+    {
+      "call_index": 32,
+      "key": "B.S2.2",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 2
+    },
+    {
+      "call_index": 33,
+      "key": "D.S3.2",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 2
+    },
+    {
+      "call_index": 34,
+      "key": "A.S3.2",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 2
+    },
+    {
+      "call_index": 35,
+      "key": "B.S3.2",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 2
+    },
+    {
+      "call_index": 36,
+      "key": "C.S3.2",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 2
+    },
+    {
+      "call_index": 37,
+      "key": "A.S4.2",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 2
+    },
+    {
+      "call_index": 38,
+      "key": "B.S4.2",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 2
+    },
+    {
+      "call_index": 39,
+      "key": "C.S4.2",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 2
+    },
+    {
+      "call_index": 40,
+      "key": "D.S4.2",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 2
+    },
+    {
+      "call_index": 41,
+      "key": "B.S5.2",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 2
+    },
+    {
+      "call_index": 42,
+      "key": "C.S5.2",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 2
+    },
+    {
+      "call_index": 43,
+      "key": "D.S5.2",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 2
+    },
+    {
+      "call_index": 44,
+      "key": "A.S5.2",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 2
+    },
+    {
+      "call_index": 45,
+      "key": "C.S6.2",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 2
+    },
+    {
+      "call_index": 46,
+      "key": "D.S6.2",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 2
+    },
+    {
+      "call_index": 47,
+      "key": "A.S6.2",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 2
+    },
+    {
+      "call_index": 48,
+      "key": "B.S6.2",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 2
+    },
+    {
+      "call_index": 49,
+      "key": "C.S1.3",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 3
+    },
+    {
+      "call_index": 50,
+      "key": "D.S1.3",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 3
+    },
+    {
+      "call_index": 51,
+      "key": "A.S1.3",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 3
+    },
+    {
+      "call_index": 52,
+      "key": "B.S1.3",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 3
+    },
+    {
+      "call_index": 53,
+      "key": "D.S2.3",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 3
+    },
+    {
+      "call_index": 54,
+      "key": "A.S2.3",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 3
+    },
+    {
+      "call_index": 55,
+      "key": "B.S2.3",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 3
+    },
+    {
+      "call_index": 56,
+      "key": "C.S2.3",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 3
+    },
+    {
+      "call_index": 57,
+      "key": "A.S3.3",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 3
+    },
+    {
+      "call_index": 58,
+      "key": "B.S3.3",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 3
+    },
+    {
+      "call_index": 59,
+      "key": "C.S3.3",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 3
+    },
+    {
+      "call_index": 60,
+      "key": "D.S3.3",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 3
+    },
+    {
+      "call_index": 61,
+      "key": "B.S4.3",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 3
+    },
+    {
+      "call_index": 62,
+      "key": "C.S4.3",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 3
+    },
+    {
+      "call_index": 63,
+      "key": "D.S4.3",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 3
+    },
+    {
+      "call_index": 64,
+      "key": "A.S4.3",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 3
+    },
+    {
+      "call_index": 65,
+      "key": "C.S5.3",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 3
+    },
+    {
+      "call_index": 66,
+      "key": "D.S5.3",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 3
+    },
+    {
+      "call_index": 67,
+      "key": "A.S5.3",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 3
+    },
+    {
+      "call_index": 68,
+      "key": "B.S5.3",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 3
+    },
+    {
+      "call_index": 69,
+      "key": "D.S6.3",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 3
+    },
+    {
+      "call_index": 70,
+      "key": "A.S6.3",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 3
+    },
+    {
+      "call_index": 71,
+      "key": "B.S6.3",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 3
+    },
+    {
+      "call_index": 72,
+      "key": "C.S6.3",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 3
+    }
+  ],
+  "scenario_inputs_sha256": {
+    "S1": "2DDFA416325A1A1E90126910EC0B54BDBE0C1D48FF0B8BC90BD066169C9BD050",
+    "S2": "3942E4482BA308E53AEA1506428F51D6059926EE6EB2934DFF3558CE7C7D541C",
+    "S3": "EA97C2D85819404D2CBBD0DC406B439B7B6D1A7D87AF3E754C888E6363716CC2",
+    "S4": "78F9F06DFC205EE486D8FA792C821E45A46B44B63E2BFC6834391B14BDD2DA1D",
+    "S5": "F0ED48A7028F8A5FDC477B604D07A09D5A1EF9611CEF1E7972BCD8DF3E6D7162",
+    "S6": "14B01943A90898B8D483F32AF564C522CD4DBFBD33034A3B7C10EE11F384159E"
+  },
+  "estimate": {
+    "method": "conservative_utf8_bytes_divided_by_2_plus_max_output",
+    "estimated_input_tokens": 1087113,
+    "maximum_output_tokens": 57600,
+    "estimated_max_cost_usd": 0.386978,
+    "cost_gate_usd": 2.0,
+    "pricing_usd_per_million": {
+      "input": 0.25,
+      "cached_input": 0.025,
+      "output": 2.0
+    }
+  }
+}

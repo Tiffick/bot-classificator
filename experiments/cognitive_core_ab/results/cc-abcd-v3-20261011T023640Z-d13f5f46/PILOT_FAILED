@@ -1,0 +1,9 @@
+{
+  "last_event_sha256": "EDB6ADBAEE3489460701EDF98FFC679D758183A80683FA3C61C7A9A64B3C4FE5",
+  "errors": [
+    "A.S1.1: invalid SemanticTurn",
+    "B.S1.1: invalid SemanticTurn",
+    "D.S1.1: invalid SemanticTurn",
+    "A.S3.1: invalid SemanticTurn"
+  ]
+}

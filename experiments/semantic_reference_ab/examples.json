@@ -1,0 +1,180 @@
+{
+  "correct_examples": [
+    {
+      "id": "correct_local_handle_and_realizes",
+      "current_user_text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю.",
+      "human_model": {
+        "schema_version": 1,
+        "items": {},
+        "relations": {},
+        "updated_at": "2026-10-12T00:00:00Z"
+      },
+      "previous_acs": null,
+      "payload": {
+        "state_patch": {
+          "item_changes": [
+            {
+              "operation": "add",
+              "handle": "cycle_pattern",
+              "kind": "experience",
+              "content": "После тяжёлой рабочей недели пользователь пропускает обед и вечером переедает.",
+              "evidence_origin": "current_user_material",
+              "source_quote": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю."
+            }
+          ],
+          "relation_changes": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [],
+        "selected_action": {
+          "decision_intent": "reflection",
+          "primary_content": {
+            "handle": "reflection_cycle",
+            "kind": "system_reflection",
+            "semantic_content": "Тяжёлая рабочая неделя связана с пропуском обеда и вечерним перееданием.",
+            "model_item_refs": [
+              {
+                "handle": "cycle_pattern"
+              }
+            ],
+            "relation_refs": []
+          },
+          "additional_contents": [],
+          "response_targets": []
+        },
+        "reply_segments": [
+          {
+            "text": "Здесь уже видна связка между тяжёлой рабочей неделей, пропуском обеда и вечерним перееданием.",
+            "realizes": [
+              "reflection_cycle"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "correct_existing_id_and_realizes",
+      "current_user_text": "Да, этот цикл повторяется почти каждую неделю.",
+      "human_model": {
+        "schema_version": 1,
+        "items": {
+          "mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": {
+            "id": "mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "kind": "experience",
+            "content": "После тяжёлой рабочей недели повторяется цикл пропуска обеда и вечернего переедания.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "source_refs": [
+              {
+                "message_id": "msg_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "char_start": null,
+                "char_end": null
+              }
+            ],
+            "supersedes_item_ids": [],
+            "created_turn": 1,
+            "updated_turn": 1
+          }
+        },
+        "relations": {},
+        "updated_at": "2026-10-12T00:00:00Z"
+      },
+      "previous_acs": null,
+      "payload": {
+        "state_patch": {
+          "item_changes": [
+            {
+              "operation": "reinforce",
+              "existing_id": "mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "evidence_origin": "current_user_material",
+              "source_quote": "этот цикл повторяется почти каждую неделю"
+            }
+          ],
+          "relation_changes": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [],
+        "selected_action": {
+          "decision_intent": "reflection",
+          "primary_content": {
+            "handle": "reflection_frequency",
+            "kind": "system_reflection",
+            "semantic_content": "Пользователь подтверждает, что известный цикл повторяется почти каждую неделю.",
+            "model_item_refs": [
+              {
+                "existing_id": "mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              }
+            ],
+            "relation_refs": []
+          },
+          "additional_contents": [],
+          "response_targets": []
+        },
+        "reply_segments": [
+          {
+            "text": "То, что этот цикл повторяется почти каждую неделю, делает его устойчивым паттерном, а не единичным эпизодом.",
+            "realizes": [
+              "reflection_frequency"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "incorrect_examples": [
+    {
+      "id": "incorrect_local_handle_as_existing_id",
+      "current_user_text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю.",
+      "human_model": {
+        "schema_version": 1,
+        "items": {},
+        "relations": {},
+        "updated_at": "2026-10-12T00:00:00Z"
+      },
+      "previous_acs": null,
+      "payload": {
+        "state_patch": {
+          "item_changes": [
+            {
+              "operation": "add",
+              "handle": "cycle_pattern",
+              "kind": "experience",
+              "content": "После тяжёлой рабочей недели пользователь пропускает обед и вечером переедает.",
+              "evidence_origin": "current_user_material",
+              "source_quote": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю."
+            }
+          ],
+          "relation_changes": [],
+          "proposal_materializations": []
+        },
+        "reconciliation": [],
+        "selected_action": {
+          "decision_intent": "reflection",
+          "primary_content": {
+            "handle": "reflection_cycle",
+            "kind": "system_reflection",
+            "semantic_content": "Тяжёлая рабочая неделя связана с пропуском обеда и вечерним перееданием.",
+            "model_item_refs": [
+              {
+                "existing_id": "cycle_pattern"
+              }
+            ],
+            "relation_refs": []
+          },
+          "additional_contents": [],
+          "response_targets": []
+        },
+        "reply_segments": [
+          {
+            "text": "Здесь уже видна связка между тяжёлой рабочей неделей, пропуском обеда и вечерним перееданием.",
+            "realizes": [
+              "reflection_cycle"
+            ]
+          }
+        ]
+      },
+      "expected_failure_stage": "semantic_turn_validation",
+      "expected_error_fragment": "Persistent ID must start with 'mi_'"
+    }
+  ]
+}

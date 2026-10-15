@@ -1,0 +1,640 @@
+{
+  "git_head": "0d693909da4a2a85eff22a8e65aa87aa76ed8309",
+  "working_patch_sha256": "C91CD475429DE06DD424FCC9AB47D69AB74DC33D38C862F11A26B1E0D035B250",
+  "model": "gpt-5-mini-2025-08-07",
+  "reasoning_effort": "minimal",
+  "max_completion_tokens": 4000,
+  "repeats": 3,
+  "api_call_budget": 72,
+  "pilot_call_budget": 8,
+  "pilot_keys": [
+    "A.S1.1",
+    "B.S1.1",
+    "C.S1.1",
+    "D.S1.1",
+    "A.S3.1",
+    "B.S3.1",
+    "C.S3.1",
+    "D.S3.1"
+  ],
+  "max_retries": 0,
+  "prompts_sha256": {
+    "A": "30ED3AC456D77EAB8C2D100D961C57C02B6E3EF2109A97A2575F1D7740FBDBD0",
+    "B": "D8721DBC8C76D70E8E151DD7262D8A58BF4F6F47FA6BC4C20A29D9A0EAB06805",
+    "C": "AB406A4454552D81151F58666335B823BB4044BF393BD36DB6E00C79A6F037A9",
+    "D": "4F686E7FC8D9A290E0FDF6AF93FF8FA978DB8D0E5BD3DAC75042A9DF5283D8BC"
+  },
+  "condition_d_minus_a": "USER INFORMATION REPETITION — CONDITIONAL POLICY\n\nDefault: do not repeat, summarize or paraphrase information the USER has just\nprovided. Treat it as input for understanding and choosing what to do next,\nnot as material that must be reproduced in the response.\n\nRepetition is permitted only when the minimum necessary fragment serves one\nof these concrete purposes:\n1. CLARIFICATION — genuine ambiguity requires briefly restating the relevant\n   fragment to verify its meaning.\n2. CONTRADICTION RESOLUTION — conflicting USER statements must be explicitly\n   compared to resolve the conflict.\n3. NEW MEANINGFUL CONNECTION — a short reference is necessary to explain a new,\n   grounded relationship, mechanism or distinction that adds understanding.\n4. EMOTIONAL ACKNOWLEDGEMENT — a brief reflection of an expressed emotion is\n   genuinely useful for recognition or rapport. Never invent emotion or use\n   this as a routine opening.\n\nBefore finalizing, decide internally: \"If I remove the repeated information,\ndoes the response lose necessary meaning, clarity or conversational value?\"\nIf no, remove it. If yes, retain only the minimum necessary fragment. Do not\nexpose this internal check.\n\nAfter USER correction: update the internal understanding, abandon unsupported\ninterpretations, and then choose the useful next conversational move. Do not\nspend the whole response acknowledging or paraphrasing the correction. Ask a\nquestion only when it resolves meaningful uncertainty or advances the\nconsultation. Do not force an insight without evidence. A short answer or a\nnatural end to the branch is acceptable.",
+  "schema_sha256_by_scenario": {
+    "S1": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4",
+    "S2": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S3": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S4": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4",
+    "S5": "67561F316597BC45594F5EF9EE4136087ADFFE7F99553394448B876C950C5DCC",
+    "S6": "A66462DFD2CA4B2C141479B0A70A5A32EB305B78545CCA3A74EDC24AA33B74D4"
+  },
+  "schedule": [
+    {
+      "call_index": 1,
+      "key": "A.S1.1",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 1,
+      "original_schedule_index": 1
+    },
+    {
+      "call_index": 2,
+      "key": "B.S1.1",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 1,
+      "original_schedule_index": 2
+    },
+    {
+      "call_index": 3,
+      "key": "C.S1.1",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 1,
+      "original_schedule_index": 3
+    },
+    {
+      "call_index": 4,
+      "key": "D.S1.1",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 1,
+      "original_schedule_index": 4
+    },
+    {
+      "call_index": 5,
+      "key": "A.S3.1",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 1,
+      "original_schedule_index": 11
+    },
+    {
+      "call_index": 6,
+      "key": "B.S3.1",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 1,
+      "original_schedule_index": 12
+    },
+    {
+      "call_index": 7,
+      "key": "C.S3.1",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 1,
+      "original_schedule_index": 9
+    },
+    {
+      "call_index": 8,
+      "key": "D.S3.1",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 1,
+      "original_schedule_index": 10
+    },
+    {
+      "call_index": 9,
+      "key": "B.S2.1",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 1,
+      "original_schedule_index": 5
+    },
+    {
+      "call_index": 10,
+      "key": "C.S2.1",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 1,
+      "original_schedule_index": 6
+    },
+    {
+      "call_index": 11,
+      "key": "D.S2.1",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 1,
+      "original_schedule_index": 7
+    },
+    {
+      "call_index": 12,
+      "key": "A.S2.1",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 1,
+      "original_schedule_index": 8
+    },
+    {
+      "call_index": 13,
+      "key": "D.S4.1",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 1,
+      "original_schedule_index": 13
+    },
+    {
+      "call_index": 14,
+      "key": "A.S4.1",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 1,
+      "original_schedule_index": 14
+    },
+    {
+      "call_index": 15,
+      "key": "B.S4.1",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 1,
+      "original_schedule_index": 15
+    },
+    {
+      "call_index": 16,
+      "key": "C.S4.1",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 1,
+      "original_schedule_index": 16
+    },
+    {
+      "call_index": 17,
+      "key": "A.S5.1",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 1,
+      "original_schedule_index": 17
+    },
+    {
+      "call_index": 18,
+      "key": "B.S5.1",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 1,
+      "original_schedule_index": 18
+    },
+    {
+      "call_index": 19,
+      "key": "C.S5.1",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 1,
+      "original_schedule_index": 19
+    },
+    {
+      "call_index": 20,
+      "key": "D.S5.1",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 1,
+      "original_schedule_index": 20
+    },
+    {
+      "call_index": 21,
+      "key": "B.S6.1",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 1,
+      "original_schedule_index": 21
+    },
+    {
+      "call_index": 22,
+      "key": "C.S6.1",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 1,
+      "original_schedule_index": 22
+    },
+    {
+      "call_index": 23,
+      "key": "D.S6.1",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 1,
+      "original_schedule_index": 23
+    },
+    {
+      "call_index": 24,
+      "key": "A.S6.1",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 1,
+      "original_schedule_index": 24
+    },
+    {
+      "call_index": 25,
+      "key": "B.S1.2",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 2,
+      "original_schedule_index": 25
+    },
+    {
+      "call_index": 26,
+      "key": "C.S1.2",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 2,
+      "original_schedule_index": 26
+    },
+    {
+      "call_index": 27,
+      "key": "D.S1.2",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 2,
+      "original_schedule_index": 27
+    },
+    {
+      "call_index": 28,
+      "key": "A.S1.2",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 2,
+      "original_schedule_index": 28
+    },
+    {
+      "call_index": 29,
+      "key": "C.S2.2",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 2,
+      "original_schedule_index": 29
+    },
+    {
+      "call_index": 30,
+      "key": "D.S2.2",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 2,
+      "original_schedule_index": 30
+    },
+    {
+      "call_index": 31,
+      "key": "A.S2.2",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 2,
+      "original_schedule_index": 31
+    },
+    {
+      "call_index": 32,
+      "key": "B.S2.2",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 2,
+      "original_schedule_index": 32
+    },
+    {
+      "call_index": 33,
+      "key": "D.S3.2",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 2,
+      "original_schedule_index": 33
+    },
+    {
+      "call_index": 34,
+      "key": "A.S3.2",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 2,
+      "original_schedule_index": 34
+    },
+    {
+      "call_index": 35,
+      "key": "B.S3.2",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 2,
+      "original_schedule_index": 35
+    },
+    {
+      "call_index": 36,
+      "key": "C.S3.2",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 2,
+      "original_schedule_index": 36
+    },
+    {
+      "call_index": 37,
+      "key": "A.S4.2",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 2,
+      "original_schedule_index": 37
+    },
+    {
+      "call_index": 38,
+      "key": "B.S4.2",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 2,
+      "original_schedule_index": 38
+    },
+    {
+      "call_index": 39,
+      "key": "C.S4.2",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 2,
+      "original_schedule_index": 39
+    },
+    {
+      "call_index": 40,
+      "key": "D.S4.2",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 2,
+      "original_schedule_index": 40
+    },
+    {
+      "call_index": 41,
+      "key": "B.S5.2",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 2,
+      "original_schedule_index": 41
+    },
+    {
+      "call_index": 42,
+      "key": "C.S5.2",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 2,
+      "original_schedule_index": 42
+    },
+    {
+      "call_index": 43,
+      "key": "D.S5.2",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 2,
+      "original_schedule_index": 43
+    },
+    {
+      "call_index": 44,
+      "key": "A.S5.2",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 2,
+      "original_schedule_index": 44
+    },
+    {
+      "call_index": 45,
+      "key": "C.S6.2",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 2,
+      "original_schedule_index": 45
+    },
+    {
+      "call_index": 46,
+      "key": "D.S6.2",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 2,
+      "original_schedule_index": 46
+    },
+    {
+      "call_index": 47,
+      "key": "A.S6.2",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 2,
+      "original_schedule_index": 47
+    },
+    {
+      "call_index": 48,
+      "key": "B.S6.2",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 2,
+      "original_schedule_index": 48
+    },
+    {
+      "call_index": 49,
+      "key": "C.S1.3",
+      "condition": "C",
+      "scenario_id": "S1",
+      "repeat": 3,
+      "original_schedule_index": 49
+    },
+    {
+      "call_index": 50,
+      "key": "D.S1.3",
+      "condition": "D",
+      "scenario_id": "S1",
+      "repeat": 3,
+      "original_schedule_index": 50
+    },
+    {
+      "call_index": 51,
+      "key": "A.S1.3",
+      "condition": "A",
+      "scenario_id": "S1",
+      "repeat": 3,
+      "original_schedule_index": 51
+    },
+    {
+      "call_index": 52,
+      "key": "B.S1.3",
+      "condition": "B",
+      "scenario_id": "S1",
+      "repeat": 3,
+      "original_schedule_index": 52
+    },
+    {
+      "call_index": 53,
+      "key": "D.S2.3",
+      "condition": "D",
+      "scenario_id": "S2",
+      "repeat": 3,
+      "original_schedule_index": 53
+    },
+    {
+      "call_index": 54,
+      "key": "A.S2.3",
+      "condition": "A",
+      "scenario_id": "S2",
+      "repeat": 3,
+      "original_schedule_index": 54
+    },
+    {
+      "call_index": 55,
+      "key": "B.S2.3",
+      "condition": "B",
+      "scenario_id": "S2",
+      "repeat": 3,
+      "original_schedule_index": 55
+    },
+    {
+      "call_index": 56,
+      "key": "C.S2.3",
+      "condition": "C",
+      "scenario_id": "S2",
+      "repeat": 3,
+      "original_schedule_index": 56
+    },
+    {
+      "call_index": 57,
+      "key": "A.S3.3",
+      "condition": "A",
+      "scenario_id": "S3",
+      "repeat": 3,
+      "original_schedule_index": 57
+    },
+    {
+      "call_index": 58,
+      "key": "B.S3.3",
+      "condition": "B",
+      "scenario_id": "S3",
+      "repeat": 3,
+      "original_schedule_index": 58
+    },
+    {
+      "call_index": 59,
+      "key": "C.S3.3",
+      "condition": "C",
+      "scenario_id": "S3",
+      "repeat": 3,
+      "original_schedule_index": 59
+    },
+    {
+      "call_index": 60,
+      "key": "D.S3.3",
+      "condition": "D",
+      "scenario_id": "S3",
+      "repeat": 3,
+      "original_schedule_index": 60
+    },
+    {
+      "call_index": 61,
+      "key": "B.S4.3",
+      "condition": "B",
+      "scenario_id": "S4",
+      "repeat": 3,
+      "original_schedule_index": 61
+    },
+    {
+      "call_index": 62,
+      "key": "C.S4.3",
+      "condition": "C",
+      "scenario_id": "S4",
+      "repeat": 3,
+      "original_schedule_index": 62
+    },
+    {
+      "call_index": 63,
+      "key": "D.S4.3",
+      "condition": "D",
+      "scenario_id": "S4",
+      "repeat": 3,
+      "original_schedule_index": 63
+    },
+    {
+      "call_index": 64,
+      "key": "A.S4.3",
+      "condition": "A",
+      "scenario_id": "S4",
+      "repeat": 3,
+      "original_schedule_index": 64
+    },
+    {
+      "call_index": 65,
+      "key": "C.S5.3",
+      "condition": "C",
+      "scenario_id": "S5",
+      "repeat": 3,
+      "original_schedule_index": 65
+    },
+    {
+      "call_index": 66,
+      "key": "D.S5.3",
+      "condition": "D",
+      "scenario_id": "S5",
+      "repeat": 3,
+      "original_schedule_index": 66
+    },
+    {
+      "call_index": 67,
+      "key": "A.S5.3",
+      "condition": "A",
+      "scenario_id": "S5",
+      "repeat": 3,
+      "original_schedule_index": 67
+    },
+    {
+      "call_index": 68,
+      "key": "B.S5.3",
+      "condition": "B",
+      "scenario_id": "S5",
+      "repeat": 3,
+      "original_schedule_index": 68
+    },
+    {
+      "call_index": 69,
+      "key": "D.S6.3",
+      "condition": "D",
+      "scenario_id": "S6",
+      "repeat": 3,
+      "original_schedule_index": 69
+    },
+    {
+      "call_index": 70,
+      "key": "A.S6.3",
+      "condition": "A",
+      "scenario_id": "S6",
+      "repeat": 3,
+      "original_schedule_index": 70
+    },
+    {
+      "call_index": 71,
+      "key": "B.S6.3",
+      "condition": "B",
+      "scenario_id": "S6",
+      "repeat": 3,
+      "original_schedule_index": 71
+    },
+    {
+      "call_index": 72,
+      "key": "C.S6.3",
+      "condition": "C",
+      "scenario_id": "S6",
+      "repeat": 3,
+      "original_schedule_index": 72
+    }
+  ],
+  "scenario_inputs_sha256": {
+    "S1": "B0F04859420A5571949BC590FAF403B5E89523E2A89FF99FF55C4E448F24FA91",
+    "S2": "8AB7D89AD305B6A3DE113CB46F1C1757BABE8AE669B6518DF963067E65F6899B",
+    "S3": "F9D3714CDC0CF54B8D757B97889E8C225109FFDE557E328EFBF9AF1791742622",
+    "S4": "9EE8CF6A45A6B9D2E2D5CC923F7D87222C0CBB387E2AAFC0A777FAEAB415C9D7",
+    "S5": "9ACDD25499E0616405344C475E629E4117E44A56AFA3102201BF49702FBDDB53",
+    "S6": "98E6FB5AF6CE5971EB5DED8F175AF32922B6E7E49F2573DB0802E20ECA3CD804"
+  },
+  "estimate": {
+    "method": "conservative_utf8_bytes_divided_by_2_plus_max_output",
+    "estimated_input_tokens": 1088589,
+    "maximum_output_tokens": 288000,
+    "estimated_max_cost_usd": 0.848147,
+    "cost_gate_usd": 1.0,
+    "pricing_usd_per_million": {
+      "input": 0.25,
+      "cached_input": 0.025,
+      "output": 2.0
+    }
+  },
+  "experiment_revision": "corrected-v3-durable-raw-first",
+  "persistence_order": [
+    "API_REQUEST",
+    "API_RESPONSE",
+    "SEMANTIC_VALIDATION"
+  ]
+}

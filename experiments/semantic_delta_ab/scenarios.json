@@ -1,0 +1,45 @@
+{
+  "version": "semantic-delta-scenarios-v1",
+  "notes": [
+    "Scenario expectations are evaluation metadata and are never sent to the model.",
+    "S1 and S3 reuse the exact fixture objects from experiments/cognitive_core_ab/run_experiment.py.",
+    "S4-S6 are deterministic lab-only fixtures defined in this package runner."
+  ],
+  "scenarios": [
+    {
+      "id": "S1",
+      "title": "Recurring mechanism with a grounded professional version",
+      "source": "reused_exactly_from_cognitive_core_ab_S1",
+      "current_user_message": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз.",
+      "evaluation_focus": "Distinguish meaningful grounded understanding from a renamed paraphrase; avoid a redundant question."
+    },
+    {
+      "id": "S3",
+      "title": "Correction resolving a previous contradiction",
+      "source": "reused_exactly_from_cognitive_core_ab_S3",
+      "current_user_message": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием.",
+      "evaluation_focus": "Accept and preserve the correction without turning it into a new questionnaire."
+    },
+    {
+      "id": "S4",
+      "title": "Insufficient information for a mechanism",
+      "source": "semantic_delta_ab_fixture",
+      "current_user_message": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело.",
+      "evaluation_focus": "Do not invent a cause; a genuinely useful focal question is allowed."
+    },
+    {
+      "id": "S5",
+      "title": "Simple factual correction without new material ambiguity",
+      "source": "semantic_delta_ab_fixture",
+      "current_user_message": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму.",
+      "evaluation_focus": "Correct the working understanding and avoid an unnecessary follow-up interview."
+    },
+    {
+      "id": "S6",
+      "title": "Short reflection is more useful than a new explanation",
+      "source": "semantic_delta_ab_fixture",
+      "current_user_message": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился.",
+      "evaluation_focus": "Allow a brief grounded acknowledgement without manufacturing a mechanism or forcing a question."
+    }
+  ]
+}

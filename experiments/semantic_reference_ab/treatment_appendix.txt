@@ -1,0 +1,26 @@
+
+SEMANTIC REFERENCE QUICK MAP
+
+| Field | Use it for | Valid form | Never use it for |
+| --- | --- | --- | --- |
+| handle | A new item/relation declared by this turn, or current ActionContent | {"handle":"cycle_pattern"}; ActionContent declares "handle":"reflection_cycle" | An object that already exists in the input HumanModel |
+| existing_id | An item/relation already present in the input HumanModel | {"existing_id":"mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"} | A handle declared by this turn or an invented persistent ID |
+| reply_segments[].realizes | Current ActionContent actually conveyed by that text | ["reflection_cycle"] | An item handle, existing_id, aci_/rt_ storage ID, or undeclared name |
+
+CORRECT EXAMPLE 1 — NEW ITEM HANDLE AND REALIZES
+The current USER message is: "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю." HumanModel is empty and previous ACS is null.
+{"state_patch":{"item_changes":[{"operation":"add","handle":"cycle_pattern","kind":"experience","content":"После тяжёлой рабочей недели пользователь пропускает обед и вечером переедает.","evidence_origin":"current_user_material","source_quote":"После тяжёлой рабочей недели я пропускаю обед и вечером переедаю."}],"relation_changes":[],"proposal_materializations":[]},"reconciliation":[],"selected_action":{"decision_intent":"reflection","primary_content":{"handle":"reflection_cycle","kind":"system_reflection","semantic_content":"Тяжёлая рабочая неделя связана с пропуском обеда и вечерним перееданием.","model_item_refs":[{"handle":"cycle_pattern"}],"relation_refs":[]},"additional_contents":[],"response_targets":[]},"reply_segments":[{"text":"Здесь уже видна связка между тяжёлой рабочей неделей, пропуском обеда и вечерним перееданием.","realizes":["reflection_cycle"]}]}
+
+Why it is correct: cycle_pattern is declared by the current ADD and is therefore referenced through handle. reflection_cycle is the current ActionContent handle, so reply_segments.realizes may name it.
+
+CORRECT EXAMPLE 2 — EXISTING HUMANMODEL ITEM
+The input HumanModel already contains item mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa. The current USER message is: "Да, этот цикл повторяется почти каждую неделю."
+{"state_patch":{"item_changes":[{"operation":"reinforce","existing_id":"mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","evidence_origin":"current_user_material","source_quote":"этот цикл повторяется почти каждую неделю"}],"relation_changes":[],"proposal_materializations":[]},"reconciliation":[],"selected_action":{"decision_intent":"reflection","primary_content":{"handle":"reflection_frequency","kind":"system_reflection","semantic_content":"Пользователь подтверждает, что известный цикл повторяется почти каждую неделю.","model_item_refs":[{"existing_id":"mi_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}],"relation_refs":[]},"additional_contents":[],"response_targets":[]},"reply_segments":[{"text":"То, что этот цикл повторяется почти каждую неделю, делает его устойчивым паттерном, а не единичным эпизодом.","realizes":["reflection_frequency"]}]}
+
+Why it is correct: existing_id is copied exactly from the input HumanModel. reflection_frequency is separately declared as current ActionContent and is the only name used by realizes.
+
+INCORRECT EXAMPLE — LOCAL HANDLE DISGUISED AS EXISTING ID
+After ADD declares "handle":"cycle_pattern", this reference is wrong:
+{"model_item_refs":[{"existing_id":"cycle_pattern"}]}
+
+Why it is wrong: cycle_pattern is a current-turn handle, not a persistent HumanModel ID. The correct reference is {"handle":"cycle_pattern"}. The invalid form must fail SemanticTurn validation because an existing item ID must start with mi_.

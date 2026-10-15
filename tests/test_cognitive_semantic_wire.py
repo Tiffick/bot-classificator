@@ -7,6 +7,7 @@ from ai.cognitive_semantic_wire import (
     SemanticTurn,
     SemanticWireError,
     adapt_semantic_turn,
+    semantic_turn_json_schema,
 )
 from ai.cognitive_turn import (
     ActionContent,
@@ -567,6 +568,18 @@ def test_missing_or_repeated_exact_quote_fails_closed(quote):
         _adapt(payload, text=text)
 
 
+def test_semantic_adapter_resolves_unique_case_only_quote_to_original_span():
+    payload = _simple()
+    payload["state_patch"]["item_changes"][0]["source_quote"] = (
+        SIMPLE_QUOTE[0].upper() + SIMPLE_QUOTE[1:]
+    )
+
+    result = _adapt(payload, text=SIMPLE_TEXT)
+
+    span = result.state_patch.item_operations[0].source_span
+    assert SIMPLE_TEXT[span.char_start:span.char_end] == SIMPLE_QUOTE
+
+
 def test_quote_is_required_for_state_operations():
     payload = _simple()
     del payload["state_patch"]["item_changes"][0]["source_quote"]
@@ -622,11 +635,21 @@ def test_ambiguous_reconciliation_preserves_both_targets_without_materialization
         "previous_target_handles": [PREVIOUS_TARGET_A, PREVIOUS_TARGET_B],
         "outcome": "ambiguous", "source_quote": None,
     }]
+    payload["selected_action"]["primary_content"]["semantic_content"] = (
+        "Уточнить, к какому из двух предыдущих вопросов относится короткий ответ."
+    )
+    payload["selected_action"]["response_targets"][0]["interaction"] = "clarification"
+    payload["reply_segments"][0]["text"] = (
+        "Вы имеете в виду сам вечерний голод или то, что происходит после него?"
+    )
     result = _adapt(payload, acs=_acs(multiple=True))
     assert result.reconciliation[0].previous_response_target_ids == (RT_A, RT_B)
     assert result.reconciliation[0].outcome == ReconciliationOutcome.AMBIGUOUS
     assert result.reconciliation[0].source_span is None
     assert not result.state_patch.proposal_materializations
+    assert result.system_action.response_targets[0].interaction == (
+        TargetInteractionKind.CLARIFICATION
+    )
 
 
 def test_relation_proposal_materialization_preserves_explicit_endpoints():
@@ -837,3 +860,99 @@ def test_generated_schema_is_strict_production_schema():
     walk(schema)
     assert len(schema.get("$defs", {})) > 0
     assert SemanticTurn.model_validate(_simple())
+
+
+def test_schema_without_previous_acs_forbids_unavailable_resolution_operations():
+    schema = semantic_turn_json_schema(None)
+    state_patch_name = schema["properties"]["state_patch"]["$ref"].rsplit("/", 1)[-1]
+
+    assert schema["properties"]["reconciliation"]["maxItems"] == 0
+    assert schema["$defs"][state_patch_name]["properties"][
+        "proposal_materializations"
+    ]["maxItems"] == 0
+    assert "maxItems" not in SEMANTIC_TURN_JSON_SCHEMA["properties"]["reconciliation"]
+
+
+def test_schema_with_previous_acs_preserves_reconciliation_contract():
+    assert semantic_turn_json_schema(_acs()) is SEMANTIC_TURN_JSON_SCHEMA
+
+
+def test_adapter_still_fails_closed_on_unavailable_previous_acs():
+    with pytest.raises(
+        SemanticWireError,
+        match="Previous ACS is required for reconciliation/materialization",
+    ):
+        adapt_semantic_turn(
+            _simple(),
+            current_user_text=SIMPLE_TEXT,
+            human_model=_model(),
+            previous_acs=None,
+        )
+
+
+def test_correction_of_unmaterialized_working_version_is_current_user_evidence():
+    user_text = (
+        "Нет, для меня один вечер не означает провал, и после него я обычно "
+        "продолжаю."
+    )
+    payload = _simple()
+    payload["state_patch"]["item_changes"] = [{
+        "operation": "add",
+        "handle": "explicit_correction",
+        "kind": "user_interpretation",
+        "content": "Один вечер не означает для пользователя провал; после него он обычно продолжает.",
+        "evidence_origin": "current_user_material",
+        "source_quote": user_text,
+    }]
+    payload["reconciliation"] = []
+    payload["selected_action"] = {
+        "decision_intent": "reflection",
+        "primary_content": {
+            "handle": "corrected_picture",
+            "kind": "system_reflection",
+            "semantic_content": "Пользователь отделяет один вечер от провала всей попытки.",
+            "model_item_refs": [{"handle": "explicit_correction"}],
+            "relation_refs": [],
+        },
+        "additional_contents": [],
+        "response_targets": [],
+    }
+    payload["reply_segments"] = [{
+        "text": "Тогда один вечер сам по себе не обнуляет для вас попытку.",
+        "realizes": ["corrected_picture"],
+    }]
+
+    result = adapt_semantic_turn(
+        payload,
+        current_user_text=user_text,
+        human_model=HumanModel(),
+        previous_acs=None,
+    )
+
+    assert result.reconciliation == ()
+    assert result.state_patch.proposal_materializations == ()
+    assert result.state_patch.item_operations[0].content.startswith(
+        "Один вечер не означает"
+    )
+
+
+def test_correction_of_persisted_evaluation_target_remains_reconciliation():
+    user_text = "Нет, это не просто привычка."
+    payload = _simple()
+    payload["state_patch"]["item_changes"] = []
+    payload["reconciliation"] = [{
+        "previous_target_handles": [PREVIOUS_TARGET_A],
+        "outcome": "rejected",
+        "source_quote": user_text,
+    }]
+    payload["selected_action"]["primary_content"]["model_item_refs"] = []
+
+    result = adapt_semantic_turn(
+        payload,
+        current_user_text=user_text,
+        human_model=_model(),
+        previous_acs=_acs(proposal=True),
+    )
+
+    assert result.reconciliation[0].previous_response_target_ids == (RT_A,)
+    assert result.reconciliation[0].outcome == ReconciliationOutcome.REJECTED

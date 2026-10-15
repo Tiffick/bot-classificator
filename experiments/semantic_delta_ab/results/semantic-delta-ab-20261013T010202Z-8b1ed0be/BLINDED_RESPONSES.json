@@ -1,0 +1,1874 @@
+[
+  {
+    "blind_id": "R01",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R02",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R03",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R04",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": "Спасибо — это даёт ясную проблему и повторяющийся паттерн. Вы описали: 1) пропуск обеда после тяжёлой недели, 2) вечернее переедание, 3) ощущение «всё испорчено» и прекращение попытки на недели. Верно ли, что ключевая часть для вас — не столько само переедание, сколько то, что оно служит сигналом к «бросанию» попытки? Если да, скажите коротко «да»; если важна другая часть, напишите, что именно."
+  },
+  {
+    "blind_id": "R05",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Спасибо, прояснение полезно — тогда рабочая картина меняется: обычно после переедания вы не уходите в длительную паузу от контроля, а всё же продолжаете следить за питанием. Это важно, потому что по-разному влияет на то, какие трудности и мотивация возникают после таких эпизодов."
+  },
+  {
+    "blind_id": "R06",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — вы уточнили, что обычно не «бросаете всё», а всё же продолжаете следить за питанием после переедания. Это меняет картину: вместо длительной паузы у вас чаще сохраняется самоконтроль. Хотите, чтобы я связал это с тем, что предшествует перееданию (напр., усталость, эмоции) или пока оставим фокус на том, как вы реагируете после?"
+  },
+  {
+    "blind_id": "R07",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R08",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R09",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. Получается, чаще случается эпизод переедания, а затем вы возвращаетесь к отслеживанию питания, а не надолго «отказываетесь» от контроля. Как вы сами это замечаете: обычно это происходит в течение одного дня, нескольких дней или иначе?"
+  },
+  {
+    "blind_id": "R10",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R11",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R12",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. То есть обычно вы всё же не «бросаете» питание после переедания, а возвращаетесь к контролю. Скажите, как часто такое случается — раз в несколько месяцев, раз в неделю или чаще?"
+  },
+  {
+    "blind_id": "R13",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понимаю — вы не просто недовольны внешним видом, а ощущаете, что потеряли знакомость с собой; это может быть не только о теле, но и о том, как вы себя узнаёте в своих действиях, настроении или ролях. Что из этого ближе к вашему опыту — чувство чужого отражения на фото, или скорее внутреннее ощущение, что вы сами стали другим?"
+  },
+  {
+    "blind_id": "R14",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. Значит вправду эпизод короткий: уже на следующий день вы возвращаетесь к обычному режиму.Если хотите, кратко расскажите, что обычно помогает вам вернуться в режим: что делает это возможным или что мешает (одно предложение достаточно)."
+  },
+  {
+    "blind_id": "R15",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": "Вы описали стойкий цикл: пропускаете обед после тяжёлой недели, вечером переедаете, потом мысли «всё испортил» приводят к тому, что вы прекращаете попытки на недели. Это важная закономерность сама по себе — она объясняет, почему один эпизод часто заканчивает весь прогресс, а не только отдельный приём пищи. Скажите, насколько эта формулировка близка: полностью верна, частично верна или неверна?"
+  },
+  {
+    "blind_id": "R16",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — снова был эпизод, и день «обычный», триггеров не заметили. Часто такое действительно не связано с одним большим событием, а с несколькими мелкими факторами вместе (усталость, пропуск перекуса, привычная вечерняя рутина или простая доступность еды). Не предлагаю делать выводы — но если хотите, скажите, было ли в тот день что-то из этого: вы уставали сильнее обычного, долго не перекусывали, или вечерние привычки (телефон/телевизор, работа за столом) были как обычно? Это поможет сделать понимание чуть более конкретным."
+  },
+  {
+    "blind_id": "R17",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Похоже, для вас важнее не столько сама цифра на весах, сколько ощущение, что привычный образ потерян и вы едва узнаёте себя — это вызывает силький дискомфорт при взгляде на фото. Хотите рассказать, когда вы впервые заметили это чувство — постепенно после набора веса или это случилось внезапно?"
+  },
+  {
+    "blind_id": "R18",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — вы снова вечером съели больше, хотя день был обычный и вы не заметили явного повода. Часто в таких случаях причина не одна: внимание смещается к еде, накопленное утомление или мелкие сдвиги настроения незаметно накапливаются к вечеру. Можете выбрать, что исследуем дальше: 1) изменения настроения/энергии перед вечером, 2) ежедневный ритм приёма пищи и перерывов, 3) вечерние ситуации/привычки (доступность еды, ритуалы, усталость). Что из этого кажется полезным сейчас?"
+  },
+  {
+    "blind_id": "R19",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понятно — вы снова съели больше вечером, но не заметили явного триггера. Могу уточнить одно конкретное, чтобы придумать рабочую гипотезу: началось ли это вдруг — например сразу после приготовления еды, оценки голода, сообщения/разговора или включения экрана — либо это было постепенное нарастающее чувство без очевидного события?"
+  },
+  {
+    "blind_id": "R20",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. Значит, типичная реакция после переедания у вас всё же восстановление привычного питания, а не длительное «срывное» поведение. Это важно, потому что по-разному меняет последствия и возможные барьеры. Хотите, чтобы мы продолжили и посмотрели, что помогает вам возвращаться к привычкам (или что мешает), или на данный момент достаточно этого уточнения?"
+  },
+  {
+    "blind_id": "R21",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R22",
+    "scenario_id": "S3",
+    "context": {
+      "current_user_message": {
+        "id": "msg_8b83b3dd5c555149832d317085b26836",
+        "sequence": 3,
+        "text": "Я сначала неправильно выразился: после переедания обычно продолжаю следить за питанием."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_950c34ec504652a5af257aefad4f8988",
+            "kind": "system_question",
+            "content": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?",
+            "model_item_ids": [],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_950c34ec504652a5af257aefad4f8988",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_950c34ec504652a5af257aefad4f8988"
+            },
+            "interaction": "clarification"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_6245f62f4b0d5686b6c11e73df10d291",
+          "sequence": 1,
+          "text": "Сначала я сказал, что после переедания всё бросаю, но потом сказал, что обычно продолжаю следить за питанием."
+        },
+        {
+          "id": "msg_39aa5a702c2154afb4cfa5c5ab30ab42",
+          "sequence": 2,
+          "text": "Эти два описания расходятся. Как точнее происходит обычно: вы продолжаете или делаете длительную паузу?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. Получается, после переедания вы обычно снова возвращаетесь к слежению за питанием, а не надолго прекращаете попытки. Это меняет рабочую картину: вместо «эпизод → длительная пауза» сейчас более вероятна схема «эпизод → быстрое восстановление контроля», и это важно для понимания, какие именно барьеры или привычки поддерживают повторные эпизоды. Хотите, чтобы уточнил дальше — например, что именно помогает вам быстро вернуться к отслеживанию (чувство вины, план действий, рутину и т.п.), или пока оставим это как факт?"
+  },
+  {
+    "blind_id": "R23",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за поправку. Тогда коротко: переедание обычно остаётся эпизодом, и вы возвращаетесь к обычному режиму уже на следующий день, а не на несколько дней. Это меняет то, как можно понимать проблему — вместо длительного срыва это скорее редкий выход из привычки, который вы обычно корректируете. Хотите, чтобы мы посмотрели, что обычно помогает вам вернуться в режим, или оставим это как несущественную эпизодическую проблему?"
+  },
+  {
+    "blind_id": "R24",
+    "scenario_id": "S5",
+    "context": {
+      "current_user_message": {
+        "id": "msg_d3e40b35be435cc695561ec14953b5e7",
+        "sequence": 3,
+        "text": "Нет, я неточно сказал: на следующий день я обычно возвращаюсь к привычному режиму."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_10f947befa4a5d6fa61443f4e1226bad",
+            "kind": "user_interpretation",
+            "content": "После переедания на несколько дней перестаёт следить за питанием.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_35abe9d954715f8c9ac5743876ac98c2"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "kind": "system_reflection",
+            "content": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?",
+            "model_item_ids": [
+              "mi_10f947befa4a5d6fa61443f4e1226bad"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_e1eef1fbd5015286adf75faadc370006",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_e1eef1fbd5015286adf75faadc370006"
+            },
+            "interaction": "evaluation"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_35abe9d954715f8c9ac5743876ac98c2",
+          "sequence": 1,
+          "text": "Обычно после переедания я на несколько дней перестаю следить за питанием."
+        },
+        {
+          "id": "msg_78938b68214b5dab95c1bc1141313dab",
+          "sequence": 2,
+          "text": "Получается, после такого вечера вы обычно выпадаете из привычного режима на несколько дней — это верное описание?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо за уточнение. Тогда выходит, что переедание обычно вызывает только однодневное отклонение: на следующий день вы возвращаетесь к привычному режиму. Хочете, чтобы мы посмотрели, какие именно моменты этого однодневного отклонения для вас наиболее заметны (чувство вины, усталость, тяга к определённой еде или что-то другое)?"
+  },
+  {
+    "blind_id": "R25",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо, что рассказали. Одно уточнение: когда вы пишете «день был обычный», вы имеете в виду, что распорядок, настроение и события были такими же, как обычно, без явных стрессоров или изменений? Это поможет понять, совпадают ли триггеры с привычными днями."
+  },
+  {
+    "blind_id": "R26",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R27",
+    "scenario_id": "S6",
+    "context": {
+      "current_user_message": {
+        "id": "msg_524ad3fbb39d55fbaf55ee66c556946b",
+        "sequence": 3,
+        "text": "Я как будто перестал узнавать себя. Это не про конкретную цифру на весах — мне просто тяжело видеть, насколько я изменился."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_dd00497d990152828294a2c98fdf629d",
+            "kind": "experience",
+            "content": "После набора веса тяжело смотреть на свои фотографии.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_f1058a757cb55919b2fcb4070653db2a"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_a56a22ff15f35475b58963226442016f",
+            "kind": "system_question",
+            "content": "Что именно в этих фотографиях задевает вас сильнее всего?",
+            "model_item_ids": [
+              "mi_dd00497d990152828294a2c98fdf629d"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_a56a22ff15f35475b58963226442016f",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_a56a22ff15f35475b58963226442016f"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_f1058a757cb55919b2fcb4070653db2a",
+          "sequence": 1,
+          "text": "После набора веса мне стало тяжело смотреть на свои фотографии."
+        },
+        {
+          "id": "msg_145d330f71075ecca3751e1067f4358f",
+          "sequence": 2,
+          "text": "Что именно в этих фотографиях задевает вас сильнее всего?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понимаю — вы не просто о числе на весах, а о чувстве, что прежний «я» ушёл и вы не узнаёте себя. Часто это сочетание утраты привычного образа, неловкости и тревоги: например, фото или зеркало могут давать ощущение чужого лица. Можете ли вы сказать, в каких ситуациях это чувство возникает сильнее — при просмотре старых фото, в зеркале, на людях или в каких‑то других моментах?"
+  },
+  {
+    "blind_id": "R28",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понимаю. Вы отметили, что это случилось снова вечером, хотя день был обычный и явного триггера вы не увидели — значит переедание выглядит как повторяющаяся вечерняя «ситуация без явной причины», а не ответ на одно заметное событие.Могу предложить пару коротких версий, которые обычно помогают дальше разбираться (не как диагноз, а как рабочие предположения). Хотите, чтобы я озвучил их и вы сказали, какая ближе — или предпочитаете сначала что-то добавить о том вечере?"
+  },
+  {
+    "blind_id": "R29",
+    "scenario_id": "S1",
+    "context": {
+      "current_user_message": {
+        "id": "msg_19f50c002aa35cbdbeb7823a3a1a253b",
+        "sequence": 1,
+        "text": "После тяжёлой рабочей недели я пропускаю обед и вечером переедаю. Потом думаю, что всё испортил, и бросаю попытку на несколько недель. Так бывает почти каждый раз."
+      },
+      "human_model": {
+        "items": [],
+        "relations": []
+      },
+      "previous_active_conversation_state": null,
+      "dialogue_history": [],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": false,
+        "abstain_reason": null,
+        "selected_cards": [
+          {
+            "id": "P001",
+            "professional_hypothesis": "Один эпизод превращается в приговор всей попытке; боль не в калориях, а в ощущении обнуления труда.",
+            "alternative_explanations": [
+              "Усталость",
+              "жёсткие правила",
+              "действительный отказ от плана"
+            ],
+            "use_when": "Только если смысл сообщения/истории поддерживает версию; сигнальные фразы — подсказки, не ключевые слова для автоматического вывода.",
+            "avoid": "Не выдавать за диагноз, скрытую истину или установленный факт; не навязывать пользователю «боль»."
+          }
+        ]
+      }
+    },
+    "reply": null
+  },
+  {
+    "blind_id": "R30",
+    "scenario_id": "S4",
+    "context": {
+      "current_user_message": {
+        "id": "msg_5b94da63dca959aeb477047365d515df",
+        "sequence": 3,
+        "text": "Вчера вечером снова съел больше, чем собирался. День был обычный, и я не заметил, что именно к этому привело."
+      },
+      "human_model": {
+        "items": [
+          {
+            "id": "mi_881a7868b1455a66ac7ddf140054c660",
+            "kind": "stated_problem",
+            "content": "Иногда вечером съедает больше, чем собирался, и не понимает почему.",
+            "provenance": "user_provided",
+            "status": "recorded",
+            "supersedes_item_ids": [],
+            "source_message_ids": [
+              "msg_05381c90af595b369425cf7d09b5e962"
+            ]
+          }
+        ],
+        "relations": []
+      },
+      "previous_active_conversation_state": {
+        "active_content": [
+          {
+            "id": "aci_4815499147325110b5963d94797e5260",
+            "kind": "system_question",
+            "content": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?",
+            "model_item_ids": [
+              "mi_881a7868b1455a66ac7ddf140054c660"
+            ],
+            "relation_ids": []
+          }
+        ],
+        "response_targets": [
+          {
+            "handle": "previous_target_1",
+            "active_content_id": "aci_4815499147325110b5963d94797e5260",
+            "subject": {
+              "kind": "active_content",
+              "id": "aci_4815499147325110b5963d94797e5260"
+            },
+            "interaction": "open_response"
+          }
+        ]
+      },
+      "dialogue_history": [
+        {
+          "id": "msg_05381c90af595b369425cf7d09b5e962",
+          "sequence": 1,
+          "text": "Я хочу похудеть, но пока не понимаю, почему вечером иногда ем больше, чем собирался."
+        },
+        {
+          "id": "msg_ef8090bfa26852b0957ba7f9bf3d69cf",
+          "sequence": 2,
+          "text": "Расскажите про последний такой вечер: что вы заметили в тот день перед тем, как съели больше?"
+        }
+      ],
+      "human_experience": {
+        "enabled": true,
+        "status": "experimental_hypotheses_not_evidence",
+        "retrieval_method": "conservative_explicit_scenarios_v1",
+        "abstained": true,
+        "abstain_reason": "no_reliable_match",
+        "selected_cards": []
+      }
+    },
+    "reply": "Понял — спасибо, что рассказали. Короткая мысль: вчерашний эпизод повторяет уже отмеченную вами проблему и случился в «обычный» день без явного триггера, поэтому возможно, причина лежит в вечерней части дня (усталость, снижение самоконтроля, привычные рутины) или в малозаметных сигналах (слегка изменившийся распорядок или настроение). Насколько эта формулировка вам подходит — поддерживаете, частично корректируете или отвергаете?"
+  }
+]

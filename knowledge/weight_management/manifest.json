@@ -1,0 +1,24 @@
+{
+  "schema_version": "knowledge-release.v1",
+  "release_id": "weight-management-pilot-2026-10-13",
+  "domain": "weight_management",
+  "language": "ru",
+  "status": "pilot_not_expert_validated",
+  "knowledge_file": "knowledge_cards_v1.json",
+  "retrieval": {
+    "method": "semantic_only_dense_cosine",
+    "embedding_model": "intfloat/multilingual-e5-small",
+    "embedding_dimension": 384,
+    "semantic_view_version": "weight-semantic-views.e5-v1",
+    "ordinary_selection": "weighted_semantic_views_then_absolute_and_relative_similarity_floor_then_token_budget",
+    "professional_similarity_floor": 0.8,
+    "human_experience_similarity_floor": 0.79,
+    "relative_similarity_band": 0.015,
+    "safety_selection": "all_admitted_safety_cards"
+  },
+  "provenance": {
+    "kind": "author_synthesis",
+    "basis": "Diagnostic Consultation Methodology AI Lead Bot, research edition 2026-10-13",
+    "expert_reviewed": false
+  }
+}

@@ -4,6 +4,11 @@ from aiogram import Router
 from aiogram.utils.chat_action import ChatActionSender
 
 from ai.dialog_engine import run_dialog_engine
+from ai.cognitive_diagnostics import (
+    conversation_identifier,
+    record_telegram_delivery,
+    start_diagnostic_session,
+)
 from ai.telegram_consultant_handoff import CONTACT_BUTTON_TEXT
 
 from memory.user_memory import (
@@ -14,14 +19,20 @@ from memory.user_memory import (
     reset_user_profile
 )
 
-from utils.logger import (
-    clear_log,
-    log_user,
-    log_bot
-)
-
 router = Router()
 TYPING_REFRESH_SECONDS = 4.0
+
+
+def _telegram_diagnostic_metadata(message, sent_message=None):
+    chat = getattr(message, "chat", None)
+    chat_id = getattr(chat, "id", None)
+    return {
+        "incoming_message_id": getattr(message, "message_id", None),
+        "outgoing_message_id": getattr(sent_message, "message_id", None),
+        "chat_identifier": (
+            conversation_identifier(chat_id) if chat_id is not None else None
+        ),
+    }
 
 
 @router.message(CommandStart())
@@ -31,8 +42,6 @@ async def start_handler(message: Message):
 
     reset_user_profile(user_id)
 
-    clear_log()
-
     text = (
         "Привет 🙂\n\n"
         "Если ты здесь, значит что-то уже начало напрягать - "
@@ -41,9 +50,16 @@ async def start_handler(message: Message):
 
     set_last_question(user_id, text)
 
-    log_bot(text)
-
-    await message.answer(text)
+    sent_message = await message.answer(text)
+    start_diagnostic_session(
+        user_id,
+        start_exchange={
+            "user_command": "/start",
+            "assistant_reply": text,
+            "telegram_delivery": "delivered",
+            **_telegram_diagnostic_metadata(message, sent_message),
+        },
+    )
 
 
 @router.message()
@@ -52,11 +68,6 @@ async def message_handler(message: Message):
     contact_phone = message.contact.phone_number if message.contact is not None else None
     user_text = message.text or ""
     user_id = message.from_user.id
-
-    print("\n--- NEW MESSAGE ---")
-    print("USER:", user_text)
-
-    log_user(user_text if contact_phone is None else "[Контакт Telegram предоставлен]")
 
     profile = get_user_profile(user_id)
 
@@ -81,8 +92,6 @@ async def message_handler(message: Message):
             user_text, profile, user_id, **engine_kwargs
         )
 
-    print("ENGINE RESULT:", result)
-
     update_data = result.get("update", {})
     reply = result.get(
         "reply",
@@ -99,11 +108,6 @@ async def message_handler(message: Message):
         reply
     )
 
-    log_bot(reply)
-
-    print("UPDATED PROFILE:", profile)
-    print("BOT REPLY:", reply)
-
     reply_markup = None
     if result.get("request_contact"):
         reply_markup = ReplyKeyboardMarkup(
@@ -119,4 +123,22 @@ async def message_handler(message: Message):
     elif result.get("remove_contact_keyboard"):
         reply_markup = ReplyKeyboardRemove()
 
-    await message.answer(reply, reply_markup=reply_markup)
+    try:
+        sent_message = await message.answer(reply, reply_markup=reply_markup)
+    except Exception as error:
+        record_telegram_delivery(
+            user_id,
+            result.get("_diagnostic_turn_id"),
+            reply=reply,
+            delivered=False,
+            error=f"{type(error).__name__}: {error}",
+            telegram_metadata=_telegram_diagnostic_metadata(message),
+        )
+        raise
+    record_telegram_delivery(
+        user_id,
+        result.get("_diagnostic_turn_id"),
+        reply=reply,
+        delivered=True,
+        telegram_metadata=_telegram_diagnostic_metadata(message, sent_message),
+    )

@@ -1,0 +1,1154 @@
+[
+  {
+    "blind_id": "R01",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "ref_1",
+        "kind": "system_reflection",
+        "semantic_content": "Понял — вы уточняете, что эффект от переедания обычно длится недолго: уже на следующий день вы возвращаетесь к привычному режиму. Это меняет понимание частоты и продолжительности нарушений режима и важнее сфокусироваться не на длительных срывах, а на том, что предшествует эпизоду и на реакциях в сам вечер и следующий день.",
+        "model_item_refs": [
+          {
+            "handle": "corr_1"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "ref_1",
+          "subject": {
+            "content_handle": "ref_1"
+          },
+          "interaction": "open_response"
+        },
+        {
+          "owner_content": "ref_1",
+          "subject": {
+            "content_handle": "ref_1"
+          },
+          "interaction": "clarification"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Спасибо, это важно — вы говорите, что обычно уже на следующий день возвращаетесь к обычному режиму.",
+        "realizes": [
+          "ref_1"
+        ]
+      },
+      {
+        "text": "С этим уточнением кажется полезным посмотреть не на многодневные срывы, а на то, что обычно происходит в сам вечер переедания и в сам следующий день — хотите ли вы кратко описать, что чаще всего предшествует таким вечерам или как вы чувствуете себя на следующий день?",
+        "realizes": [
+          "ref_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R02",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflec_1",
+        "kind": "system_reflection",
+        "semantic_content": "Понял. Вместо того чтобы выпадать из режима на несколько дней, вы уточняете: обычно это кратковременное отклонение, и уже на следующий день вы возвращаетесь к обычным привычкам. Это меняет рабочую картину о масштабе воздействия эпизода — он чаще кажется единичным кратким сбоем, а не затяжным срывом.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_10f947befa4a5d6fa61443f4e1226bad"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflec_1",
+          "subject": {
+            "content_handle": "reflec_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Спасибо за уточнение. Теперь видно, что эффект обычно короткий: вы возвращаетесь к привычному режиму уже на следующий день, а не на несколько дней. Как вы сами относитесь к этому — облегчённо (раз это быстро проходит) или всё ещё смущает, что бывает такой срыв?",
+        "realizes": [
+          "reflec_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R03",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_reflection1",
+        "kind": "system_reflection",
+        "semantic_content": "У вас устойчивый цикл: усталость (пропуск обеда) приводит к вечернему перееданию, которое вызывает убеждение «всё испорчено», и это убеждение чаще всего завершает попытки на недели. Это выглядит как поведенческий паттерн, где реакция на один эпизод (самообвинение) важнее самой еды для продолжения или прекращения усилий.",
+        "model_item_refs": [
+          {
+            "existing_id": "it_problem_pattern"
+          },
+          {
+            "existing_id": "it_previous_attempts"
+          },
+          {
+            "existing_id": "it_emotional_response"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "rc_reflection1",
+          "subject": {
+            "content_handle": "rc_reflection1"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Похоже, вы попадаете в постоянный цикл: усталость → пропуск обеда → вечернее переедание → чувство «всё испорчено» → прекращение попыток на недели. Я вижу здесь не столько вопрос калорий, сколько смысл этого эпизода для ваших усилий — один провал часто становится поводом полностью остановиться. Согласны ли вы с такой формулировкой и важно ли для вас разобраться именно в этой части?",
+        "realizes": [
+          "rc_reflection1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R04",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflec_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, что у вас сформировался повторяющийся паттерн: после сильной усталости вы пропускаете прием пищи, вечером компенсируете перееданием, а затем внутреннее правило («всё испорчено») запускает отказ от попытки на недели. Это делает попытки устойчиво хрупкими — не столько из‑за одного переедания, сколько из‑за смысла, который вы ему присваиваете.",
+        "model_item_refs": [
+          {
+            "handle": "itm_skip_and_binge"
+          },
+          {
+            "handle": "itm_feeling_all_ruined"
+          },
+          {
+            "handle": "itm_pattern_repetition"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflec_1",
+          "subject": {
+            "content_handle": "reflec_1"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Спасибо — это даёт ясную проблему и повторяющийся паттерн. Вы описали: 1) пропуск обеда после тяжёлой недели, 2) вечернее переедание, 3) ощущение «всё испорчено» и прекращение попытки на недели. Верно ли, что ключевая часть для вас — не столько само переедание, сколько то, что оно служит сигналом к «бросанию» попытки? Если да, скажите коротко «да»; если важна другая часть, напишите, что именно.",
+        "realizes": [
+          "reflec_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R05",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, первоначальная формулировка была неточной: реальный обычный паттерн — после переедания вы обычно не «отпускаете» питание полностью, а всё же продолжаете следить за тем, что и сколько едите. Это меняет понимание того, какие барьеры или чувства связаны с эпизодами переедания.",
+        "model_item_refs": [
+          {
+            "handle": "itm_followup_pattern"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Спасибо, прояснение полезно — тогда рабочая картина меняется: обычно после переедания вы не уходите в длительную паузу от контроля, а всё же продолжаете следить за питанием. Это важно, потому что по-разному влияет на то, какие трудности и мотивация возникают после таких эпизодов.",
+        "realizes": [
+          "rc_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R06",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c1_reflection_after_correction",
+        "kind": "system_reflection",
+        "semantic_content": "Вы прояснили: ваш обычный стиль — не «отключаться» после срыва, а сохранить контроль и продолжить следить за питанием. Это меняет раннее противоречивое описание и даёт рабочую картину самоконтроля после переедания.",
+        "model_item_refs": [
+          {
+            "handle": "it_1_followup_behavior"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — вы уточнили, что обычно не «бросаете всё», а всё же продолжаете следить за питанием после переедания. Это меняет картину: вместо длительной паузы у вас чаще сохраняется самоконтроль. Хотите, чтобы я связал это с тем, что предшествует перееданию (напр., усталость, эмоции) или пока оставим фокус на том, как вы реагируете после?",
+        "realizes": [
+          "c1_reflection_after_correction"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R07",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflec_identity_change_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, для вас проблема не в отдельной цифре — важнее ощущение утраты знакомого образа и трудность признать постепенные изменения. Это делает просмотр фотографий и, вероятно, другие зеркальные/визуальные моменты особенно болезненными.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_dd00497d990152828294a2c98fdf629d"
+          },
+          {
+            "existing_id": "itm_self_recognition_loss_1"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflec_identity_change_1",
+          "subject": {
+            "content_handle": "reflec_identity_change_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю — это как будто вы замечаете не столько число на весах, сколько постепенное расхождение между тем, кто вы были, и как видите себя теперь. Такое ощущение утраты привычного образа часто делает фотографии и отражения сильнее бьют по самоощущению.",
+        "realizes": [
+          "reflec_identity_change_1"
+        ]
+      },
+      {
+        "text": "Что из этого для вас важнее: само ощущение «неузнавания» (что вы внутри чувствуете иначе) или конкретные внешние признаки, которые вы видите на фото? Расскажите, что именно вы замечаете первым — тело, лицо, выражение, поза, или что‑то другое.",
+        "realizes": [
+          "reflec_identity_change_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R08",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": null,
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reply_content_1",
+          "subject": {
+            "content_handle": "reply_content_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "human_discovery"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю — вы чувствуете, что перестали узнавать себя, и это не только о числе на весах, а про ощущение изменения личности при взгляде на фото. Можете коротко описать: когда это началось (примерно) и есть ли у вас конкретные ситуации или снимки, которые сильнее всего вызывают такое ощущение?",
+        "realizes": [
+          "reply_content_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R09",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "ref_after_binge",
+        "kind": "system_reflection",
+        "semantic_content": "Вы поправили описаниe: привычнее для вас не «сдаваться» после переедания, а возвращаться к отслеживанию питания. Это меняет рабочую картину: проблема менее связана с длительными «провалами» и больше — с эпизодами переедания, после которых вы всё же возвращаетесь к привычкам.",
+        "model_item_refs": [
+          {
+            "handle": "it_after_binge_behavior"
+          },
+          {
+            "handle": "it_correction_note"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "ref_after_binge",
+          "subject": {
+            "content_handle": "ref_after_binge"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. Получается, чаще случается эпизод переедания, а затем вы возвращаетесь к отслеживанию питания, а не надолго «отказываетесь» от контроля. Как вы сами это замечаете: обычно это происходит в течение одного дня, нескольких дней или иначе?",
+        "realizes": [
+          "ref_after_binge"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R10",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, что ключевой момент — не только сам эпизод переедания, а смысл, который вы ему придаёте: один срыв воспринимается как «всё испорчено», и это запускает уход от усилий. Такое значение срыва поддерживает устойчивый цикл даже при единичных промахах.",
+        "model_item_refs": [
+          {
+            "existing_id": "it_1_skipped_lunch_binge_cycle"
+          },
+          {
+            "existing_id": "it_2_emotional_response_guilt_ab"
+          },
+          {
+            "existing_id": "it_3_pattern_repetition"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c_reflection_1",
+          "subject": {
+            "content_handle": "c_reflection_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Похоже, для вас важнее не только сам переед — вы воспринимаете его как знак, что все предыдущие усилия обнулились, и это делает попытку бессмысленной, поэтому вы прекращаете её на недели. Такое восприятие может поддерживать цикл, даже если срывы случаются редко.",
+        "realizes": [
+          "c_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R11",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": {
+        "handle": "ref_self_loss_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, для вас сейчас важнее не сама масса тела, а ощущение утраты прежнего образа — фотографии напоминают, что внешность и, возможно, привычки или роль изменились, и это вызывает сильное отчуждение от себя.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_dd00497d990152828294a2c98fdf629d"
+          },
+          {
+            "existing_id": "it_seen_self_changed"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "ref_self_loss_1",
+          "subject": {
+            "content_handle": "ref_self_loss_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю — вы не столько переживаете цифру, сколько ощущаете, что часть прежнего «я» стала чужой, и фотографии это подтверждают. Иногда такое отчуждение связано не только с внешними изменениями, но и с тем, что привычные роли или привычки поменялись. Что в этом ощущении для вас самое тяжёлое — потеря привычного образа, чувство стыда при взгляде на фото или что-то другое?",
+        "realizes": [
+          "ref_self_loss_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R12",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c_reflect_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы уточнили, что привычное для вас поведение после эпизода переедания — не «сдаваться», а продолжать следить за питанием. Это меняет рабочую картину: скорее всего у вас нет длительной полного выхода из режима контроля после таких эпизодов, но остаётся важным понять, как часто это повторяется и насколько тяжело вам восстановить привычный режим.",
+        "model_item_refs": [
+          {
+            "handle": "itm_1"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c_reflect_1",
+          "subject": {
+            "content_handle": "c_reflect_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. То есть обычно вы всё же не «бросаете» питание после переедания, а возвращаетесь к контролю. Скажите, как часто такое случается — раз в несколько месяцев, раз в неделю или чаще?",
+        "realizes": [
+          "c_reflect_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R13",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflec_self_change",
+        "kind": "system_reflection",
+        "semantic_content": "Вы говорите не только о внешней разнице на фото, а о глубоком ощущении, что собственная личность или образ себя стали чужими — и это вызывает боль скорее из-за утраты знакомости с собой, чем из‑за числа на весах.",
+        "model_item_refs": [
+          {
+            "handle": "mi_now_self_unfamiliar"
+          },
+          {
+            "existing_id": "mi_dd00497d990152828294a2c98fdf629d"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflec_self_change",
+          "subject": {
+            "content_handle": "reflec_self_change"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю — вы не просто недовольны внешним видом, а ощущаете, что потеряли знакомость с собой; это может быть не только о теле, но и о том, как вы себя узнаёте в своих действиях, настроении или ролях. Что из этого ближе к вашему опыту — чувство чужого отражения на фото, или скорее внутреннее ощущение, что вы сами стали другим?",
+        "realizes": [
+          "reflec_self_change"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R14",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "hc_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы уточнили: вместо «выпадаю из режима на несколько дней» точнее — на следующий день вы возвращаетесь к обычному режиму. Это меняет понимание продолжительности и возможных последствий эпизода переедания.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_10f947befa4a5d6fa61443f4e1226bad"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "hc_1",
+          "subject": {
+            "content_handle": "hc_1"
+          },
+          "interaction": "open_response"
+        },
+        {
+          "owner_content": "hc_1",
+          "subject": {
+            "content_handle": "hc_1"
+          },
+          "interaction": "clarification"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. Значит вправду эпизод короткий: уже на следующий день вы возвращаетесь к обычному режиму.",
+        "realizes": [
+          "hc_1"
+        ]
+      },
+      {
+        "text": "Если хотите, кратко расскажите, что обычно помогает вам вернуться в режим: что делает это возможным или что мешает (одно предложение достаточно).",
+        "realizes": [
+          "hc_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R15",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, есть повторяющаяся цепочка: пропущенный обед → вечернее переедание → сильная самооценочная реакция («всё испортил») → прекращение попыток на недели. Эта схема сама по себе важнее единичных калорий, потому что поддерживает цикл, который повторяется почти всегда.",
+        "model_item_refs": [
+          {
+            "handle": "it_overshoot_pattern"
+          },
+          {
+            "handle": "it_emotional_reaction"
+          },
+          {
+            "handle": "it_cycle_repetition"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "rc_reflection_1",
+          "subject": {
+            "content_handle": "rc_reflection_1"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Вы описали стойкий цикл: пропускаете обед после тяжёлой недели, вечером переедаете, потом мысли «всё испортил» приводят к тому, что вы прекращаете попытки на недели. Это важная закономерность сама по себе — она объясняет, почему один эпизод часто заканчивает весь прогресс, а не только отдельный приём пищи. Скажите, насколько эта формулировка близка: полностью верна, частично верна или неверна?",
+        "realizes": [
+          "rc_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R16",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы снова заметили эпизод переедания и при этом не обнаружили очевидных триггеров в течение дня. Часто это важно: когда повседневный день кажется \"обычным\", причина может быть не в одном ярком событии, а в наборах мелких вещей (усталость, пропуски в еде, обычные рутины вечером, автоматическое поведение). Подумать можно о том, какие небольшие изменения в ощущениях или в контексте (уровень усталости, перерывы на еду, стресс, доступность пищи вечером) предшествовали эпизоду — не чтобы назначать причину, а чтобы найти рабочие подсказки для следующего шага.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_881a7868b1455a66ac7ddf140054c660"
+          },
+          {
+            "handle": "it_1_last_evening_context"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c_reflection_1",
+          "subject": {
+            "content_handle": "c_reflection_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — снова был эпизод, и день «обычный», триггеров не заметили. Часто такое действительно не связано с одним большим событием, а с несколькими мелкими факторами вместе (усталость, пропуск перекуса, привычная вечерняя рутина или простая доступность еды). Не предлагаю делать выводы — но если хотите, скажите, было ли в тот день что-то из этого: вы уставали сильнее обычного, долго не перекусывали, или вечерние привычки (телефон/телевизор, работа за столом) были как обычно? Это поможет сделать понимание чуть более конкретным.",
+        "realizes": [
+          "c_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R17",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы говорите, что потеряли ощущение себя — не просто неудовольствие от внешности, а чувство, что вы «перестали узнавать» собственное лицо и образ. Это кажется связано с изменением внешности после набора веса и вызывает силькое эмоциональное напряжение при взгляде на фотографии. Такое переживание может включать утрату привычной идентичности, неловкость и тревогу при сопоставлении «прошлого» и «нынешнего» образа.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_dd00497d990152828294a2c98fdf629d"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "rc_reflection_1",
+          "subject": {
+            "content_handle": "rc_reflection_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Похоже, для вас важнее не столько сама цифра на весах, сколько ощущение, что привычный образ потерян и вы едва узнаёте себя — это вызывает силький дискомфорт при взгляде на фото. Хотите рассказать, когда вы впервые заметили это чувство — постепенно после набора веса или это случилось внезапно?",
+        "realizes": [
+          "rc_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R18",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_1_reflection_plus_question",
+        "kind": "system_reflection",
+        "semantic_content": "Вы описываете повторяющийся эпизод: вечером съедаете больше, часто без очевидных внешних триггеров — последний раз день прошёл «обычно», и вы не заметили, что к этому привело. Такое поведение часто остаётся незамеченным, потому что в момент переедания внимание смещается или накопленные за день мелкие факторы складываются. Если хотите, можем исследовать либо: 1) мелкие изменения в настроении/энергии близко к вечеру, 2) повседневные паттерны еды/перерывов в течение дня, или 3) ситуации и привычки вечером (напр., ритуалы, доступность еды, уставание). Какой из трёх фокусов кажется наиболее полезным сейчас?",
+        "model_item_refs": [
+          {
+            "handle": "it_1_evening_no_clear_cause"
+          },
+          {
+            "existing_id": "mi_881a7868b1455a66ac7ddf140054c660"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "rc_1_reflection_plus_question",
+          "subject": {
+            "content_handle": "rc_1_reflection_plus_question"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — вы снова вечером съели больше, хотя день был обычный и вы не заметили явного повода. Часто в таких случаях причина не одна: внимание смещается к еде, накопленное утомление или мелкие сдвиги настроения незаметно накапливаются к вечеру. Можете выбрать, что исследуем дальше: 1) изменения настроения/энергии перед вечером, 2) ежедневный ритм приёма пищи и перерывов, 3) вечерние ситуации/привычки (доступность еды, ритуалы, усталость). Что из этого кажется полезным сейчас?",
+        "realizes": [
+          "rc_1_reflection_plus_question"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R19",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c1",
+        "kind": "system_question",
+        "semantic_content": "Один конкретный вопрос о том вечере, чтобы уменьшить неопределённость: заметили ли вы, что примерно когда началось переедание — сразу после какого-то события (приготовление еды, разговор, просмотр экрана), или это произошло постепенно без явного триггера?",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_881a7868b1455a66ac7ddf140054c660"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c1",
+          "subject": {
+            "content_handle": "c1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "mechanism_discovery"
+    },
+    "reply_segments": [
+      {
+        "text": "Понятно — вы снова съели больше вечером, но не заметили явного триггера. Могу уточнить одно конкретное, чтобы придумать рабочую гипотезу: началось ли это вдруг — например сразу после приготовления еды, оценки голода, сообщения/разговора или включения экрана — либо это было постепенное нарастающее чувство без очевидного события?",
+        "realizes": [
+          "c1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R20",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы поправили предыдущее высказывание: обычно после эпизода переедания вы не «бросаете всё», а продолжаете следить за питанием. Это меняет рабочую картину поведения — вместо длительных перерывов видна тенденция к восстановлению контроля сразу после инцидента.",
+        "model_item_refs": [],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. Значит, типичная реакция после переедания у вас всё же восстановление привычного питания, а не длительное «срывное» поведение. Это важно, потому что по-разному меняет последствия и возможные барьеры. Хотите, чтобы мы продолжили и посмотрели, что помогает вам возвращаться к привычкам (или что мешает), или на данный момент достаточно этого уточнения?",
+        "realizes": [
+          "reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R21",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflec_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, вы уточнили: реакция на переедание скорее краткая (возвращаетесь в режим уже на следующий день), а не многодневная потеря контроля. Это меняет значимость предыдущих попыток и барьеров — полезно понять, что именно происходит в сам вечер переедания и на следующий день.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_10f947befa4a5d6fa61443f4e1226bad"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflec_1",
+          "subject": {
+            "content_handle": "reflec_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понятно — вы уточнили, что на следующий день обычно возвращаетесь в обычный режим, а не «выпадаете на несколько дней». Это действительно меняет картину: теперь важнее то, что происходит в сам вечер и как вы себя чувствуете на следующий день. Что вы заметили о том вечере и о следующем дне — какие мысли, настроение или поведение отличаются по сравнению с обычными днями?",
+        "realizes": [
+          "reflec_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R22",
+    "scenario_id": "S3",
+    "selected_action": {
+      "primary_content": {
+        "handle": "ref_correct_pattern",
+        "kind": "system_reflection",
+        "semantic_content": "Вы уточнили, что типично после переедания вы не «отпускаете» контроль полностью, а возвращаетесь к отслеживанию питания. Это меняет рабочую картину: вместо чередования «эпизод — длительная пауза» сейчас выглядит как эпизод с быстрым восстановлением привычки слежения. Такое уточнение важно для понимания того, какие предыдущие попытки и барьеры действительно влияют на продолжительность эффекта эпизода.",
+        "model_item_refs": [
+          {
+            "handle": "itm_followup_eating"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "ref_correct_pattern",
+          "subject": {
+            "content_handle": "ref_correct_pattern"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. Получается, после переедания вы обычно снова возвращаетесь к слежению за питанием, а не надолго прекращаете попытки. Это меняет рабочую картину: вместо «эпизод → длительная пауза» сейчас более вероятна схема «эпизод → быстрое восстановление контроля», и это важно для понимания, какие именно барьеры или привычки поддерживают повторные эпизоды. Хотите, чтобы уточнил дальше — например, что именно помогает вам быстро вернуться к отслеживанию (чувство вины, план действий, рутину и т.п.), или пока оставим это как факт?",
+        "realizes": [
+          "ref_correct_pattern"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R23",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Понял — вы исправили: переедание не ведёт к нескольким дням нарушения режима, вы обычно возвращаетесь к обычному распорядку уже на следующий день. Это меняет картину: вместо затяжной «срывающей» реакции здесь скорее эпизод, после которого поведение быстро нормализуется.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_10f947befa4a5d6fa61443f4e1226bad"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflection_1",
+          "subject": {
+            "content_handle": "reflection_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за поправку. Тогда коротко: переедание обычно остаётся эпизодом, и вы возвращаетесь к обычному режиму уже на следующий день, а не на несколько дней. Это меняет то, как можно понимать проблему — вместо длительного срыва это скорее редкий выход из привычки, который вы обычно корректируете. Хотите, чтобы мы посмотрели, что обычно помогает вам вернуться в режим, или оставим это как несущественную эпизодическую проблему?",
+        "realizes": [
+          "reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R24",
+    "scenario_id": "S5",
+    "selected_action": {
+      "primary_content": {
+        "handle": "reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы поправили: вместо «несколько дней» вы говорите, что обычно уже на следующий день возвращаетесь к обычному режиму. Это меняет картину — похоже, эпизод переедания чаще даёт лишь кратковременное отклонение, а не продолжительный срыв.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_10f947befa4a5d6fa61443f4e1226bad"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "reflection_1",
+          "subject": {
+            "content_handle": "reflection_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо за уточнение. Тогда выходит, что переедание обычно вызывает только однодневное отклонение: на следующий день вы возвращаетесь к привычному режиму. Хочете, чтобы мы посмотрели, какие именно моменты этого однодневного отклонения для вас наиболее заметны (чувство вины, усталость, тяга к определённой еде или что-то другое)?",
+        "realizes": [
+          "reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R25",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "mc_1_mechanism_q1",
+        "kind": "system_question",
+        "semantic_content": "Одно уточнение: когда говорите \"день был обычный\", вы имеете в виду, что распорядок, настроение и события были такими же, как обычно, без явных стрессоров или изменений? Это поможет понять, совпадают ли триггеры с привычными днями.",
+        "model_item_refs": [
+          {
+            "handle": "it_1_evening_overeat"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "mc_1_mechanism_q1",
+          "subject": {
+            "content_handle": "mc_1_mechanism_q1"
+          },
+          "interaction": "clarification"
+        },
+        {
+          "owner_content": "mc_1_mechanism_q1",
+          "subject": {
+            "item": {
+              "existing_id": "mi_881a7868b1455a66ac7ddf140054c660"
+            }
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "mechanism_discovery"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо, что рассказали. Одно уточнение: когда вы пишете «день был обычный», вы имеете в виду, что распорядок, настроение и события были такими же, как обычно, без явных стрессоров или изменений? Это поможет понять, совпадают ли триггеры с привычными днями.",
+        "realizes": [
+          "mc_1_mechanism_q1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R26",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "ref_cycle_meaning",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, причина сохраняемости цикла не только в одной ошибке питания, а в том, как вы её интерпретируете: единичный срыв превращается в сигнал «я провалил всё», что ведёт к прекращению попыток и восстановлению старых привычек. Это даёт объяснение, почему проблема возвращается почти каждый раз после тяжёлой недели.",
+        "model_item_refs": [
+          {
+            "existing_id": "it_cycle_overeating_after_skip"
+          },
+          {
+            "existing_id": "it_pattern_frequency"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "ref_cycle_meaning",
+          "subject": {
+            "content_handle": "ref_cycle_meaning"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю. Вы описываете устойчивый цикл: пропуск обеда после тяжёлой недели → вечернее переедание → мысль «всё испорчено» → прекращение попыток на недели. Один заметный последствие этого — что само восприятие срыва превращает единичный эпизод в причину прекратить усилия, поэтому привычка возвращается снова и снова.",
+        "realizes": [
+          "ref_cycle_meaning"
+        ]
+      },
+      {
+        "text": "Насколько вы согласны с этой идеей, что не столько сам переед — сколько интерпретация срыва — поддерживает повторение цикла? (поддерживаете / частично поддерживаете / не поддерживаете / не уверены)",
+        "realizes": [
+          "ref_cycle_meaning"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R27",
+    "scenario_id": "S6",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы говорите, что перестали узнавать себя: это не только о весе как цифре, а о том, что изменения во внешности и, возможно, в ощущении себя делают взгляд на фото болезненным и чужим. Такое «неузнавание» часто соединяет потерю привычного образа, досаду или грусть из‑за того, что прежний образ перестал соответствовать внутреннему ощущению, и тревогу о том, как это воспринимают другие. Я предлагаю дальше исследовать, какие именно чувства и ситуации усиливают это ощущение — например, при просмотре старых фото, в зеркале или когда видите себя в обществе — чтобы точнее понять, что для вас самое тяжёлое.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_dd00497d990152828294a2c98fdf629d"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c1",
+          "subject": {
+            "content_handle": "c1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю — вы не просто о числе на весах, а о чувстве, что прежний «я» ушёл и вы не узнаёте себя. Часто это сочетание утраты привычного образа, неловкости и тревоги: например, фото или зеркало могут давать ощущение чужого лица. Можете ли вы сказать, в каких ситуациях это чувство возникает сильнее — при просмотре старых фото, в зеркале, на людях или в каких‑то других моментах?",
+        "realizes": [
+          "c1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R28",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c_reflect_1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, что переедание повторяется вечером даже в обычные дни и часто происходит без явного триггера, который вы заметили. Это делает причину менее очевидной и может означать, что важны мелкие, незаметные события или привычные реакции в конце дня.",
+        "model_item_refs": [
+          {
+            "existing_id": "mi_881a7868b1455a66ac7ddf140054c660"
+          },
+          {
+            "handle": "it_1_last_evening_unnoticed"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c_reflect_1",
+          "subject": {
+            "content_handle": "c_reflect_1"
+          },
+          "interaction": "open_response"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понимаю. Вы отметили, что это случилось снова вечером, хотя день был обычный и явного триггера вы не увидели — значит переедание выглядит как повторяющаяся вечерняя «ситуация без явной причины», а не ответ на одно заметное событие.",
+        "realizes": [
+          "c_reflect_1"
+        ]
+      },
+      {
+        "text": "Могу предложить пару коротких версий, которые обычно помогают дальше разбираться (не как диагноз, а как рабочие предположения). Хотите, чтобы я озвучил их и вы сказали, какая ближе — или предпочитаете сначала что-то добавить о том вечере?",
+        "realizes": [
+          "c_reflect_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R29",
+    "scenario_id": "S1",
+    "selected_action": {
+      "primary_content": {
+        "handle": "rc_reflection_1",
+        "kind": "system_reflection",
+        "semantic_content": "Вы описали устойчивый циклический механизм: усталость и пропуск обеда чаще запускают вечернее переедание, после которого вы воспринимаете эпизод как «провал» всей попытки и временно прекращаете усилия. Это повторяется почти каждый раз и, похоже, поддерживает чувство, что одна ошибка обнуляет прогресс.",
+        "model_item_refs": [
+          {
+            "existing_id": "it_problem_overeat_cycle_1"
+          },
+          {
+            "existing_id": "it_previous_attempts_pattern_1"
+          },
+          {
+            "existing_id": "it_possible_triggers_1"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "rc_reflection_1",
+          "subject": {
+            "content_handle": "rc_reflection_1"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Похоже, у вас стабильно появляется цикл: усталость на работе → пропуск обеда → вечером переедаете → после этого ощущение «всё испорчено» и пауза в попытках на недели. Это важно, потому что тогда одна ошибка превращается в долгую потерю прогресса, а не в единичный эпизод.",
+        "realizes": [
+          "rc_reflection_1"
+        ]
+      }
+    ]
+  },
+  {
+    "blind_id": "R30",
+    "scenario_id": "S4",
+    "selected_action": {
+      "primary_content": {
+        "handle": "c1",
+        "kind": "system_reflection",
+        "semantic_content": "Похоже, это не единичный эпизод: у вас уже есть сформулированная проблема — по вечерам иногда съедаете больше, чем планировали — и вчера событие повторилось в обычный день без очевидного триггера. Это может означать, что причина связана не с отдельным событием в течение дня, а с закономерностью вечера (усталость, привычка, снижение внимания) или с малозаметными сигналами (тонкие эмоции, изменение рутины).",
+        "model_item_refs": [
+          {
+            "handle": "it_1"
+          },
+          {
+            "handle": "it_2"
+          }
+        ],
+        "relation_refs": []
+      },
+      "additional_contents": [],
+      "response_targets": [
+        {
+          "owner_content": "c1",
+          "subject": {
+            "content_handle": "c1"
+          },
+          "interaction": "evaluation"
+        }
+      ],
+      "decision_intent": "reflection"
+    },
+    "reply_segments": [
+      {
+        "text": "Понял — спасибо, что рассказали. Короткая мысль: вчерашний эпизод повторяет уже отмеченную вами проблему и случился в «обычный» день без явного триггера, поэтому возможно, причина лежит в вечерней части дня (усталость, снижение самоконтроля, привычные рутины) или в малозаметных сигналах (слегка изменившийся распорядок или настроение). Насколько эта формулировка вам подходит — поддерживаете, частично корректируете или отвергаете?",
+        "realizes": [
+          "c1"
+        ]
+      }
+    ]
+  }
+]

@@ -3,3 +3,4 @@ openai==2.30.0
 python-dotenv==1.2.1
 pydantic==2.11.10
 pytest==8.3.5
+fastembed==0.6.1

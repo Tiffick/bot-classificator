@@ -1,0 +1,13 @@
+{
+  "schema_version": "human-experience-admission.v1",
+  "release_id": "weight-he-pilot-2026-10-13",
+  "source_schema_version": "2.0-research",
+  "status": "pilot_retrieval_eligible_not_expert_validated",
+  "basis": "Strict schema/provenance validation and the supplied DIALOGUE_RULES/VALIDATION checks; no claim of clinical or expert validation.",
+  "eligible_ids": [
+    "P001", "P002", "P003", "P004", "P005", "P006", "P007", "P008", "P009", "P010",
+    "P011", "P012", "P013", "P014", "P015", "P016", "P017", "P018", "P019", "P020",
+    "P021", "P022", "P023", "P024", "P025", "P026", "P027", "P028", "P029", "P030"
+  ],
+  "excluded": []
+}

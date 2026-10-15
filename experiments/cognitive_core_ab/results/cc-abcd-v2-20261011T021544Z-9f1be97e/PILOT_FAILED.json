@@ -1,0 +1,12 @@
+{
+  "status": "PILOT_FAILED",
+  "api_requests_attempted": 5,
+  "durable_api_responses": 4,
+  "last_checkpoint_event_sha256": "4972255411CA8F395D550DB67FBC55BD95A3AB611B314766F625C98A85201AF2",
+  "failures": [
+    "D.S1.1 returned non-empty output but failed SemanticTurn validation because local item handles were emitted as existing_id references.",
+    "A.S3.1 reached the API and returned, but the lab harness raised TypeError while deepcopying the immutable previous ACS FrozenDict before the response could be appended."
+  ],
+  "retry_performed": false,
+  "full_run_started": false
+}

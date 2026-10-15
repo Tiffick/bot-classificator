@@ -5,6 +5,7 @@ Handles name only declarations within one response; they are never persistent ID
 
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import (
@@ -294,6 +295,28 @@ def _strict_schema() -> dict[str, Any]:
 
 
 SEMANTIC_TURN_JSON_SCHEMA = _strict_schema()
+
+
+def semantic_turn_json_schema(
+    previous_acs: ActiveConversationState | None,
+) -> dict[str, Any]:
+    """Return the same strict contract narrowed to references available now.
+
+    Reconciliation and proposal materialization have no valid referent when
+    there is no previous ACS.  Constraining those required arrays to be empty
+    keeps the API-facing schema aligned with the actual turn input while the
+    adapter retains its fail-closed check for all direct callers.
+    """
+    if previous_acs is not None:
+        return SEMANTIC_TURN_JSON_SCHEMA
+
+    schema = deepcopy(SEMANTIC_TURN_JSON_SCHEMA)
+    schema["properties"]["reconciliation"]["maxItems"] = 0
+    state_patch_name = schema["properties"]["state_patch"]["$ref"].rsplit("/", 1)[-1]
+    schema["$defs"][state_patch_name]["properties"][
+        "proposal_materializations"
+    ]["maxItems"] = 0
+    return schema
 
 
 def adapt_semantic_turn(
