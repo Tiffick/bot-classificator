@@ -560,6 +560,7 @@ class CognitiveCore:
             return result
         professional_scores = dict(getattr(selection, "professional_scores", ()))
         human_scores = dict(getattr(selection, "human_experience_scores", ()))
+        safety_scores = dict(getattr(selection, "safety_candidate_scores", ()))
         selected_professional_ids = {
             card.id for card in getattr(selection, "professional_cards", ())
         }
@@ -582,6 +583,12 @@ class CognitiveCore:
                 {"kind": kind, "text": text, "weight": weight}
                 for kind, text, weight in getattr(selection, "query_views", ())
             ],
+            "safety_query_views": [
+                {"kind": kind, "text": text, "weight": weight}
+                for kind, text, weight in getattr(
+                    selection, "safety_query_views", ()
+                )
+            ],
             "latency_ms": getattr(selection, "retrieval_latency_ms", None),
             "similarity_floors": {
                 "professional": getattr(
@@ -590,7 +597,11 @@ class CognitiveCore:
                 "human_experience": getattr(
                     selection, "human_experience_similarity_floor", None
                 ),
+                "safety": getattr(selection, "safety_similarity_floor", None),
             },
+            "safety_discrimination_margin": getattr(
+                selection, "safety_discrimination_margin", None
+            ),
             "professional_cards": [
                 {
                     "card_id": card.id,
@@ -622,8 +633,21 @@ class CognitiveCore:
                 if card_id not in selected_human_ids
             ],
             "safety_cards": [
-                {"card_id": card.id, "title": card.title}
+                {
+                    "card_id": card.id,
+                    "title": card.title,
+                    "similarity": safety_scores.get(card.id),
+                }
                 for card in getattr(selection, "safety_cards", ())
+            ],
+            "rejected_safety_candidates": [
+                {"card_id": card_id, "similarity": score}
+                for card_id, score in getattr(
+                    selection, "safety_candidate_scores", ()
+                )
+                if card_id not in {
+                    card.id for card in getattr(selection, "safety_cards", ())
+                }
             ],
         }
 

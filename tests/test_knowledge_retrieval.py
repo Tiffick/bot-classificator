@@ -55,13 +55,21 @@ class MeaningBackend:
     @staticmethod
     def _vector(text):
         value = text.casefold()
+        if any(part in value for part in ("вызываю рвоту", "очищаюсь", "слабительные", "голодаю в компенсацию")):
+            return [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+        if any(part in value for part in ("резко набрал", "резко похудел", "новое лекарство", "гормональн")):
+            return [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
+        if any(part in value for part in ("причинить себе вред", "не хочу жить", "покончить с собой")):
+            return [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
         if any(part in value for part in ("пропуск", "физическ", "желание поесть", "не могу остановиться", "теряю контроль")):
-            return [1.0, 0.0, 0.0, 0.0]
+            return [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         if any(part in value for part in ("всё испорт", "полный провал", "бросаю на недели")):
-            return [0.0, 1.0, 0.0, 0.0]
+            return [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         if any(part in value for part in ("быстр", "медленно", "скорого результата")):
-            return [0.0, 0.0, 1.0, 0.0]
-        return [0.0, 0.0, 0.0, 1.0]
+            return [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        if "обычный разговор" in value:
+            return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 
 
 @pytest.fixture
@@ -114,10 +122,11 @@ def test_feature_flag_defaults_on_and_explicit_false_is_complete_rollback(monkey
 def test_semantic_index_has_multiple_views_and_all_admitted_he(semantic_runtime):
     index = semantic_runtime.index
     assert index.embedding_model_id == EMBEDDING_MODEL_ID
-    assert len(index.documents) == 8 * 3 + 30 * 2
+    assert len(index.documents) == 8 * 3 + 3 + 30 * 2
     assert {document.layer for document in index.documents} == {
         "professional_knowledge",
         "human_experience",
+        "safety",
     }
     assert len({document.card_id for document in index.documents if document.layer == "human_experience"}) == 30
 
@@ -133,6 +142,8 @@ def test_selection_preserves_complete_semantic_retrieval_trace(semantic_runtime)
 
     assert selection.query_views[0][0] == "current_user_message"
     assert selection.query_views[0][1]
+    assert selection.query_views[0][2] == 1.0
+    assert selection.safety_query_views[0][0] == "current_user_message"
     assert selection.index_schema_version == retrieval.SEMANTIC_INDEX_SCHEMA_VERSION
     assert selection.semantic_view_version == retrieval.SEMANTIC_VIEW_VERSION
     assert len(selection.professional_candidate_scores) == 8
@@ -141,7 +152,7 @@ def test_selection_preserves_complete_semantic_retrieval_trace(semantic_runtime)
     assert selection.human_experience_similarity_floor is not None
 
 
-def test_primary_mechanism_view_outranks_broader_applicability_view():
+def test_primary_mechanism_view_outranks_broader_supporting_signal_view():
     class FixedBackend:
         model_id = EMBEDDING_MODEL_ID
 
@@ -163,10 +174,10 @@ def test_primary_mechanism_view_outranks_broader_applicability_view():
                 vector=(0.85, (1 - 0.85**2) ** 0.5),
             ),
             retrieval.SemanticIndexDocument(
-                document_id="broad::applicability",
+                document_id="broad::supporting_signals",
                 card_id="broad",
                 layer="professional_knowledge",
-                view_kind="applicability",
+                view_kind="supporting_signals",
                 vector=(0.86, (1 - 0.86**2) ** 0.5),
             ),
         ),
@@ -212,6 +223,44 @@ def test_short_answer_uses_structured_active_context(semantic_runtime):
     assert "weight.mechanism.restriction_evening_hunger" in {
         card.id for card in selection.professional_cards
     }
+
+
+def test_system_authored_context_cannot_create_a_safety_signal(semantic_runtime):
+    system = _message(
+        DialogueRole.SYSTEM,
+        "После нового лекарства вы резко набрали вес?",
+        2,
+    )
+    content = ActiveContentItem(
+        kind=ActiveContentKind.SYSTEM_QUESTION,
+        content=system.text,
+        source_message_id=system.id,
+    )
+    target = ResponseTarget(
+        active_content_id=content.id,
+        subject=TargetReference(kind=TargetSubjectKind.ACTIVE_CONTENT, id=content.id),
+        interaction=TargetInteractionKind.OPEN_RESPONSE,
+    )
+    acs = ActiveConversationState(
+        created_turn=1,
+        source_system_message_id=system.id,
+        active_content={content.id: content},
+        response_targets={target.id: target},
+    )
+
+    selection = retrieve_professional_context(
+        "Нет, речь только о том, как сидит одежда.",
+        HumanModel(),
+        acs,
+        DialogueHistory(messages=(system,)),
+        runtime=semantic_runtime,
+    )
+
+    assert selection.safety_cards == ()
+    assert "active_conversation_content" in selection.query_view_kinds
+    assert {
+        kind for kind, _text, _weight in selection.safety_query_views
+    } == {"current_user_message"}
 
 
 def test_rejected_items_are_not_query_evidence_and_negation_stays_user_data(semantic_runtime):
@@ -260,7 +309,7 @@ def test_he_disable_keeps_professional_semantic_index_available(semantic_runtime
     assert selection.indexed_human_experience_count == 30
 
 
-def test_safety_lane_includes_all_admitted_cards_outside_ordinary_budget(semantic_runtime):
+def test_safety_lane_abstains_for_ordinary_conversation(semantic_runtime):
     selection = retrieve_professional_context(
         "Обычный разговор о снижении веса.",
         HumanModel(), None, DialogueHistory(),
@@ -268,16 +317,53 @@ def test_safety_lane_includes_all_admitted_cards_outside_ordinary_budget(semanti
         runtime=semantic_runtime,
     )
     assert selection.professional_cards == ()
-    assert {card.id for card in selection.safety_cards} == {
-        "weight.safety.eating_disorder",
-        "weight.safety.medical_change",
-        "weight.safety.self_harm",
-    }
-    assert all(
-        "Не ставить диагноз" in " ".join(card.prohibited_inferences)
-        or card.kind == "safety_signal"
-        for card in selection.safety_cards
+    assert selection.safety_cards == ()
+    assert len(selection.safety_candidate_scores) == 3
+
+def test_safety_lane_abstains_for_ordinary_emotional_idiom(semantic_runtime):
+    selection = retrieve_professional_context(
+        "Перестать жить от попытки до попытки и снова нормально чувствовать себя в своём теле.",
+        HumanModel(), None, DialogueHistory(),
+        runtime=semantic_runtime,
     )
+
+    assert selection.safety_cards == ()
+
+
+def test_safety_lane_requires_cross_category_semantic_discrimination():
+    catalog = load_knowledge_catalog()
+    scores = {
+        "weight.safety.self_harm": 0.8885,
+        "weight.safety.eating_disorder": 0.8840,
+        "weight.safety.medical_change": 0.8789,
+    }
+
+    selected, margin = retrieval._select_safety_cards(
+        catalog.cards, scores, retrieval.SAFETY_MIN_SIMILARITY
+    )
+
+    assert selected == ()
+    assert margin == pytest.approx(0.0045)
+
+
+@pytest.mark.parametrize(
+    ("message", "expected_id"),
+    (
+        ("После еды вызываю рвоту и принимаю слабительные.", "weight.safety.eating_disorder"),
+        ("После нового лекарства я резко набрал вес.", "weight.safety.medical_change"),
+        ("Я не хочу жить и думаю причинить себе вред.", "weight.safety.self_harm"),
+    ),
+)
+def test_safety_lane_semantically_selects_explicit_red_flag(
+    semantic_runtime, message, expected_id
+):
+    selection = retrieve_professional_context(
+        message,
+        HumanModel(), None, DialogueHistory(),
+        runtime=semantic_runtime,
+    )
+    assert [card.id for card in selection.safety_cards] == [expected_id]
+    assert selection.safety_similarity_floor is not None
 
 
 def test_model_and_index_are_process_singletons(monkeypatch, semantic_runtime):

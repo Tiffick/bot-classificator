@@ -417,7 +417,7 @@ def _assert_source_boundary() -> dict[str, Any]:
         raise ProtocolStop(f"Legacy Engine symbols are active: {present}")
     if "OpenAI(max_retries=0)" not in source:
         raise ProtocolStop("DialogEngine does not visibly enforce max_retries=0.")
-    if source.count(".propose(") != 1:
+    if source.count("core.propose") != 1:
         raise ProtocolStop("DialogEngine source does not contain exactly one propose call site.")
     return {
         "legacy_symbols_present": present,
@@ -664,23 +664,13 @@ def _run_live(repo_root: Path) -> int:
         last_record = None
         while state.completed_turns < MAX_TURNS:
             next_turn = state.completed_turns + 1
-            if next_turn == MAX_TURNS:
-                if last_record is None or last_record["acs_target_count"] in (None, 0):
-                    checkpoint.append(
-                        "RUN_COMPLETED",
-                        {
-                            "reason": "sixth_turn_not_eligible_without_response_target",
-                            "completed_turns": state.completed_turns,
-                        },
-                    )
-                    state.write_summary("COMPLETED")
-                    return 0
+
             checkpoint.append(
                 "HUMAN_GATE",
                 {
                     "next_turn": next_turn,
                     "previous_turn": last_record,
-                    "sixth_turn_conditional": next_turn == MAX_TURNS,
+                    "previous_target_required": False,
                 },
             )
             state.write_summary("WAITING_FOR_HUMAN")

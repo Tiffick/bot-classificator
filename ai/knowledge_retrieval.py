@@ -20,7 +20,12 @@ from typing import Any, Iterable, Protocol, Sequence
 from pydantic import BaseModel, ConfigDict, model_validator
 
 from ai.discovery_data_model import (
-    ActiveConversationState, DialogueHistory, DialogueRole, HumanModel, ItemStatus,
+    ActiveConversationState,
+    DialogueHistory,
+    DialogueRole,
+    HumanModel,
+    ItemStatus,
+    Provenance,
 )
 from ai.human_experience import HumanExperienceCard, load_human_experience_catalog
 
@@ -30,7 +35,7 @@ KNOWLEDGE_RETRIEVAL_INDEX_PATH = "KNOWLEDGE_RETRIEVAL_INDEX_PATH"
 KNOWLEDGE_RETRIEVAL_MODEL_CACHE = "KNOWLEDGE_RETRIEVAL_MODEL_CACHE"
 EMBEDDING_MODEL_ID = "intfloat/multilingual-e5-small"
 SEMANTIC_INDEX_SCHEMA_VERSION = "knowledge-semantic-index.v1"
-SEMANTIC_VIEW_VERSION = "weight-semantic-views.e5-v1"
+SEMANTIC_VIEW_VERSION = "weight-semantic-views.e5-v3"
 KNOWLEDGE_CONTEXT_TOKEN_BUDGET = 1_800
 HUMAN_EXPERIENCE_TOKEN_BUDGET = 900
 # Calibrated on the real E5 index (2026-10-14), including document-view
@@ -40,17 +45,27 @@ HUMAN_EXPERIENCE_TOKEN_BUDGET = 900
 # not impose a fixed result count.
 PROFESSIONAL_MIN_SIMILARITY = 0.80
 HUMAN_EXPERIENCE_MIN_SIMILARITY = 0.79
+# Calibrated on explicit red-flag and ordinary weight-management controls with
+# the real local E5 model. The higher floor prevents general weight language
+# from surfacing safety instructions while retaining explicit safety signals.
+SAFETY_MIN_SIMILARITY = 0.875
+# Dense similarity alone is not enough for safety: ordinary emotional language
+# can sit near several unrelated warning cards in multilingual embedding space.
+# A safety match must also be semantically discriminative against the next-best
+# safety interpretation. This is category competition, not lexical routing.
+SAFETY_MIN_DISCRIMINATION_MARGIN = 0.009
 SEMANTIC_RELATIVE_BAND = 0.015
 # Core mechanism/experience text is the primary retrieval signal. Supporting
-# applicability and inquiry/limits views broaden recall, but may not outrank a
+# Supporting-signal and inquiry/limits views broaden recall, but may not outrank a
 # direct mechanism match merely because they contain generic conversational
 # language.
 _DOCUMENT_VIEW_WEIGHTS = {
     "mechanism": 1.0,
-    "applicability": 0.93,
+    "supporting_signals": 0.96,
     "inquiry_limits_and_manifestations": 0.88,
     "lived_experience": 1.0,
     "applicability_alternatives_and_limits": 0.90,
+    "safety_signal": 1.0,
 }
 _RETRIEVABLE_STATUS = "pilot_eligible_not_expert_validated"
 _CATALOG_PATH = Path(__file__).parents[1] / "knowledge/weight_management/knowledge_cards_v1.json"
@@ -161,6 +176,7 @@ class SemanticQueryView:
 @dataclass(frozen=True)
 class RetrievalContext:
     query_views: tuple[SemanticQueryView, ...]
+    safety_query_views: tuple[SemanticQueryView, ...]
     rejected_or_corrected_item_count: int
     active_context_present: bool
 
@@ -267,23 +283,30 @@ class SemanticRetrievalRuntime:
     backend: EmbeddingBackend
     index: SemanticIndex
 
-    def score(self, views: Sequence[SemanticQueryView]) -> dict[str, float]:
+    def score_views(
+        self, views: Sequence[SemanticQueryView]
+    ) -> tuple[dict[str, float], ...]:
         vectors = self.backend.encode([f"query: {view.text}" for view in views])
         if len(vectors) != len(views):
             raise KnowledgeRetrievalError("Unexpected query vector count")
-        scores: dict[str, float] = {}
-        for document in self.index.documents:
-            document_weight = _DOCUMENT_VIEW_WEIGHTS.get(document.view_kind)
-            if document_weight is None:
-                raise KnowledgeRetrievalError(
-                    f"Unsupported semantic document view: {document.view_kind}"
+        results: list[dict[str, float]] = []
+        for view, vector in zip(views, vectors):
+            scores: dict[str, float] = {}
+            for document in self.index.documents:
+                document_weight = _DOCUMENT_VIEW_WEIGHTS.get(document.view_kind)
+                if document_weight is None:
+                    raise KnowledgeRetrievalError(
+                        f"Unsupported semantic document view: {document.view_kind}"
+                    )
+                score = _cosine(vector, document.vector) * view.weight * document_weight
+                scores[document.card_id] = max(
+                    scores.get(document.card_id, -1.0), score
                 )
-            score = max(
-                _cosine(vector, document.vector) * view.weight * document_weight
-                for view, vector in zip(views, vectors)
-            )
-            scores[document.card_id] = max(scores.get(document.card_id, -1.0), score)
-        return scores
+            results.append(scores)
+        return tuple(results)
+
+    def score(self, views: Sequence[SemanticQueryView]) -> dict[str, float]:
+        return _aggregate_score_maps(self.score_views(views))
 
 
 @dataclass(frozen=True)
@@ -304,10 +327,14 @@ class KnowledgeRetrievalSelection:
     professional_scores: tuple[tuple[str, float], ...] = ()
     human_experience_scores: tuple[tuple[str, float], ...] = ()
     query_views: tuple[tuple[str, str, float], ...] = ()
+    safety_query_views: tuple[tuple[str, str, float], ...] = ()
     professional_candidate_scores: tuple[tuple[str, float], ...] = ()
     human_experience_candidate_scores: tuple[tuple[str, float], ...] = ()
+    safety_candidate_scores: tuple[tuple[str, float], ...] = ()
     professional_similarity_floor: float | None = None
     human_experience_similarity_floor: float | None = None
+    safety_similarity_floor: float | None = None
+    safety_discrimination_margin: float | None = None
     index_schema_version: str = ""
     semantic_view_version: str = ""
 
@@ -391,13 +418,14 @@ def build_retrieval_context(
     dialogue_history: DialogueHistory,
 ) -> RetrievalContext:
     """Build independent meaning-bearing views, not a lexical query string."""
-    # When an active target exists, its meaning anchors a short current answer.
-    # This is structural weighting, not inspection of the user's words.
-    current_weight = 0.94 if previous_acs is not None else 1.0
-    views = [SemanticQueryView("current_user_message", current_user_text, current_weight)]
+    # Current user material remains primary. Previous ACS can supply the meaning
+    # of a short answer, but model-authored text must not outrank a rich current
+    # answer or recursively steer retrieval toward its own wording.
+    views = [SemanticQueryView("current_user_message", current_user_text, 1.0)]
+    safety_views = [SemanticQueryView("current_user_message", current_user_text, 1.0)]
     if previous_acs is not None:
         views.extend(
-            SemanticQueryView("active_conversation_content", item.content, 1.0)
+            SemanticQueryView("active_conversation_content", item.content, 0.94)
             for item in previous_acs.active_content.values()
             if item.content.strip()
         )
@@ -415,17 +443,27 @@ def build_retrieval_context(
             rejected += 1
         else:
             views.append(SemanticQueryView("human_model_item", item.content, 0.84))
+            if item.provenance in {
+                Provenance.USER_PROVIDED,
+                Provenance.USER_INTERPRETATION,
+            }:
+                safety_views.append(
+                    SemanticQueryView("human_model_item", item.content, 0.84)
+                )
     views.extend(
         SemanticQueryView("human_model_relation", relation.meaning, 0.86)
         for relation in human_model.relations.values()
     )
     for message in dialogue_history.messages[-6:]:
         if message.role == DialogueRole.USER:
-            views.append(SemanticQueryView("recent_user_message", message.text, 0.76))
+            view = SemanticQueryView("recent_user_message", message.text, 0.76)
+            views.append(view)
+            safety_views.append(view)
         else:
             views.append(SemanticQueryView("recent_system_message", message.text, 0.68))
     return RetrievalContext(
         query_views=_deduplicate_query_views(views),
+        safety_query_views=_deduplicate_query_views(safety_views),
         rejected_or_corrected_item_count=rejected,
         active_context_present=previous_acs is not None,
     )
@@ -458,25 +496,66 @@ def retrieve_professional_context(
     context = build_retrieval_context(
         current_user_text, human_model, previous_acs, dialogue_history
     )
-    scores = semantic_runtime.score(context.query_views)
+    per_view_scores = semantic_runtime.score_views(context.query_views)
+    scores = _aggregate_score_maps(per_view_scores)
+    current_scores = per_view_scores[0]
+    contextual_scores = _aggregate_score_maps(per_view_scores[1:])
+    # Safety may only be surfaced by user-origin material. Model-authored ACS,
+    # replies and proposals are consultation context, not evidence of a medical
+    # or psychological red flag.
+    safety_view_keys = {
+        (view.kind, view.text, view.weight) for view in context.safety_query_views
+    }
+    safety_scores = _aggregate_score_maps(
+        tuple(
+            view_scores
+            for view, view_scores in zip(context.query_views, per_view_scores)
+            if (view.kind, view.text, view.weight) in safety_view_keys
+        )
+    )
     professional_ids = {
         card.id for card in catalog.cards if card.kind != "safety_signal"
     }
+    safety_ids = {
+        card.id for card in catalog.cards if card.kind == "safety_signal"
+    }
     he_ids = {card.id for card in he_cards}
-    professional_floor = _candidate_floor(
-        scores, professional_ids, PROFESSIONAL_MIN_SIMILARITY
+    current_professional_floor = _candidate_floor(
+        current_scores, professional_ids, PROFESSIONAL_MIN_SIMILARITY
+    )
+    contextual_professional_floor = _candidate_floor(
+        contextual_scores, professional_ids, PROFESSIONAL_MIN_SIMILARITY
+    )
+    professional_floor = min(
+        current_professional_floor, contextual_professional_floor
     )
     he_floor = _candidate_floor(
         scores, he_ids, HUMAN_EXPERIENCE_MIN_SIMILARITY
     )
-    professional_ranked = sorted(
+    safety_floor = _candidate_floor(
+        safety_scores, safety_ids, SAFETY_MIN_SIMILARITY
+    )
+    current_professional_ranked = sorted(
         (
             card for card in catalog.cards
             if card.kind != "safety_signal"
             and card.status == _RETRIEVABLE_STATUS
-            and scores.get(card.id, -1.0) >= professional_floor
+            and current_scores.get(card.id, -1.0) >= current_professional_floor
         ),
-        key=lambda card: (-scores[card.id], card.id),
+        key=lambda card: (-current_scores[card.id], card.id),
+    )
+    contextual_professional_ranked = sorted(
+        (
+            card for card in catalog.cards
+            if card.kind != "safety_signal"
+            and card.status == _RETRIEVABLE_STATUS
+            and contextual_scores.get(card.id, -1.0)
+            >= contextual_professional_floor
+        ),
+        key=lambda card: (-contextual_scores[card.id], card.id),
+    )
+    professional_ranked = _interleave_unique_cards(
+        current_professional_ranked, contextual_professional_ranked
     )
     he_ranked = sorted(
         (
@@ -485,10 +564,11 @@ def retrieve_professional_context(
         ),
         key=lambda card: (-scores[card.id], card.id),
     )
-    # The safety lane is deliberately independent from similarity ranking.
-    safety_cards = tuple(
-        card for card in catalog.cards
-        if card.kind == "safety_signal" and card.status == _RETRIEVABLE_STATUS
+    # Safety remains an independent semantic lane. Absolute similarity finds a
+    # possible boundary; category discrimination prevents an idiom or general
+    # distress from simultaneously masquerading as several unrelated red flags.
+    safety_cards, safety_discrimination_margin = _select_safety_cards(
+        catalog.cards, safety_scores, safety_floor
     )
     selected_professional = _pack_cards(professional_ranked, knowledge_token_budget)
     selected_he = _pack_human_experience(he_ranked, human_experience_token_budget)
@@ -519,6 +599,10 @@ def retrieve_professional_context(
         query_views=tuple(
             (view.kind, view.text, view.weight) for view in context.query_views
         ),
+        safety_query_views=tuple(
+            (view.kind, view.text, view.weight)
+            for view in context.safety_query_views
+        ),
         professional_candidate_scores=tuple(
             sorted(
                 ((card_id, scores[card_id]) for card_id in professional_ids),
@@ -531,8 +615,19 @@ def retrieve_professional_context(
                 key=lambda entry: (-entry[1], entry[0]),
             )
         ),
+        safety_candidate_scores=tuple(
+            sorted(
+                (
+                    (card_id, safety_scores.get(card_id, -1.0))
+                    for card_id in safety_ids
+                ),
+                key=lambda item: (-item[1], item[0]),
+            )
+        ),
         professional_similarity_floor=professional_floor,
         human_experience_similarity_floor=he_floor,
+        safety_similarity_floor=safety_floor,
+        safety_discrimination_margin=safety_discrimination_margin,
         index_schema_version=semantic_runtime.index.schema_version,
         semantic_view_version=semantic_runtime.index.semantic_view_version,
     )
@@ -630,7 +725,28 @@ def _semantic_documents(
     he_by_id = {card.id: card for card in human_experience}
     documents: list[SemanticDocument] = []
     for card in catalog.cards:
-        if card.kind == "safety_signal" or card.status != _RETRIEVABLE_STATUS:
+        if card.status != _RETRIEVABLE_STATUS:
+            continue
+        if card.kind == "safety_signal":
+            # Safety retrieval is intentionally grounded in explicit red-flag
+            # manifestations. Generic title/summary language about weight would
+            # make ordinary consultations look safety-relevant in high-baseline
+            # multilingual embedding space.
+            text = " ".join(
+                (
+                    *card.supporting_signals,
+                    *card.discriminating_observations,
+                )
+            )
+            documents.append(
+                SemanticDocument(
+                    f"{card.id}::safety_signal",
+                    card.id,
+                    "safety",
+                    "safety_signal",
+                    text,
+                )
+            )
             continue
         manifestations = " ".join(
             he_by_id[card_id].possible_inner_experience
@@ -639,11 +755,10 @@ def _semantic_documents(
         )
         views = {
             "mechanism": " ".join((card.title, card.summary, card.mechanism)),
-            "applicability": " ".join(
-                (*card.supporting_signals, *card.contradicting_signals)
-            ),
+            "supporting_signals": " ".join(card.supporting_signals),
             "inquiry_limits_and_manifestations": " ".join(
                 (
+                    *card.contradicting_signals,
                     *card.discriminating_observations,
                     *card.prohibited_inferences,
                     manifestations,
@@ -746,6 +861,60 @@ def _candidate_floor(
     return max(absolute_floor, best - SEMANTIC_RELATIVE_BAND)
 
 
+def _select_safety_cards(
+    cards: Sequence[KnowledgeCard],
+    scores: dict[str, float],
+    floor: float,
+) -> tuple[tuple[KnowledgeCard, ...], float | None]:
+    """Select one specific semantic safety category or abstain.
+
+    Safety cards represent distinct escalation boundaries. When the best match
+    barely differs from another unrelated safety category, the embedding has
+    detected broad emotional/weight language rather than a specific red flag.
+    """
+    ranked = sorted(
+        (
+            card
+            for card in cards
+            if card.kind == "safety_signal"
+            and card.status == _RETRIEVABLE_STATUS
+        ),
+        key=lambda card: (-scores.get(card.id, -1.0), card.id),
+    )
+    if not ranked or scores.get(ranked[0].id, -1.0) < floor:
+        return (), None
+    runner_up = scores.get(ranked[1].id, -1.0) if len(ranked) > 1 else -1.0
+    margin = scores[ranked[0].id] - runner_up
+    if margin < SAFETY_MIN_DISCRIMINATION_MARGIN:
+        return (), margin
+    return (ranked[0],), margin
+
+
+def _aggregate_score_maps(
+    score_maps: Sequence[dict[str, float]],
+) -> dict[str, float]:
+    result: dict[str, float] = {}
+    for scores in score_maps:
+        for card_id, score in scores.items():
+            result[card_id] = max(result.get(card_id, -1.0), score)
+    return result
+
+
+def _interleave_unique_cards(
+    primary: Sequence[KnowledgeCard],
+    contextual: Sequence[KnowledgeCard],
+) -> tuple[KnowledgeCard, ...]:
+    """Preserve the current leader and the narrow structured-context frontier."""
+    result: list[KnowledgeCard] = []
+    seen: set[str] = set()
+    ordered = tuple(primary[:1]) + tuple(contextual) + tuple(primary[1:])
+    for card in ordered:
+        if card.id not in seen:
+            result.append(card)
+            seen.add(card.id)
+    return tuple(result)
+
+
 def _deduplicate_query_views(
     views: Iterable[SemanticQueryView],
 ) -> tuple[SemanticQueryView, ...]:
@@ -811,6 +980,8 @@ def _human_experience_card_view(card: HumanExperienceCard) -> dict[str, Any]:
         "id": card.id,
         "review_status": "research_catalog_not_expert_validated",
         "professional_hypothesis": card.possible_inner_experience,
+        "recognition_example": card.recognition_to_user,
+        "discriminating_question": card.discriminating_question,
         "alternative_explanations": list(card.alternative_explanations),
         "use_when": card.use_when,
         "avoid": card.avoid,

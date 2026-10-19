@@ -9,12 +9,13 @@
     "method": "semantic_only_dense_cosine",
     "embedding_model": "intfloat/multilingual-e5-small",
     "embedding_dimension": 384,
-    "semantic_view_version": "weight-semantic-views.e5-v1",
-    "ordinary_selection": "weighted_semantic_views_then_absolute_and_relative_similarity_floor_then_token_budget",
+    "semantic_view_version": "weight-semantic-views.e5-v3",
+    "ordinary_selection": "current_user_primary_then_weighted_semantic_context_then_absolute_and_relative_similarity_floor_then_token_budget",
     "professional_similarity_floor": 0.8,
     "human_experience_similarity_floor": 0.79,
+    "safety_similarity_floor": 0.875,
     "relative_similarity_band": 0.015,
-    "safety_selection": "all_admitted_safety_cards"
+    "safety_selection": "user_origin_semantic_views_with_absolute_floor_and_cross_category_discrimination"
   },
   "provenance": {
     "kind": "author_synthesis",

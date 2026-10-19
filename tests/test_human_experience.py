@@ -103,8 +103,8 @@ def test_explicit_recurring_failure_pattern_selects_p001_from_history():
     assert len(json.dumps(view["selected_cards"], ensure_ascii=False)) <= MAX_CONTEXT_CHARS
     assert "original_v1" not in view
     assert "professional_hypothesis" in view["selected_cards"][0]
-    assert "recognition_to_user" not in view["selected_cards"][0]
-    assert "discriminating_question" not in view["selected_cards"][0]
+    assert "recognition_example" in view["selected_cards"][0]
+    assert "discriminating_question" in view["selected_cards"][0]
 
 
 @pytest.mark.parametrize(

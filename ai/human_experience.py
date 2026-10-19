@@ -46,6 +46,10 @@ EXPERIMENTAL HUMAN EXPERIENCE MODE:
   Express any useful connection naturally in the current context; do not
   announce labels such as "working hypothesis" or reproduce a card as a
   prefabricated observation or question.
+- recognition_example illustrates the useful human meaning carried by a card,
+  and discriminating_question illustrates what would distinguish it when that
+  distinction materially changes the next move. Adapt the meaning naturally;
+  neither field is a required phrase or a required question.
 - You may use none of the cards. Do not expose card IDs, internal titles or the
   retrieval mechanism. Do not name a hidden or "real" pain, invent feelings,
   motives or causes, or make the card stronger than the user's material.
@@ -324,6 +328,8 @@ def _card_view(card: HumanExperienceCard) -> dict[str, Any]:
     return {
         "id": card.id,
         "professional_hypothesis": card.possible_inner_experience,
+        "recognition_example": card.recognition_to_user,
+        "discriminating_question": card.discriminating_question,
         "alternative_explanations": list(card.alternative_explanations),
         "use_when": card.use_when,
         "avoid": card.avoid,

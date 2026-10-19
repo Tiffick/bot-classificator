@@ -273,11 +273,11 @@ def test_human_experience_flag_on_adds_bounded_p001_hypothesis(monkeypatch):
     ] == ["P001"]
     card = payload["human_experience"]["selected_cards"][0]
     assert "professional_hypothesis" in card
-    assert "recognition_to_user" not in card
-    assert "discriminating_question" not in card
+    assert "recognition_example" in card
+    assert "discriminating_question" in card
     serialized_context = json.dumps(payload["human_experience"], ensure_ascii=False)
-    assert "Возможно, сложнее всего не сам трудный вечер" not in serialized_context
-    assert "Что именно кажется потерянным после такого вечера" not in serialized_context
+    assert "Возможно, сложнее всего не сам трудный вечер" in serialized_context
+    assert "Что именно кажется потерянным после такого вечера" in serialized_context
     assert "original_v1" not in payload["human_experience"]
 
 
@@ -745,6 +745,32 @@ def test_consultation_policy_separates_user_owned_fact_from_system_delta():
         assert "не созда" in policy and "responsetarget" in policy
 
 
+def test_v2_policy_prioritizes_professional_value_support_and_memory():
+    prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
+    source = " ".join(
+        (
+            Path(__file__).parents[1]
+            / "Research/Human_Experience/Weight/12_Cognitive_Cycle.txt"
+        ).read_text(encoding="utf-8").split()
+    ).casefold()
+
+    for policy in (prompt, source):
+        assert "профессиональн" in policy
+        assert "поддерж" in policy
+        assert "мотивац" in policy
+        assert "желаем" in policy
+        assert "довер" in policy and "себ" in policy
+        assert "без жёсткой очередности" in policy or "не линейная лестница" in policy
+    assert "сохраняй через statepatch" in prompt
+    assert "если хотите, могу объяснить" in prompt
+    assert "должны дойти до человека" in prompt
+    assert "соответствующем responsetarget" in prompt
+    assert "уверенность относится к профессиональному действию" in prompt
+    assert "не возвращайся к уже объяснённой ветке" in prompt
+    assert "отсутствие responsetarget" in prompt
+    assert "закончи его декларативно" in prompt
+
+
 def test_prompt_uses_contrastive_examples_without_turning_them_into_templates():
     prompt = " ".join(CognitiveCore._system_prompt().split()).casefold()
 
@@ -872,12 +898,12 @@ def test_system_prompt_enforces_solution_action_product_boundary():
     for instruction in (
         "A. HOW TO CONDUCT THE CONSULTATION",
         "Помогай человеку яснее увидеть собственную ситуацию",
-        "Explanation помогает понять, что происходит и почему это важно",
+        "Explanation помогает понять, что происходит, почему это важно",
         "B. STRICT BEHAVIORAL PROHIBITIONS",
-        "Небольшая практическая польза также допустима",
-        "одно сфокусированное, безопасное, обратимое общее наблюдение или рекомендация",
+        "Направление работы называет, ЧТО должно измениться и ПОЧЕМУ",
+        "Даже одна конкретная практика или рекомендация",
         "Product Boundary проходит не перед любым практическим смыслом",
-        "Перечень несвязанных action options",
+        "перечень options не становится допустимым",
         "Не составляй программу, подробный рацион",
         "Когда следующий полезный шаг требует выбрать, адаптировать или спроектировать",
         "Форма вопроса сама по себе не требует Transition",
@@ -903,8 +929,8 @@ def test_direct_solution_question_keeps_explanation_inside_product_boundary():
     # A bounded general orientation is allowed, but it cannot become an invented
     # user-specific cause or personalized solution design.
     assert "не выдумывай факты, причины, чувства, мотивы" in policy
-    assert "небольшая практическая польза также допустима" in policy
-    assert "без изображения её персонально выбранным решением" in policy
+    assert "направления профессиональной работы" in policy
+    assert "остановись до выбора действий" in policy
     assert "не составляй программу, подробный рацион" in policy
     assert "когда следующий полезный шаг требует выбрать, адаптировать или спроектировать" in policy
     assert "предложи transition к живому консультанту с meaningful consent" in policy
@@ -927,22 +953,22 @@ def test_product_boundary_allows_bounded_help_but_rejects_personal_design():
         .split()
     ).casefold()
 
-    # Understanding and one bounded practical orientation remain inside the product.
-    assert "explanation помогает понять, что происходит и почему это важно" in prompt
+    # Understanding and a non-prescriptive professional direction remain inside the product.
+    assert "explanation помогает понять, что происходит, почему это важно" in prompt
     assert "descriptive explanation наблюдаемого mechanism" in prompt
-    assert "небольшая практическая польза" in boundaries
-    assert "одно сфокусированное безопасное и обратимое" in boundaries
-    assert "один ограниченный практический ориентир" in cycle
+    assert "профессиональная перспектива" in boundaries
+    assert "не выбирает конкретную практику" in boundaries
+    assert "направления профессиональной работы" in cycle
     assert "bounded answer может на этом закончиться" in transition
-    assert "один сфокусированный безопасный и обратимый" in transition
+    assert "останавливается до выбора конкретной практики" in transition
 
-    # A menu or adaptation remains outside; relabelling does not bypass the boundary.
-    assert "перечень несвязанных action options" in prompt
-    assert "общий перечень несвязанных" in boundaries
-    assert "generic menu" in cycle
-    assert "общим menu" in transition
+    # Any concrete action recommendation, menu or adaptation remains outside; relabelling does not bypass the boundary.
+    assert "даже одна конкретная практика" in prompt
+    assert "конкретную рекомендацию" in boundaries
+    assert "generic menu" in cycle and "конкретной рекомендации" in cycle
+    assert "один такой action option" in transition
     for policy in (boundaries, cycle, transition):
-        assert '"общ' in policy and 'принцип' in policy
+        assert "общ" in policy and "принцип" in policy
 
     # Personal selection/adaptation/design still requires Transition.
     assert "не продолжай discovery только для обхода product boundary" in prompt
@@ -951,7 +977,7 @@ def test_product_boundary_allows_bounded_help_but_rejects_personal_design():
     assert "transition с осмысленным согласием" in transition
 
 
-def test_source_of_truth_separates_bounded_practical_value_from_personal_design():
+def test_source_of_truth_separates_professional_direction_from_personal_design():
     root = Path(__file__).parents[1] / "Research/Human_Experience/Weight"
     boundaries = " ".join((root / "11_BOUNDARIES.txt").read_text(encoding="utf-8").split())
     cycle = " ".join((root / "12_Cognitive_Cycle.txt").read_text(encoding="utf-8").split())
@@ -961,14 +987,14 @@ def test_source_of_truth_separates_bounded_practical_value_from_personal_design(
     )
 
     assert "не равны проектированию решения" in boundaries
-    assert "одно сфокусированное безопасное и обратимое" in boundaries
+    assert "не выбирает конкретную практику" in boundaries
     assert "Текущий AI не должен: - выбирать или проектировать систему привычек" in boundaries
     assert "Прямой вопрос пользователя не отменяет эту границу" in boundaries
     assert "Прямой вопрос не отменяет Product Boundary" in cycle
-    assert "один ограниченный практический ориентир" in cycle
+    assert "направления профессиональной работы" in cycle
     assert "не делая переход автоматическим по форме вопроса" in cycle
     assert "не подбирает программу питания или лечения" in cycle
-    assert "на слое Discovery не должна" in transition
+    assert "останавливается до выбора конкретной" in transition
     assert "не должна обязательно" not in transition
 
 
